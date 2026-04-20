@@ -1,0 +1,21 @@
+{{ define "main" }}
+<section class="post-list">
+  {{ if .Title }}
+    <header class="post-list__header">
+      <h1 class="post-list__title">{{ .Title }}</h1>
+      {{ with .Content }}<div class="post-list__intro">{{ . }}</div>{{ end }}
+    </header>
+  {{ end }}
+
+  {{ $typeName := $.Site.Params.contentTypeName | default "post" }}
+  {{ $paginator := .Paginate (where .Pages "Type" $typeName) }}
+
+  <div class="posts h-feed">
+    {{ range $paginator.Pages }}
+      {{ partial "post-card.html" . }}
+    {{ end }}
+  </div>
+
+  {{ partial "pagination.html" . }}
+</section>
+{{ end }}

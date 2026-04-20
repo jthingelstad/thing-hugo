@@ -1,0 +1,23 @@
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    {{ with $.Site.Params.weeklyThingFormUrl }}
+      {{ partial "weekly-thing.html" $ }}
+    {{ end }}
+    {{ with $.Site.Params.anotherThingFormUrl }}
+      {{ partial "another-thing.html" $ }}
+    {{ end }}
+
+    <div class="site-footer__meta">
+      {{ if $.Site.Copyright }}
+        <p class="site-footer__copy">{{ $.Site.Copyright | safeHTML }}</p>
+      {{ else }}
+        <p class="site-footer__copy">© {{ now.Year }} {{ $.Site.Title }}</p>
+      {{ end }}
+      <p class="site-footer__links">
+        <a href="{{ "feed.xml" | absURL }}">RSS</a>
+        <a href="{{ "feed.json" | absURL }}">JSON</a>
+        {{ if $.Site.Params.llmsTxtEnabled }}<a href="{{ "llms.txt" | absURL }}">LLMs.txt</a>{{ end }}
+      </p>
+    </div>
+  </div>
+</footer>

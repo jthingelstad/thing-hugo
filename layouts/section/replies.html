@@ -1,0 +1,15 @@
+{{ define "main" }}
+<section class="post-list post-list--replies">
+  <header class="post-list__header">
+    <h1 class="post-list__title">{{ .Title | default "Replies" }}</h1>
+  </header>
+
+  {{ $paginator := .Paginate (where .Pages "Type" "reply") }}
+  <div class="posts h-feed">
+    {{ range $paginator.Pages }}
+      {{ partial "post-card.html" . }}
+    {{ end }}
+  </div>
+  {{ partial "pagination.html" . }}
+</section>
+{{ end }}

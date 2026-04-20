@@ -1,0 +1,13 @@
+{
+  "params": {
+    "contentTypeName": "post",
+    "showReadingTime": false,
+    "showPostMeta": true,
+    "pagefindEnabled": true,
+    "llmsTxtEnabled": true,
+    "weeklyThingFormUrl": "",
+    "anotherThingFormUrl": "",
+    "primaryColor": "#2a5d8f",
+    "accentColor": "#c25b3f"
+  }
+}
