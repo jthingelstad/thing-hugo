@@ -1,0 +1,27 @@
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-header__brand p-name u-url" href="{{ "/" | absURL }}">
+      <span class="site-header__title">{{ $.Site.Title }}</span>
+      {{ with $.Site.Params.subtitle }}<span class="site-header__subtitle">{{ . }}</span>{{ end }}
+    </a>
+
+    {{ if $.Site.Menus.main }}
+      <nav class="site-nav" aria-label="Primary">
+        <ul class="site-nav__list">
+          {{ range $.Site.Menus.main }}
+            <li class="site-nav__item"><a href="{{ .URL }}">{{ .Name }}</a></li>
+          {{ end }}
+          {{ if $.Site.Params.pagefindEnabled }}
+            <li class="site-nav__item site-nav__item--search"><a href="{{ "search/" | absURL }}" aria-label="Search">Search</a></li>
+          {{ end }}
+        </ul>
+      </nav>
+    {{ else if $.Site.Params.pagefindEnabled }}
+      <nav class="site-nav" aria-label="Primary">
+        <ul class="site-nav__list">
+          <li class="site-nav__item"><a href="{{ "search/" | absURL }}">Search</a></li>
+        </ul>
+      </nav>
+    {{ end }}
+  </div>
+</header>

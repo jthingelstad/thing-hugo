@@ -1,0 +1,41 @@
+{{ define "main" }}
+<article class="post post--single h-entry">
+  {{ if .Title }}
+    <header class="post__header">
+      <h1 class="post__title p-name">{{ .Title | markdownify }}</h1>
+      {{ partial "post-meta.html" . }}
+    </header>
+  {{ else }}
+    {{ partial "post-meta.html" . }}
+  {{ end }}
+
+  <div class="post__content e-content">
+    {{ .Content }}
+  </div>
+
+  {{ with .Params.tags }}
+    <div class="post__tags">
+      {{ range . }}
+        <a class="tag" href="{{ (urlize (printf "tags/%s" .)) | absURL }}/">#{{ . }}</a>
+      {{ end }}
+    </div>
+  {{ end }}
+
+  {{ if or .NextInSection .PrevInSection }}
+    <nav class="post__nav" aria-label="Post navigation">
+      {{ with .NextInSection }}
+        <a class="post__nav-prev" href="{{ .Permalink }}" rel="prev">← {{ .Title | default "Newer" }}</a>
+      {{ end }}
+      {{ with .PrevInSection }}
+        <a class="post__nav-next" href="{{ .Permalink }}" rel="next">{{ .Title | default "Older" }} →</a>
+      {{ end }}
+    </nav>
+  {{ end }}
+
+  {{ partial "comments.html" . }}
+
+  {{ if .Site.Params.include_conversation }}
+    <script type="text/javascript" src="https://micro.blog/conversation.js?url={{ .Permalink }}"></script>
+  {{ end }}
+</article>
+{{ end }}

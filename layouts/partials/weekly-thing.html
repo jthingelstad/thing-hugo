@@ -1,0 +1,21 @@
+{{/*
+  Weekly Thing signup widget.
+  Configure with Site.Params.weeklyThingFormUrl (e.g. a Buttondown/ConvertKit/Mailchimp POST endpoint).
+  Optional overrides:
+    weeklyThingTitle, weeklyThingBlurb, weeklyThingCta, weeklyThingEmailField
+*/}}
+<section class="signup signup--weekly-thing" aria-labelledby="weekly-thing-heading">
+  <h3 id="weekly-thing-heading" class="signup__title">{{ $.Site.Params.weeklyThingTitle | default "The Weekly Thing" }}</h3>
+  <p class="signup__blurb">{{ $.Site.Params.weeklyThingBlurb | default "A weekly newsletter of links, notes, and things worth thinking about." }}</p>
+  <form class="signup__form" action="{{ $.Site.Params.weeklyThingFormUrl }}" method="post" target="_blank">
+    <label class="signup__label" for="weekly-thing-email">Email</label>
+    <input class="signup__input"
+           id="weekly-thing-email"
+           type="email"
+           required
+           name="{{ $.Site.Params.weeklyThingEmailField | default "email" }}"
+           placeholder="you@example.com"
+           autocomplete="email">
+    <button class="signup__button" type="submit">{{ $.Site.Params.weeklyThingCta | default "Subscribe" }}</button>
+  </form>
+</section>

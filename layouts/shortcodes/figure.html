@@ -1,0 +1,19 @@
+{{/* Figure shortcode — accepts the args Micro.blog passes in for uploaded images. */}}
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" -}}
+{{- $caption := .Get "caption" -}}
+{{- $link := .Get "link" -}}
+{{- $width := .Get "width" -}}
+{{- $height := .Get "height" -}}
+{{- $class := .Get "class" -}}
+<figure class="figure{{ with $class }} {{ . }}{{ end }}">
+  {{ with $link }}<a href="{{ . }}">{{ end }}
+  <img src="{{ $src }}"
+       alt="{{ $alt }}"
+       loading="lazy"
+       decoding="async"
+       {{ with $width }}width="{{ . }}"{{ end }}
+       {{ with $height }}height="{{ . }}"{{ end }}>
+  {{ with $link }}</a>{{ end }}
+  {{ with $caption }}<figcaption class="figure__caption">{{ . | markdownify }}</figcaption>{{ end }}
+</figure>

@@ -1,0 +1,33 @@
+{{- /*
+  LLMs.txt for the site root — /llms.txt
+  Spec: https://llmstxt.org/
+*/ -}}
+# {{ .Site.Title }}
+
+{{ with .Site.Params.subtitle }}> {{ . }}
+
+{{ end -}}
+{{ with .Site.Params.description }}{{ . | plainify }}
+
+{{ end -}}
+
+## About
+
+- Site: {{ .Site.BaseURL }}
+- Feed (RSS): {{ "feed.xml" | absURL }}
+- Feed (JSON): {{ "feed.json" | absURL }}
+{{ with .Site.Params.author }}- Author: {{ . }}
+{{ end }}
+
+## Recent posts
+
+{{ $typeName := $.Site.Params.contentTypeName | default "post" -}}
+{{ range first 100 (where .Site.RegularPages "Type" $typeName).ByDate.Reverse -}}
+- [{{ if .Title }}{{ .Title | plainify }}{{ else }}{{ .Date.Format "2006-01-02" }}{{ end }}]({{ .Permalink }}){{ with .Summary }}: {{ . | plainify | truncate 200 }}{{ end }}
+{{ end }}
+
+## Pages
+
+{{ range where .Site.RegularPages "Type" "page" -}}
+- [{{ .Title | plainify }}]({{ .Permalink }}){{ with .Summary }}: {{ . | plainify | truncate 200 }}{{ end }}
+{{ end }}

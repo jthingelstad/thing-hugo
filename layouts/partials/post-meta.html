@@ -1,0 +1,15 @@
+{{ if $.Site.Params.showPostMeta | default true }}
+<div class="post-meta">
+  {{ if .Date }}
+    <a href="{{ .Permalink }}" class="u-url">
+      <time class="dt-published post-meta__date" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+        {{ .Date.Format ($.Site.Params.dateFormat | default "January 2, 2006") }}
+      </time>
+    </a>
+  {{ end }}
+  {{ with .Params.author }}<span class="post-meta__sep">·</span><span class="p-author h-card post-meta__author">{{ . }}</span>{{ end }}
+  {{ if and $.Site.Params.showReadingTime .WordCount }}
+    <span class="post-meta__sep">·</span><span class="post-meta__reading">{{ .ReadingTime }} min</span>
+  {{ end }}
+</div>
+{{ end }}

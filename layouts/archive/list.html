@@ -1,0 +1,29 @@
+{{ define "main" }}
+{{ $typeName := $.Site.Params.contentTypeName | default "post" }}
+<section class="archive">
+  <header class="archive__header">
+    <h1>{{ .Title | default "Archive" }}</h1>
+  </header>
+
+  {{ range .Site.RegularPages.GroupByPublishDate "2006" }}
+    {{ if ne .Key "0001" }}
+      <section class="archive__year">
+        <h2 class="archive__year-heading">{{ .Key }}</h2>
+        {{ range .Pages.GroupByDate "January" }}
+          <section class="archive__month">
+            <h3 class="archive__month-heading">{{ .Key }}</h3>
+            <ul class="archive__posts">
+              {{ range where .Pages "Type" $typeName }}
+                <li class="archive__post">
+                  <time class="archive__post-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "Jan 2" }}</time>
+                  <a class="archive__post-link" href="{{ .Permalink }}">{{ if .Title }}{{ .Title | markdownify }}{{ else }}{{ .Summary | plainify | truncate 80 }}{{ end }}</a>
+                </li>
+              {{ end }}
+            </ul>
+          </section>
+        {{ end }}
+      </section>
+    {{ end }}
+  {{ end }}
+</section>
+{{ end }}

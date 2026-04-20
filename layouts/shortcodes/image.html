@@ -1,0 +1,13 @@
+{{/* Image shortcode — Micro.blog's default image uploader uses this. */}}
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" -}}
+{{- $width := .Get "width" -}}
+{{- $height := .Get "height" -}}
+{{- $class := .Get "class" -}}
+<img class="image{{ with $class }} {{ . }}{{ end }}"
+     src="{{ $src }}"
+     alt="{{ $alt }}"
+     loading="lazy"
+     decoding="async"
+     {{ with $width }}width="{{ . }}"{{ end }}
+     {{ with $height }}height="{{ . }}"{{ end }}>

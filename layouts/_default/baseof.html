@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="{{ $.Site.Language.Lang | default "en" }}">
+<head>
+  {{ block "title" . }}
+    <title>{{ if .IsHome }}{{ $.Site.Title }}{{ with $.Site.Params.subtitle }} — {{ . }}{{ end }}{{ else }}{{ .Title }} · {{ $.Site.Title }}{{ end }}</title>
+  {{ end }}
+  {{ partial "head.html" . }}
+</head>
+<body class="{{ if .IsHome }}is-home {{ end }}page-{{ .Kind }}">
+  <a class="skip-link" href="#content">Skip to content</a>
+  {{ partial "header.html" . }}
+
+  <main id="content" class="content">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  {{ block "footer" . }}
+    {{ partial "footer.html" . }}
+  {{ end }}
+
+  {{ partial "extended_footer.html" . }}
+</body>
+</html>
