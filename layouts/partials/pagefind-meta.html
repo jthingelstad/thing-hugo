@@ -1,0 +1,20 @@
+{{- /* Pagefind index metadata for a post. Hidden; Pagefind reads attributes.
+       micro.blog runs Pagefind itself (the Pagefind publishing Action), so
+       changes here take effect on the next publish.
+
+       title: partials/title.html (microposts get their opening words).
+       sort:  ISO date, which sorts lexically.
+       filters: year and each category. */ -}}
+{{- $title := partial "title.html" . -}}
+<div hidden>
+  <span data-pagefind-meta="title">{{ $title }}</span>
+  <span data-pagefind-meta="date">{{ .Date.Format "January 2, 2006" }}</span>
+  <span data-pagefind-sort="date">{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</span>
+  <span data-pagefind-filter="year">{{ .Date.Year }}</span>
+  {{- range .Params.categories }}
+  <span data-pagefind-filter="category">{{ . }}</span>
+  {{- end }}
+  {{- with .Params.photos }}
+  <span data-pagefind-meta="image">{{ index . 0 }}</span>
+  {{- end }}
+</div>

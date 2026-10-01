@@ -1,0 +1,16 @@
+{{- /* The Pagefind search UI. micro.blog builds the index with its Pagefind
+       publishing Action and serves the bundle at /pagefind/; the theme supplies
+       the mount point, the init script and the token-mapped styles.
+       Thingy is offered as the semantic, cross-site alternative. */ -}}
+{{- $thingy := "" -}}
+{{- range hugo.Data.sites.sites }}{{ if eq .id "thingy" }}{{ $thingy = . }}{{ end }}{{ end -}}
+<div class="search-ui">
+  <div id="search" class="search-ui__mount">
+    <noscript><p>Search needs JavaScript. You can also browse the <a href="{{ "archive/" | relURL }}">archive</a>.</p></noscript>
+  </div>
+  {{- with $thingy }}
+  <p class="search-page__also">Looking for something across all of Jamie's sites, or a question rather than a keyword? <a href="{{ .url }}">Ask {{ .name }}</a>.</p>
+  {{- end }}
+</div>
+<script src="/pagefind/pagefind-ui.js" defer></script>
+<script src="{{ partial "asset.html" "js/search.js" }}" defer></script>
