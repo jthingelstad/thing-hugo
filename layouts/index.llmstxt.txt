@@ -1,33 +1,47 @@
 {{- /*
-  LLMs.txt for the site root — /llms.txt
-  Spec: https://llmstxt.org/
+  /llms.txt for the whole site (https://llmstxt.org/). Site level only.
+  Capped: 20 years and tens of thousands of posts would make a useless file,
+  so it lists the most recent titled posts, the Featured category, and pages.
+  The full archive is linked, not inlined.
 */ -}}
-# {{ .Site.Title }}
+{{- $recent := int (site.Params.llmstxt_recent | default 50) -}}
+{{- $typeName := site.Params.contentTypeName | default "post" -}}
+{{- $posts := where site.RegularPages "Type" $typeName -}}
+# {{ site.Title }}
 
-{{ with .Site.Params.subtitle }}> {{ . }}
+{{ with site.Params.description }}> {{ . | plainify }}
 
 {{ end -}}
-{{ with .Site.Params.description }}{{ . | plainify }}
-
-{{ end -}}
+Personal blog of {{ site.Params.author.name | default site.Title }}, writing on the web since 2004. Hosted on micro.blog.
 
 ## About
 
-- Site: {{ .Site.BaseURL }}
+- Site: {{ site.BaseURL }}
+- Archive (every post): {{ "archive/" | absURL }}
 - Feed (RSS): {{ "feed.xml" | absURL }}
 - Feed (JSON): {{ "feed.json" | absURL }}
-{{ with .Site.Params.author }}- Author: {{ . }}
-{{ end }}
+{{- range hugo.Data.sites.sites }}{{ if and .in_publishing_system (ne .id "www") }}
+- {{ .name }}: {{ .url }} ({{ .description }})
+{{- end }}{{ end }}
 
 ## Recent posts
 
-{{ $typeName := $.Site.Params.contentTypeName | default "post" -}}
-{{ range first 100 (where .Site.RegularPages "Type" $typeName).ByDate.Reverse -}}
-- [{{ if .Title }}{{ .Title | plainify }}{{ else }}{{ .Date.Format "2006-01-02" }}{{ end }}]({{ .Permalink }}){{ with .Summary }}: {{ . | plainify | truncate 200 }}{{ end }}
+{{ range first $recent (where $posts "Title" "!=" "").ByDate.Reverse -}}
+- [{{ .Title | plainify }}]({{ .Permalink }}) ({{ .Date.Format "2006-01-02" }}){{ with .Summary }}: {{ . | plainify | htmlUnescape | truncate 160 }}{{ end }}
 {{ end }}
+{{- with site.Taxonomies.categories.featured }}
+
+## Featured
+
+{{ range first 25 .Pages.ByDate.Reverse -}}
+- [{{ .Title | default (.Date.Format "2006-01-02") | plainify }}]({{ .Permalink }})
+{{ end }}
+{{- end }}
 
 ## Pages
 
-{{ range where .Site.RegularPages "Type" "page" -}}
-- [{{ .Title | plainify }}]({{ .Permalink }}){{ with .Summary }}: {{ . | plainify | truncate 200 }}{{ end }}
-{{ end }}
+{{ range first 50 (where site.RegularPages "Type" "page") -}}
+{{- if not .Params.redirect_url -}}
+- [{{ .Title | plainify }}]({{ .Permalink }})
+{{ end -}}
+{{ end -}}
