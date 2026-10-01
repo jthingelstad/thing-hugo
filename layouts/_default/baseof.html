@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="{{ $.Site.Language.Lang | default "en" }}">
+<html lang="{{ site.Language.Locale | default "en" }}">
 <head>
   {{ block "title" . }}
-    <title>{{ if .IsHome }}{{ $.Site.Title }}{{ with $.Site.Params.subtitle }} — {{ . }}{{ end }}{{ else }}{{ .Title }} · {{ $.Site.Title }}{{ end }}</title>
+    <title>{{ if .IsHome }}{{ site.Title }}{{ with site.Params.subtitle }} — {{ . }}{{ end }}{{ else }}{{ with partial "title.html" . }}{{ . }} · {{ end }}{{ site.Title }}{{ end }}</title>
   {{ end }}
   {{ partial "head.html" . }}
 </head>
-<body class="{{ if .IsHome }}is-home {{ end }}page-{{ .Kind }}">
+<body class="{{ if .IsHome }}is-home {{ end }}kind-{{ .Kind }} type-{{ .Type }}">
   <a class="skip-link" href="#content">Skip to content</a>
+  {{ partial "sites-header.html" . }}
   {{ partial "header.html" . }}
 
   <main id="content" class="content">
@@ -18,6 +19,11 @@
     {{ partial "footer.html" . }}
   {{ end }}
 
+  {{ range site.Params.plugins_js }}
+  <script src="{{ . }}"></script>
+  {{ end }}
   {{ partial "extended_footer.html" . }}
+  {{ partial "custom_footer.html" . }}
+  {{ partial "microhook.html" (dict "name" "before-closing-body" "page" .) }}
 </body>
 </html>

@@ -1,0 +1,35 @@
+{{- /* The one way CSS and JS reach a page. Returns a URL string.
+
+       Takes a path under static/assets/ ("js/search.js"), or a dict
+       {"name": "css/site.css", "paths": ["css/tokens.css", "css/thing.css"]}
+       to concatenate several files into one bundle.
+
+       Files live in static/assets/ and config.json mounts that directory a
+       second time as `assets`, so Hugo Pipes can minify and fingerprint them.
+       Fingerprints matter on micro.blog: theme_seconds does not reliably change
+       when a plug-in is re-cloned, so a plain URL can serve stale bytes for
+       hours. If the mount is ever missing, fall back to the static URL with
+       ?theme_seconds rather than failing the build. Pattern from b10g-theme. */ -}}
+{{- $name := . -}}
+{{- $paths := slice . -}}
+{{- if reflect.IsMap . -}}
+  {{- $name = .name -}}
+  {{- $paths = .paths -}}
+{{- end -}}
+{{- $resources := slice -}}
+{{- range $paths -}}
+  {{- with resources.Get . -}}{{- $resources = $resources | append . -}}{{- end -}}
+{{- end -}}
+{{- $url := "" -}}
+{{- if eq (len $resources) (len $paths) -}}
+  {{- $r := index $resources 0 -}}
+  {{- if gt (len $resources) 1 -}}
+    {{- $r = $resources | resources.Concat (printf "assets/%s" $name) -}}
+  {{- else -}}
+    {{- $r = resources.Copy (printf "assets/%s" $name) $r -}}
+  {{- end -}}
+  {{- $url = ($r | minify | fingerprint "sha256").RelPermalink -}}
+{{- else -}}
+  {{- $url = printf "%s?%v" (printf "assets/%s" (index $paths 0) | relURL) site.Params.theme_seconds -}}
+{{- end -}}
+{{- return $url -}}

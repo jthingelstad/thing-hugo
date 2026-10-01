@@ -1,56 +1,11 @@
 /*
  * thing-theme — modern, clean, quiet.
  * One sans family, near-neutral palette, whitespace over rules.
- * All tokens are CSS custom properties — override at :root in your
- * Micro.blog custom CSS to retune.
+ * Tokens (custom properties) live in tokens.css, synced from the design
+ * workspace; partials/asset.html bundles tokens.css + thing.css into one
+ * minified, fingerprinted stylesheet. Override at :root in micro.blog
+ * custom CSS to retune.
  */
-
-:root {
-  /* Palette — light */
-  --color-bg: #ffffff;
-  --color-surface: #fafaf9;
-  --color-text: #111111;
-  --color-text-muted: #5a5a5a;
-  --color-text-faint: #9a9a9a;
-  --color-border: #eeeeec;
-  --color-rule: #e5e5e2;
-  --color-accent: #0a66c2;
-  --color-selection: #0a66c2;
-
-  /* Type — a single modern sans */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-  --font-size-base: 1.0625rem;  /* 17px */
-  --line-height-base: 1.65;
-  --measure: 44rem;             /* ~720px reading column */
-
-  /* Space scale */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 5rem;
-
-  /* Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0f0f0f;
-    --color-surface: #181818;
-    --color-text: #f2f2f2;
-    --color-text-muted: #a0a0a0;
-    --color-text-faint: #666666;
-    --color-border: #242424;
-    --color-rule: #2a2a2a;
-    --color-accent: #4d9fff;
-  }
-}
 
 /* Reset */
 *, *::before, *::after { box-sizing: border-box; }
@@ -176,6 +131,13 @@ img, video { max-width: 100%; height: auto; display: block; border-radius: var(-
   gap: var(--space-3);
 }
 .site-header__brand:hover { text-decoration: none; }
+.site-author__name {
+  font-weight: 700;
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+  color: inherit;
+  text-decoration: none;
+}
 .site-header__title {
   font-weight: 700;
   font-size: 1.0625rem;
@@ -238,7 +200,14 @@ img, video { max-width: 100%; height: auto; display: block; border-radius: var(-
 .post__content > * + * { margin-top: var(--space-4); }
 .post__content h2 { margin-top: var(--space-6); }
 .post__content h3 { margin-top: var(--space-5); }
-.post__tags { margin-top: var(--space-6); }
+.post__tags,
+.post__categories { margin-top: var(--space-6); }
+.post-card__categories { margin-top: var(--space-4); }
+.reply-to {
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  margin-bottom: var(--space-3);
+}
 
 .tag {
   font-size: 0.8125rem;
@@ -388,7 +357,10 @@ img, video { max-width: 100%; height: auto; display: block; border-radius: var(-
 .search-page { display: flex; flex-direction: column; gap: var(--space-5); }
 .search-page h1 { font-size: 1.75rem; letter-spacing: -0.025em; }
 .search-page__blurb { color: var(--color-text-muted); font-size: 0.9375rem; }
-.search-page [data-pagefind-ui] {
+:root .pagefind-ui {
+  /* Pagefind UI tokens mapped to the theme's. `:root .pagefind-ui` outranks
+     pagefind-ui.css's own `.pagefind-ui` defaults whichever loads last. */
+  --pagefind-ui-scale: 0.9;
   --pagefind-ui-primary: var(--color-accent);
   --pagefind-ui-text: var(--color-text);
   --pagefind-ui-background: var(--color-bg);
@@ -396,10 +368,11 @@ img, video { max-width: 100%; height: auto; display: block; border-radius: var(-
   --pagefind-ui-tag: var(--color-surface);
   --pagefind-ui-font: var(--font-sans);
   --pagefind-ui-border-width: 1px;
-  --pagefind-ui-border-radius: 8px;
-  --pagefind-ui-image-border-radius: 4px;
+  --pagefind-ui-border-radius: var(--radius-md);
+  --pagefind-ui-image-border-radius: var(--radius-sm);
   --pagefind-ui-image-box-ratio: 3 / 2;
 }
+.search-page__also { margin-top: var(--space-6); color: var(--color-text-muted); font-size: 0.9375rem; }
 
 /* Home intro */
 .home__intro {
@@ -408,6 +381,35 @@ img, video { max-width: 100%; height: auto; display: block; border-radius: var(-
   padding-bottom: var(--space-6);
   margin-bottom: var(--space-6);
 }
+
+/* Jamie's sites: the strip above the header and the footer directory */
+.sites-strip {
+  font-size: 0.8125rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.sites-strip__list {
+  list-style: none;
+  margin: 0 auto;
+  padding: var(--space-2) var(--space-5);
+  max-width: var(--measure);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.sites-strip a { color: var(--color-text-muted); text-decoration: none; }
+.sites-strip a:hover { color: var(--color-accent); }
+.sites-strip__item--current a { color: var(--color-text); font-weight: 600; }
+
+.sites-footer__title,
+.signup__list { font-size: 0.9375rem; }
+.sites-footer__title { font-weight: 600; margin-bottom: var(--space-3); }
+.sites-footer__list,
+.signup__list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); }
+.sites-footer__name,
+.signup__link { font-weight: 600; margin-right: var(--space-2); }
+.sites-footer__desc,
+.signup__desc { color: var(--color-text-muted); font-size: 0.875rem; }
 
 /* Small screens */
 @media (max-width: 38rem) {

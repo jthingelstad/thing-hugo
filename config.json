@@ -1,13 +1,44 @@
 {
+  "module": {
+    "mounts": [
+      { "source": "layouts", "target": "layouts" },
+      { "source": "static", "target": "static" },
+      { "source": "static/assets", "target": "assets" },
+      { "source": "data", "target": "data" }
+    ]
+  },
+  "outputFormats": {
+    "llmstxt": {
+      "mediaType": "text/plain",
+      "baseName": "llms",
+      "isPlainText": true,
+      "notAlternative": true
+    }
+  },
+  "outputs": {
+    "home": [
+      "HTML",
+      "RSS",
+      "JSON",
+      "RSD",
+      "ArchiveHTML",
+      "ArchiveJSON",
+      "PhotosHTML",
+      "PhotosJSON",
+      "PodcastXML",
+      "PodcastJSON",
+      "llmstxt"
+    ]
+  },
   "params": {
     "contentTypeName": "post",
     "showReadingTime": false,
     "showPostMeta": true,
     "pagefindEnabled": true,
+    "search_path": "/search/",
     "llmsTxtEnabled": true,
-    "weeklyThingFormUrl": "",
-    "anotherThingFormUrl": "",
-    "primaryColor": "#2a5d8f",
-    "accentColor": "#c25b3f"
+    "llmstxt_recent": 50,
+    "sites_include": [],
+    "signup_sites": []
   }
 }

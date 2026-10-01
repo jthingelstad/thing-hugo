@@ -1,35 +1,66 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="{{ if .IsHome }}{{ $.Site.Params.subtitle | default $.Site.Params.description }}{{ else }}{{ .Summary | plainify }}{{ end }}">
-{{ with $.Site.Params.keywords }}<meta name="keywords" content="{{ . }}">{{ end }}
+{{- $description := "" -}}
+{{- if .IsHome -}}
+  {{- $description = site.Params.subtitle | default site.Params.description | plainify | strings.TrimSpace -}}
+{{- else -}}
+  {{- $description = .Summary | plainify | htmlUnescape | strings.TrimSpace | truncate 200 -}}
+{{- end }}
+<meta name="description" content="{{ $description }}">
+{{- with site.Params.keywords }}
+<meta name="keywords" content="{{ . }}">
+{{- end }}
 <link rel="canonical" href="{{ .Permalink }}">
+{{- if site.Params.llmsTxtEnabled }}
+<link rel="alternate" type="text/plain" title="llms.txt" href="{{ "llms.txt" | absURL }}">
+{{- end }}
 
-<link rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" href="{{ "feed.xml" | absURL }}">
-<link rel="alternate" type="application/json" title="{{ $.Site.Title }}" href="{{ "feed.json" | absURL }}">
-{{ if $.Site.Params.llmsTxtEnabled }}
-  <link rel="alternate" type="text/plain" title="LLMs.txt" href="{{ "llms.txt" | absURL }}">
-{{ end }}
+{{- /* Pagefind's stylesheet goes before the theme's when the page uses it. */ -}}
+{{- if .HasShortcode "search" }}
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+{{- else if eq .Layout "search" }}
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+{{- end }}
+<link rel="stylesheet" href="{{ partial "asset.html" (dict "name" "css/site.css" "paths" (slice "css/tokens.css" "css/thing.css")) }}">
 
-<link rel="stylesheet" href="{{ "css/thing.css" | absURL }}">
-<link rel="stylesheet" href="{{ "style.css" | absURL }}"><!-- user overrides via micro.blog Design -->
+{{- /* theme-color has to be a literal; read it from the tokens. */ -}}
+{{- with resources.Get "css/tokens.css" }}
+{{- with findRESubmatch `--color-accent:\s*(#[0-9a-fA-F]{3,8})` .Content 1 }}
+<meta name="theme-color" content="{{ index (index . 0) 1 }}">
+{{- end }}
+{{- end }}
 
-<meta name="theme-color" content="{{ $.Site.Params.primaryColor | default "#2a5d8f" }}">
-
-<!-- Open Graph -->
-<meta property="og:site_name" content="{{ $.Site.Title }}">
-<meta property="og:title" content="{{ if .IsHome }}{{ $.Site.Title }}{{ else }}{{ .Title }}{{ end }}">
-<meta property="og:description" content="{{ if .IsHome }}{{ $.Site.Params.subtitle | default $.Site.Params.description }}{{ else }}{{ .Summary | plainify }}{{ end }}">
+{{- /* Open Graph. micro.blog injects none. */ -}}
+{{- $title := partial "title.html" . -}}
+{{- if .IsHome }}{{ $title = site.Title }}{{ end }}
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ $title | default site.Title }}">
+<meta property="og:description" content="{{ $description }}">
 <meta property="og:url" content="{{ .Permalink }}">
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
-{{ with .Params.images }}{{ range first 1 . }}<meta property="og:image" content="{{ . | absURL }}">{{ end }}{{ end }}
-{{ if .IsPage }}
-  <meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-  {{ range .Params.tags }}<meta property="article:tag" content="{{ . }}">{{ end }}
-{{ end }}
+{{- $image := "" -}}
+{{- with .Params.photos }}{{ $image = index . 0 }}{{ end -}}
+{{- if not $image }}{{ with site.Params.author.avatar }}{{ $image = . }}{{ end }}{{ end -}}
+{{- with $image }}
+<meta property="og:image" content="{{ . | absURL }}">
+{{- end }}
+{{- if .IsPage }}
+<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+{{- range .Params.categories }}
+<meta property="article:tag" content="{{ . }}">
+{{- end }}
+{{- end }}
+<meta name="twitter:card" content="{{ if .Params.photos }}summary_large_image{{ else }}summary{{ end }}">
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary">
+{{- /* rel=me to Jamie's other identities that microblog_head doesn't already emit. */ -}}
+{{- $emitted := slice (printf "https://micro.blog/%s" site.Params.author.username) -}}
+{{- with site.Params.github_username }}{{ $emitted = $emitted | append (printf "https://github.com/%s" .) }}{{ end -}}
+{{- range hugo.Data.sites.owner.rel_me }}
+{{- if not (in $emitted .) }}
+<link rel="me" href="{{ . }}">
+{{- end }}
+{{- end }}
 
 {{ partial "extended_head.html" . }}
-
 {{ partial "microblog_head.html" . }}
+{{ partial "microhook.html" (dict "name" "head" "page" .) }}
