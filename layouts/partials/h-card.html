@@ -1,13 +1,18 @@
 {{- /* The author h-card. One per page, in the header; rel=me links come from
        microblog_head.html (micro.blog, GitHub, …) plus the cross-site owner
-       list in data/sites.json, so every site points at the same identity. */ -}}
+       list in data/sites.json, so every site points at the same identity.
+
+       Visible: the avatar (linked home), the name and, on the home page, the
+       About line (micro.blog's About text, which may carry links). */ -}}
 {{- $author := site.Params.author -}}
+{{- $name := $author.name | default site.Title -}}
+{{- $note := site.Params.itunes_description | default site.Params.description -}}
 <div class="h-card site-author">
-  <a class="u-url u-uid p-name site-author__name" rel="me" href="{{ "/" | absURL }}">{{ with $author.name }}{{ . }}{{ else }}{{ site.Title }}{{ end }}</a>
   {{- with $author.avatar }}
-  <img class="u-photo site-author__photo" src="{{ . }}" alt="" width="48" height="48" loading="lazy" hidden>
+  <a class="site-author__photo-link" href="{{ "/" | relURL }}" tabindex="-1" aria-hidden="true"><img class="u-photo site-author__photo" src="{{ . }}" alt="{{ site.Title }} Profile Photo" width="76" height="76"></a>
   {{- end }}
-  {{- with site.Params.description }}
-  <p class="p-note site-author__note" hidden>{{ . | plainify }}</p>
+  <a class="u-url u-uid p-name site-author__name" rel="me" href="{{ "/" | absURL }}">{{ $name }}</a>
+  {{- with $note }}
+  <p class="p-note site-author__note"{{ if not $.IsHome }} hidden{{ end }}>{{ . | safeHTML }}</p>
   {{- end }}
 </div>

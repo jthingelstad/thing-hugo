@@ -5,15 +5,9 @@
   <header class="post-list__header">
     <h1 class="post-list__title">{{ .Title | default "Replies" }}</h1>
   </header>
-  {{ partial "microhook.html" (dict "name" "before-replies" "page" .) }}
 
   {{ $paginator := .Paginate (where .RegularPagesRecursive "Type" "reply") }}
-  <div class="posts h-feed">
-    {{ range $paginator.Pages }}
-      {{ partial "post-card.html" . }}
-    {{ end }}
-  </div>
-  {{ partial "microhook.html" (dict "name" "after-replies" "page" .) }}
+  {{ partial "post-stream.html" $paginator.Pages }}
   {{ partial "pagination.html" . }}
 </section>
 {{ end }}

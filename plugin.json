@@ -17,6 +17,16 @@
       "field": "params.llmstxt_recent",
       "label": "Recent posts listed in llms.txt",
       "placeholder": "50"
+    },
+    {
+      "field": "params.tinylytics_id",
+      "label": "Tinylytics embed id (blank turns Tinylytics and Kudos off)",
+      "placeholder": "dMNzEVG73Bcq1RisbGRG"
+    },
+    {
+      "field": "params.tinylytics_options",
+      "label": "Tinylytics embed options",
+      "placeholder": "hits&kudos=👍&uptime&webring=avatars&countries&publicstats"
     }
   ]
 }

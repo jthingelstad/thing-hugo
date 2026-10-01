@@ -1,16 +1,21 @@
-{{ if site.Params.showPostMeta | default true }}
-<div class="post-meta">
-  {{ if .Date }}
-    <a href="{{ .Permalink }}" class="u-url">
-      <time class="dt-published post-meta__date" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
-        {{ .Date.Format (site.Params.dateFormat | default "January 2, 2006") }}
-      </time>
-    </a>
-  {{ end }}
-  {{ if and site.Params.showReadingTime .WordCount (gt .ReadingTime 1) }}
-    <span class="post-meta__sep">·</span><span class="post-meta__reading">{{ .ReadingTime }} min</span>
-  {{ end }}
+{{- /* A post's date line, in one of two Notebook styles.
+       Usage: {{ partial "post-meta.html" (dict "page" . "style" "label") }}
+
+       style "label": copper small caps above a title ("September 21 · 2 min").
+       style "line":  muted sans under a micropost's text.
+       long:          date with year and time (a micropost's own page).
+       year:          always show the year (a titled post's own page).
+       categories:    add the categories to a "line".
+       The hidden p-author keeps the h-entry's author. */ -}}
+{{- $p := .page -}}
+{{- $style := .style | default "line" -}}
+<div class="post-meta post-meta--{{ $style }}">
+  {{ partial "post-date.html" (dict "page" $p "long" .long "year" .year) }}
+  {{- if and (eq $style "label") (ne site.Params.showReadingTime false) $p.WordCount }}
+  <span class="post-meta__sep" aria-hidden="true">·</span> <span class="post-meta__reading">{{ $p.ReadingTime }} min</span>
+  {{- end }}
+  {{- if and (eq $style "line") .categories }}{{ range $p.Params.categories }}
+  <span class="post-meta__sep" aria-hidden="true">·</span> <a class="p-category" href="{{ printf "categories/%s/" (urlize .) | absURL }}">{{ . }}</a>
+  {{- end }}{{ end }}
   <a class="p-author h-card" href="{{ "/" | absURL }}" hidden>{{ site.Params.author.name | default site.Title }}</a>
-  {{ partial "microhook.html" (dict "name" "post-byline" "page" .) }}
 </div>
-{{ end }}

@@ -1,22 +1,29 @@
-<header class="site-header">
+{{- /* Notebook header. Home: centred avatar, name, About line, then the nav.
+       Everywhere else: a compact row, avatar and name left, nav right.
+       Menu links keep Tiny's "page-link {Name}" classes so Custom CSS that
+       targets one item still works. */ -}}
+<header class="site-header{{ if .IsHome }} site-header--home{{ else }} site-header--compact{{ end }}">
   <div class="site-header__inner">
-    <div class="site-header__brand">
-      {{ partial "h-card.html" . }}
-      {{ with site.Params.subtitle }}<span class="site-header__subtitle">{{ . }}</span>{{ end }}
-    </div>
-
-    {{ partial "microhook.html" (dict "name" "navigation" "page" .) }}
-    <nav class="site-nav" aria-label="Primary">
+    {{ partial "h-card.html" . }}
+    <nav class="site-nav" aria-label="Main">
       <ul class="site-nav__list">
         {{- range site.Menus.main }}
         {{- $href := .URL -}}
         {{- with .Page }}{{ with .Params.redirect_url }}{{ $href = . }}{{ end }}{{ end }}
-        <li class="site-nav__item"><a href="{{ $href }}">{{ .Name }}</a></li>
+        <li class="site-nav__item"><a class="page-link {{ .Name }}" href="{{ $href }}">{{ .Name }}</a></li>
         {{- end }}
         {{- if site.Params.pagefindEnabled }}
-        <li class="site-nav__item site-nav__item--search"><a href="{{ site.Params.search_path | default "/search/" | relURL }}">Search</a></li>
+        {{- $search := site.Params.search_path | default "/search/" -}}
+        {{- $inMenu := false -}}
+        {{- range site.Menus.main }}{{ if eq .URL $search }}{{ $inMenu = true }}{{ end }}{{ end }}
+        {{- if not $inMenu }}
+        <li class="site-nav__item site-nav__item--search"><a class="page-link Search" href="{{ $search | relURL }}">Search</a></li>
+        {{- end }}
         {{- end }}
       </ul>
     </nav>
   </div>
 </header>
+{{- if .IsHome }}
+<div class="site-rule" aria-hidden="true"></div>
+{{- end }}

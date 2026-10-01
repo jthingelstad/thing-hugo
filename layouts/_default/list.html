@@ -1,21 +1,26 @@
+{{- /* Category, year and other lists. A year (each year is a section on
+       micro.blog, /2008/) is a compact archive, 100 to a page; everything
+       else is the post stream. */ -}}
 {{ define "main" }}
-<section class="post-list">
+{{- $typeName := site.Params.contentTypeName | default "post" -}}
+{{- $isYear := and (eq .Kind "section") (findRE `^\d{4}$` .Section) -}}
+<section class="post-list{{ if $isYear }} archive archive--year{{ end }}{{ with .Title }} post-list--{{ . | urlize | lower }}{{ end }}">
   {{ if .Title }}
     <header class="post-list__header">
+      {{- if $isYear }}<p class="post-list__kicker"><a href="{{ "archive/" | relURL }}">Archive</a></p>{{ end }}
       <h1 class="post-list__title">{{ .Title }}</h1>
+      {{ with .Description }}<div class="post-list__intro">{{ . | markdownify }}</div>{{ end }}
       {{ with .Content }}<div class="post-list__intro">{{ . }}</div>{{ end }}
     </header>
   {{ end }}
-  {{ if eq .Kind "term" }}{{ partial "microhook.html" (dict "name" "category-header" "page" .) }}{{ end }}
 
-  {{ $typeName := site.Params.contentTypeName | default "post" }}
-  {{ $paginator := .Paginate (where .RegularPagesRecursive "Type" $typeName) }}
-
-  <div class="posts h-feed">
-    {{ range $paginator.Pages }}
-      {{ partial "post-card.html" . }}
-    {{ end }}
-  </div>
+  {{ if $isYear }}
+    {{ $paginator := .Paginate ((where .RegularPagesRecursive "Type" $typeName).ByDate.Reverse) 100 }}
+    {{ partial "archive-list.html" (dict "pages" $paginator.Pages "years" false) }}
+  {{ else }}
+    {{ $paginator := .Paginate (where .RegularPagesRecursive "Type" $typeName) }}
+    {{ partial "post-stream.html" $paginator.Pages }}
+  {{ end }}
 
   {{ partial "pagination.html" . }}
 </section>

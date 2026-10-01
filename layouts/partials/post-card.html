@@ -1,22 +1,31 @@
-<article class="post-card type-{{ .Type }} h-entry{{ if not .Title }} post-card--titleless{{ end }}">
-  {{ partial "reply-context.html" . }}
-  {{ if .Title }}
-    <header class="post-card__header">
-      <h2 class="post-card__title p-name"><a href="{{ .Permalink }}" class="u-url">{{ .Title | markdownify }}</a></h2>
-      {{ partial "post-meta.html" . }}
-    </header>
-  {{ else }}
-    {{ partial "post-meta.html" . }}
-  {{ end }}
+{{- /* One post in a list (home, categories, replies).
 
+       Titled posts: copper date label, the title, then an excerpt and "Read
+       the post" when there is more to read. The excerpt is micro.blog's
+       summary field when Jamie wrote one (custom_summary), else Hugo's summary
+       (the text before <!--more-->, or the opening words). A titled post of
+       60 words or fewer is shown whole. (.Truncated is unreliable on 0.158:
+       a 140-word post with a list reported false.)
+       Microposts: shown whole, set large, with the date line underneath. */ -}}
+{{- $cats := "" -}}
+{{- range .Params.categories }}{{ $cats = printf "%s %s" $cats (. | urlize | lower) }}{{ end -}}
+<article class="post-card type-{{ .Type }} h-entry{{ if .Title }} post-card--titled{{ else }} post-card--note post-card--titleless{{ end }}{{ $cats }}">
+  {{ partial "reply-context.html" . }}
+  {{- if .Title }}
+  {{ partial "post-meta.html" (dict "page" . "style" "label") }}
+  <h2 class="post-card__title p-name"><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h2>
+  {{- if or .Params.custom_summary (gt .WordCount 60) }}
+  <p class="post-card__summary p-summary">{{ .Summary | plainify | htmlUnescape | strings.TrimSpace | truncate 280 }}</p>
+  <a class="post-card__more" href="{{ .Permalink }}">Read the post<span class="visually-hidden">: {{ .Title | plainify }}</span></a>
+  {{- else }}
   <div class="post-card__content e-content">
     {{ .Content }}
   </div>
-
-  {{ with .Params.categories }}
-    <p class="post-card__categories">
-      {{ range . }}<a class="tag p-category" href="{{ printf "categories/%s/" (urlize .) | absURL }}">{{ . }}</a> {{ end }}
-    </p>
-  {{ end }}
-  {{ partial "microhook.html" (dict "name" "below-post-in-list" "page" .) }}
+  {{- end }}
+  {{- else }}
+  <div class="post-card__content e-content">
+    {{ .Content }}
+  </div>
+  {{ partial "post-meta.html" (dict "page" . "style" "line" "categories" true) }}
+  {{- end }}
 </article>

@@ -1,54 +1,58 @@
 {{ define "main" }}
 {{- $isPost := eq .Type "post" -}}
-{{ partial "microhook.html" (dict "name" "before-post" "page" .) }}
-<article class="post post--single type-{{ .Type }} h-entry{{ if not .Title }} post--titleless{{ end }}"{{ if $isPost }} data-pagefind-body{{ end }}>
+{{- $isPage := eq .Type "page" -}}
+{{- /* A short note with no photo is set large on its own page. */ -}}
+{{- $brief := and (not .Title) (le .WordCount 30) (not (strings.Contains .Content "<img")) -}}
+<article class="post post--single type-{{ .Type }} h-entry{{ if .Title }} post--titled{{ else }} post--note post--titleless{{ end }}{{ if $brief }} post--brief{{ end }}{{ range .Params.categories }} {{ . | urlize | lower }}{{ end }}"{{ if $isPost }} data-pagefind-body{{ end }}>
   {{- if $isPost }}{{ partial "pagefind-meta.html" . }}{{ end }}
   {{ partial "reply-context.html" . }}
-  {{ if .Title }}
-    <header class="post__header">
-      <h1 class="post__title p-name">{{ .Title | markdownify }}</h1>
-      {{ if ne .Type "page" }}{{ partial "post-meta.html" . }}{{ end }}
-    </header>
-  {{ else if ne .Type "page" }}
-    {{ partial "post-meta.html" . }}
-  {{ end }}
+  {{- if .Title }}
+  <header class="post__header">
+    {{- if not $isPage }}{{ partial "post-meta.html" (dict "page" . "style" "label" "year" true) }}{{ end }}
+    <h1 class="post__title p-name">{{ .Title | markdownify }}</h1>
+  </header>
+  {{- end }}
 
-  {{ if eq .Type "page" }}{{ partial "microhook.html" (dict "name" "before-page-content" "page" .) }}{{ end }}
+  {{- with .Params.audio }}
+  <div class="post__narration" data-pagefind-ignore>
+    <script src="https://micro.blog/narration.js?url={{ . }}"></script>
+  </div>
+  {{- end }}
+
   <div class="post__content e-content">
     {{ .Content }}
   </div>
-  {{ if eq .Type "page" }}{{ partial "microhook.html" (dict "name" "after-page-content" "page" .) }}{{ end }}
 
-  {{ with .Params.categories }}
-    <p class="post__categories" data-pagefind-ignore>
-      {{ range . }}<a class="tag p-category" href="{{ printf "categories/%s/" (urlize .) | absURL }}">{{ . }}</a> {{ end }}
-    </p>
-  {{ end }}
-  {{ partial "microhook.html" (dict "name" "categories" "page" .) }}
+  {{- if not $isPage }}
+  <div class="dinkus" aria-hidden="true">· · ·</div>
+  <footer class="post__footer" data-pagefind-ignore>
+    {{- if .Title }}
+    {{- with .Params.categories }}
+    {{- $last := sub (len .) 1 }}
+    <p class="post__filed">Filed under {{ range $i, $c := . }}{{ if $i }}{{ if eq $i $last }} and {{ else }}, {{ end }}{{ end }}<a class="p-category" href="{{ printf "categories/%s/" (urlize $c) | absURL }}">{{ $c }}</a>{{ end }}</p>
+    {{- end }}
+    {{- else }}
+    {{ partial "post-meta.html" (dict "page" . "style" "line" "long" true "categories" true) }}
+    {{- end }}
+    {{ partial "post-actions.html" . }}
+  </footer>
+  {{- end }}
 
-  {{ if $isPost }}
-    {{ if or .NextInSection .PrevInSection }}
-    <nav class="post__nav" aria-label="Post navigation" data-pagefind-ignore>
-      {{ with .NextInSection }}
-        <a class="post__nav-prev" href="{{ .Permalink }}" rel="prev">← {{ .Title | default "Newer" }}</a>
-      {{ end }}
-      {{ with .PrevInSection }}
-        <a class="post__nav-next" href="{{ .Permalink }}" rel="next">{{ .Title | default "Older" }} →</a>
-      {{ end }}
-    </nav>
-    {{ end }}
-  {{ end }}
+  {{- if $isPost }}{{ if or .NextInSection .PrevInSection }}
+  <nav class="post__nav" aria-label="More posts" data-pagefind-ignore>
+    {{- with .PrevInSection }}
+    <a class="post__nav-link post__nav-link--earlier" href="{{ .Permalink }}" rel="next"><span class="post__nav-label">Earlier</span> <span class="post__nav-title">{{ partial "title.html" . }}</span></a>
+    {{- end }}
+    {{- with .NextInSection }}
+    <a class="post__nav-link post__nav-link--later" href="{{ .Permalink }}" rel="prev"><span class="post__nav-label">Later</span> <span class="post__nav-title">{{ partial "title.html" . }}</span></a>
+    {{- end }}
+  </nav>
+  {{- end }}{{ end }}
 
-  {{ if ne .Type "page" }}
-  <div class="post__conversation" data-pagefind-ignore>
-    {{ partial "microhook.html" (dict "name" "before-comments" "page" .) }}
-    {{ partial "comments.html" . }}
-    {{ if site.Params.include_conversation }}
-      <script src="https://micro.blog/conversation.js?url={{ .Permalink }}"></script>
-    {{ end }}
-    {{ partial "microhook.html" (dict "name" "after-comments" "page" .) }}
-  </div>
-  {{ end }}
+  {{- if and (not $isPage) site.Params.include_conversation }}
+  <section class="post__conversation" aria-label="Replies" data-pagefind-ignore>
+    <script src="https://micro.blog/conversation.js?url={{ .Permalink }}"></script>
+  </section>
+  {{- end }}
 </article>
-{{ partial "microhook.html" (dict "name" "after-post" "page" .) }}
 {{ end }}

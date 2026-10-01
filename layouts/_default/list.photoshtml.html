@@ -1,0 +1,25 @@
+{{- /* /photos/: micro.blog's PhotosHTML output of the home page (replaces
+       Blank's list.photoshtml.html). Same list as Blank, the first photo of
+       every post that has one, newest first, with each photo's alt text from
+       photos_alt and the grid styled by the theme instead of inline styles.
+       Narrated posts list an .mp3 in photos; partials/first-image.html skips it. */ -}}
+{{ define "title" }}<title>Photos · {{ site.Title }}</title>{{ end }}
+{{ define "canonical" }}<link rel="canonical" href="{{ "photos/" | absURL }}">{{ end }}
+{{ define "main" }}
+<section class="photos">
+  <header class="post-list__header">
+    <h1 class="post-list__title">Photos</h1>
+  </header>
+  <div class="photos-grid-container">
+    {{- range (where site.RegularPages ".Params.photos" "!=" nil).ByDate.Reverse }}
+    {{- $page := . -}}
+    {{- $src := partial "first-image.html" . -}}
+    {{- with $src }}
+    {{- $alt := "" -}}
+    {{- range $i, $p := $page.Params.photos }}{{ if and (eq $p $src) (not $alt) }}{{ with $page.Params.photos_alt }}{{ if lt $i (len .) }}{{ $alt = index . $i }}{{ end }}{{ end }}{{ end }}{{ end -}}
+    <a class="photos-grid-item-link" href="{{ $page.Permalink }}"><img class="photos-grid-item" src="{{ $src }}" alt="{{ $alt }}" width="300" height="300" loading="lazy" decoding="async"></a>
+    {{- end }}
+    {{- end }}
+  </div>
+</section>
+{{ end }}

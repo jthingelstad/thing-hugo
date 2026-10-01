@@ -5,6 +5,9 @@
     <title>{{ if .IsHome }}{{ site.Title }}{{ with site.Params.subtitle }} — {{ . }}{{ end }}{{ else }}{{ with partial "title.html" . }}{{ . }} · {{ end }}{{ site.Title }}{{ end }}</title>
   {{ end }}
   {{ partial "head.html" . }}
+  {{- /* /archive/ and /photos/ are the home page in another output format, so
+         .Permalink there is "/"; their templates redefine this block. */}}
+  {{ block "canonical" . }}<link rel="canonical" href="{{ .Permalink }}">{{ end }}
 </head>
 <body class="{{ if .IsHome }}is-home {{ end }}kind-{{ .Kind }} type-{{ .Type }}">
   <a class="skip-link" href="#content">Skip to content</a>
@@ -24,6 +27,6 @@
   {{ end }}
   {{ partial "extended_footer.html" . }}
   {{ partial "custom_footer.html" . }}
-  {{ partial "microhook.html" (dict "name" "before-closing-body" "page" .) }}
+  {{ partial "tinylytics.html" . }}
 </body>
 </html>

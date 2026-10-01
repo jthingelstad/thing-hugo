@@ -1,0 +1,28 @@
+{{- /* The pill row under a post: Kudos, the reply plug-ins, Explore with Thingy.
+
+       Kudos is the theme's own Tinylytics (partials/tinylytics.html), shown
+       when a Tinylytics id is set or the old plug-in is still installed; the
+       Tinylytics script fills .tinylytics_kudos. Reply by Email, Conversation
+       Link and Reply on Mastodon appear when their micro.blog plug-in is
+       installed (the plug-in ships the partial). Explore with
+       Thingy is the theme's own and opens Thingy on this post, using the
+       Thingy URL from data/sites.json. */ -}}
+{{- $thingy := "" -}}
+{{- range hugo.Data.sites.sites }}{{ if eq .id "thingy" }}{{ $thingy = .url }}{{ end }}{{ end -}}
+<ul class="reply-buttons" data-pagefind-ignore>
+  {{- if or site.Params.tinylytics_id (templates.Exists "partials/plugin_tinylytics.html") }}
+  <li><button type="button" class="tinylytics_kudos">Kudos</button></li>
+  {{- end }}
+  {{- if templates.Exists "partials/reply-by-email.html" }}
+  <li>{{ partial "reply-by-email.html" . }}</li>
+  {{- end }}
+  {{- if templates.Exists "partials/conversation-link.html" }}
+  <li>{{ partial "conversation-link.html" . }}</li>
+  {{- end }}
+  {{- if templates.Exists "partials/reply-on-mastodon.html" }}
+  <li>{{ partial "reply-on-mastodon.html" . }}</li>
+  {{- end }}
+  {{- with $thingy }}
+  <li><a class="explore-with-thingy" href="{{ strings.TrimSuffix "/" . }}/chat/?explore={{ $.Permalink | urlquery }}">Explore with Thingy</a></li>
+  {{- end }}
+</ul>

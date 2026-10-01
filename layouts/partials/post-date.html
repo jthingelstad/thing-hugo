@@ -1,0 +1,13 @@
+{{- /* The permalink date: a u-url around dt-published.
+       Usage: {{ partial "post-date.html" (dict "page" . "long" true) }}
+       Short form: "September 27", with the year added when it isn't this
+       year's or "year" is set (micro.blog rebuilds on every publish, so "this year" stays
+       current). Long form: "January 29, 2008 at 6:00 PM". site.Params.dateFormat
+       overrides both. */ -}}
+{{- $p := .page -}}
+{{- $format := "January 2" -}}
+{{- if or .year (ne $p.Date.Year now.Year) }}{{ $format = "January 2, 2006" }}{{ end -}}
+{{- if .long }}{{ $format = "January 2, 2006 at 3:04 PM" }}{{ end -}}
+{{- with site.Params.dateFormat }}{{ $format = . }}{{ end -}}
+<a href="{{ $p.Permalink }}" class="u-url post-date"><time class="dt-published" datetime="{{ $p.Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ $p.Date.Format $format }}</time></a>
+{{- /* end */ -}}

@@ -1,0 +1,10 @@
+{{- /* A list of post cards with Notebook's "· · ·" between them.
+       Takes a slice of pages (one paginator page). */ -}}
+<div class="posts h-feed">
+  {{- range $i, $p := . }}
+  {{- if $i }}
+  <div class="dinkus" aria-hidden="true">· · ·</div>
+  {{- end }}
+  {{ partial "post-card.html" $p }}
+  {{- end }}
+</div>

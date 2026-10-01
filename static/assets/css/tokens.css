@@ -2,30 +2,50 @@
 /*
  * www.thingelstad.com design tokens: the source of truth.
  *
- * Placeholder seeded 2026-10-01 from thing-hugo's original thing.css. Claude
- * Design replaces these values; keep them as custom properties on :root.
+ * Direction B, "Notebook" (chosen 2026-10-01): one narrow serif column on a
+ * white ground, copper accent from Thingy's blog colour, sans only for small
+ * meta and controls. Canvas: https://claude.ai/artifact/Gx94FDkFzMjQnAaNjDzEzE
+ *
  * scripts/sync-shared.sh copies this file to thing-hugo/static/assets/css/tokens.css.
- * Never edit the synced copy.
+ * Never edit the synced copy. head.html reads the first --color-accent below
+ * for <meta name="theme-color">.
+ *
+ * Contrast (WCAG AA): raw copper is 4.2:1 on white, so it is reserved for
+ * graphics (the play disc, rules). Text uses --color-link (6.6:1) and
+ * --color-mark (5.3:1) in light; the dark values are lightened to match.
  */
 
 :root {
-  /* Palette — light */
-  --color-bg: #ffffff;
-  --color-surface: #fafaf9;
-  --color-text: #111111;
-  --color-text-muted: #5a5a5a;
-  --color-text-faint: #9a9a9a;
-  --color-border: #eeeeec;
-  --color-rule: #e5e5e2;
-  --color-accent: #0a66c2;
-  --color-selection: #0a66c2;
+  color-scheme: light dark;
 
-  /* Type — a single modern sans */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
-  --font-size-base: 1.0625rem;  /* 17px */
+  /* Palette, light */
+  --color-bg: #ffffff;
+  --color-surface: #f4f4f1;
+  --color-text: #191919;
+  --color-text-muted: #595955;
+  --color-text-faint: #6b6b66;
+  --color-border: #e6e6e2;
+  --color-rule: #e6e6e2;
+  --color-accent: #b86131;
+  --color-link: #975028;
+  --color-mark: #a2552b;
+  --color-on-mark: #ffffff;
+  --color-selection: #f3dccd;
+
+  /* Type: Newsreader reads, Source Sans 3 labels (both self-hosted, OFL) */
+  --font-serif: "Newsreader", "Iowan Old Style", "Charter", "Georgia", serif;
+  --font-sans: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-size-base: 1.25rem;     /* 20px body */
   --line-height-base: 1.65;
-  --measure: 44rem;             /* ~720px reading column */
+  --font-size-micro: 1.4375rem;  /* 23px: microposts in the stream, lead paragraphs */
+  --font-size-micro-single: 2.5rem; /* 40px: a micropost on its own page */
+  --font-size-h1: 3.25rem;       /* 52px: titled post */
+  --font-size-h2: 2.25rem;       /* 36px: titles in the stream */
+  --font-size-meta: 0.875rem;    /* 14px sans */
+  --font-size-label: 0.8125rem;  /* 13px sans caps */
+  --font-size-ui: 0.9375rem;     /* 15px sans: nav, buttons */
+  --measure: 38rem;
 
   /* Space scale */
   --space-1: 0.25rem;
@@ -34,23 +54,31 @@
   --space-4: 1rem;
   --space-5: 1.5rem;
   --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 5rem;
+  --space-7: 2.5rem;
+  --space-8: 4rem;
 
   /* Radius */
   --radius-sm: 4px;
-  --radius-md: 8px;
+  --radius-md: 6px;
+  --radius-pill: 999px;
+
+  /* Touch */
+  --target-min: 44px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #0f0f0f;
-    --color-surface: #181818;
-    --color-text: #f2f2f2;
-    --color-text-muted: #a0a0a0;
-    --color-text-faint: #666666;
-    --color-border: #242424;
-    --color-rule: #2a2a2a;
-    --color-accent: #4d9fff;
+    --color-bg: #121212;
+    --color-surface: #1d1c1b;
+    --color-text: #ededea;
+    --color-text-muted: #a6a59f;
+    --color-text-faint: #a6a59f;
+    --color-border: #2d2c2a;
+    --color-rule: #2d2c2a;
+    --color-accent: #c6815a;
+    --color-link: #cf9473;
+    --color-mark: #c6815a;
+    --color-on-mark: #121212;
+    --color-selection: #5a3520;
   }
 }

@@ -10,7 +10,6 @@
 {{- with site.Params.keywords }}
 <meta name="keywords" content="{{ . }}">
 {{- end }}
-<link rel="canonical" href="{{ .Permalink }}">
 {{- if site.Params.llmsTxtEnabled }}
 <link rel="alternate" type="text/plain" title="llms.txt" href="{{ "llms.txt" | absURL }}">
 {{- end }}
@@ -62,4 +61,3 @@
 
 {{ partial "extended_head.html" . }}
 {{ partial "microblog_head.html" . }}
-{{ partial "microhook.html" (dict "name" "head" "page" .) }}

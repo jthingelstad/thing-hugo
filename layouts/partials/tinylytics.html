@@ -1,0 +1,11 @@
+{{- /* Tinylytics, built into the theme: page hits plus Kudos on every post
+       (partials/post-actions.html renders the .tinylytics_kudos button the
+       script fills in). site.Params.tinylytics_id is the site's public embed
+       id; tinylytics_options are the embed's features, as in Tinylytics' own
+       snippet. If the Tinylytics micro.blog plug-in is still installed it
+       loads the same script, so the theme stands down rather than count twice. */ -}}
+{{- with site.Params.tinylytics_id }}
+{{- if not (templates.Exists "partials/plugin_tinylytics.html") }}
+<script src="https://tinylytics.app/embed/{{ . }}.js{{ with site.Params.tinylytics_options }}?{{ . | safeURL }}{{ end }}" defer></script>
+{{- end }}
+{{- end }}

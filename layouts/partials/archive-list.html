@@ -1,0 +1,29 @@
+{{- /* A compact archive: one line per post, grouped by year and month.
+       Usage: {{ partial "archive-list.html" (dict "pages" $paginator.Pages "years" true) }}
+       pages is one paginator page, so never every post. With years false (a
+       year's own page, whose h1 is the year) months are the top headings. */ -}}
+{{- $years := .years -}}
+{{- range .pages.GroupByDate "2006" }}
+<section class="archive__year">
+  {{- if $years }}
+  <h2 class="archive__year-heading">{{ .Key }}</h2>
+  {{- end }}
+  {{- range .Pages.GroupByDate "January" }}
+  <section class="archive__month">
+    {{- if $years }}
+    <h3 class="archive__month-heading">{{ .Key }}</h3>
+    {{- else }}
+    <h2 class="archive__month-heading">{{ .Key }}</h2>
+    {{- end }}
+    <ul class="archive__posts h-feed">
+      {{- range .Pages }}
+      <li class="archive__post h-entry">
+        <a class="u-url archive__post-date" href="{{ .Permalink }}"><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "Jan 2" }}</time></a>
+        <a class="archive__post-link" href="{{ .Permalink }}">{{ if .Title }}<span class="p-name">{{ .Title | markdownify }}</span>{{ else }}{{ partial "title.html" . }}{{ end }}</a>
+      </li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+</section>
+{{- end }}

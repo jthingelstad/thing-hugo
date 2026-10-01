@@ -1,0 +1,37 @@
+{{- /* /archive/: micro.blog's ArchiveHTML output of the home page (replaces
+       Blank's list.archivehtml.html). Years first, each linking to its own
+       compact list (/2008/), then the categories. Blank lists every post on
+       this one page; with 10,000+ posts that is a 3.7 MB page, so the full
+       list now lives on the year pages, 100 to a page. */ -}}
+{{ define "title" }}<title>Archive · {{ site.Title }}</title>{{ end }}
+{{ define "canonical" }}<link rel="canonical" href="{{ "archive/" | absURL }}">{{ end }}
+{{ define "main" }}
+{{- $years := slice -}}
+{{- range site.Sections }}{{ if findRE `^\d{4}$` .Section }}{{ $years = $years | append . }}{{ end }}{{ end -}}
+<section class="archive archive--index">
+  <header class="post-list__header">
+    <h1 class="post-list__title">Archive</h1>
+    <p class="post-list__intro">Every post since {{ with sort $years "Section" }}{{ (index . 0).Section }}{{ end }}, by year. You can also <a href="{{ site.Params.search_path | default "/search/" | relURL }}">search</a> the whole blog.</p>
+  </header>
+
+  <section class="archive-years" aria-labelledby="archive-years">
+    <h2 id="archive-years" class="archive-index__heading">Years</h2>
+    <ul class="archive-years__list">
+      {{- range sort $years "Section" "desc" }}
+      <li><a href="{{ .RelPermalink }}">{{ .Section }}</a></li>
+      {{- end }}
+    </ul>
+  </section>
+
+  {{- with site.Taxonomies.categories }}
+  <section class="archive-categories" aria-labelledby="archive-categories">
+    <h2 id="archive-categories" class="archive-index__heading">Categories</h2>
+    <ul class="archive-categories__list">
+      {{- range .Alphabetical }}
+      <li><a href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a></li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+</section>
+{{ end }}

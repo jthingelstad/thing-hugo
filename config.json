@@ -32,13 +32,15 @@
   },
   "params": {
     "contentTypeName": "post",
-    "showReadingTime": false,
+    "showReadingTime": true,
     "showPostMeta": true,
     "pagefindEnabled": true,
     "search_path": "/search/",
     "llmsTxtEnabled": true,
     "llmstxt_recent": 50,
     "sites_include": [],
-    "signup_sites": []
+    "signup_sites": [],
+    "tinylytics_id": "dMNzEVG73Bcq1RisbGRG",
+    "tinylytics_options": "hits&kudos=👍&uptime&webring=avatars&countries&publicstats"
   }
 }
