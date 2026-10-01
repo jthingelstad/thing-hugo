@@ -14,7 +14,7 @@
   {{- range .Params.categories }}
   <span data-pagefind-filter="category">{{ . }}</span>
   {{- end }}
-  {{- with .Params.photos }}
-  <span data-pagefind-meta="image">{{ index . 0 }}</span>
+  {{- with partial "first-image.html" . }}
+  <span data-pagefind-meta="image">{{ . }}</span>
   {{- end }}
 </div>

@@ -1,0 +1,9 @@
+{{- /* The first image in .Params.photos, or "". Narrated posts can list an
+       uploaded .mp3 there, so anything that isn't an image file is skipped. */ -}}
+{{- $out := "" -}}
+{{- range .Params.photos -}}
+  {{- if and (not $out) (findRE `(?i)\.(jpe?g|png|gif|webp|avif|heic)(\?.*)?$` .) -}}
+    {{- $out = . -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}
