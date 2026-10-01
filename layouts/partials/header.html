@@ -1,27 +1,22 @@
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="site-header__brand p-name u-url" href="{{ "/" | absURL }}">
-      <span class="site-header__title">{{ $.Site.Title }}</span>
-      {{ with $.Site.Params.subtitle }}<span class="site-header__subtitle">{{ . }}</span>{{ end }}
-    </a>
+    <div class="site-header__brand">
+      {{ partial "h-card.html" . }}
+      {{ with site.Params.subtitle }}<span class="site-header__subtitle">{{ . }}</span>{{ end }}
+    </div>
 
-    {{ if $.Site.Menus.main }}
-      <nav class="site-nav" aria-label="Primary">
-        <ul class="site-nav__list">
-          {{ range $.Site.Menus.main }}
-            <li class="site-nav__item"><a href="{{ .URL }}">{{ .Name }}</a></li>
-          {{ end }}
-          {{ if $.Site.Params.pagefindEnabled }}
-            <li class="site-nav__item site-nav__item--search"><a href="{{ "search/" | absURL }}" aria-label="Search">Search</a></li>
-          {{ end }}
-        </ul>
-      </nav>
-    {{ else if $.Site.Params.pagefindEnabled }}
-      <nav class="site-nav" aria-label="Primary">
-        <ul class="site-nav__list">
-          <li class="site-nav__item"><a href="{{ "search/" | absURL }}">Search</a></li>
-        </ul>
-      </nav>
-    {{ end }}
+    {{ partial "microhook.html" (dict "name" "navigation" "page" .) }}
+    <nav class="site-nav" aria-label="Primary">
+      <ul class="site-nav__list">
+        {{- range site.Menus.main }}
+        {{- $href := .URL -}}
+        {{- with .Page }}{{ with .Params.redirect_url }}{{ $href = . }}{{ end }}{{ end }}
+        <li class="site-nav__item"><a href="{{ $href }}">{{ .Name }}</a></li>
+        {{- end }}
+        {{- if site.Params.pagefindEnabled }}
+        <li class="site-nav__item site-nav__item--search"><a href="{{ site.Params.search_path | default "/search/" | relURL }}">Search</a></li>
+        {{- end }}
+      </ul>
+    </nav>
   </div>
 </header>

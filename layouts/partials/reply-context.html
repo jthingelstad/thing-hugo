@@ -1,0 +1,12 @@
+{{- /* What a reply was replying to. micro.blog writes reply_to_* front matter
+       (the who, never the what). Kept out of the search index. */ -}}
+{{- with .Params.reply_to_url }}
+<p class="reply-to" data-pagefind-ignore>
+  In reply to
+  {{ if eq $.Params.reply_to_hostname "micro.blog" -}}
+  <a class="u-in-reply-to" href="{{ . }}">@{{ $.Params.reply_to_username }}</a>
+  {{- else -}}
+  <a class="u-in-reply-to" href="{{ . }}">{{ $.Params.reply_to_hostname | default . }}</a>
+  {{- end }}
+</p>
+{{- end }}

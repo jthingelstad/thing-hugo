@@ -1,19 +1,21 @@
 {{ define "main" }}
 <section class="home">
-  {{ with .Site.Params.intro }}
+  {{ with site.Params.intro }}
     <div class="home__intro">
       {{ . | markdownify }}
     </div>
   {{ end }}
 
-  {{ $typeName := $.Site.Params.contentTypeName | default "post" }}
-  {{ $paginator := .Paginate (where .Site.RegularPages "Type" $typeName) }}
+  {{ partial "microhook.html" (dict "name" "before-post-list" "page" .) }}
+  {{ $typeName := site.Params.contentTypeName | default "post" }}
+  {{ $paginator := .Paginate (where site.RegularPages "Type" $typeName) }}
 
   <div class="posts h-feed">
     {{ range $paginator.Pages }}
       {{ partial "post-card.html" . }}
     {{ end }}
   </div>
+  {{ partial "microhook.html" (dict "name" "after-post-list" "page" .) }}
 
   {{ partial "pagination.html" . }}
 </section>

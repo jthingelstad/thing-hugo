@@ -6,9 +6,10 @@
       {{ with .Content }}<div class="post-list__intro">{{ . }}</div>{{ end }}
     </header>
   {{ end }}
+  {{ if eq .Kind "term" }}{{ partial "microhook.html" (dict "name" "category-header" "page" .) }}{{ end }}
 
-  {{ $typeName := $.Site.Params.contentTypeName | default "post" }}
-  {{ $paginator := .Paginate (where .Pages "Type" $typeName) }}
+  {{ $typeName := site.Params.contentTypeName | default "post" }}
+  {{ $paginator := .Paginate (where .RegularPagesRecursive "Type" $typeName) }}
 
   <div class="posts h-feed">
     {{ range $paginator.Pages }}

@@ -1,0 +1,13 @@
+{{- /* The author h-card. One per page, in the header; rel=me links come from
+       microblog_head.html (micro.blog, GitHub, …) plus the cross-site owner
+       list in data/sites.json, so every site points at the same identity. */ -}}
+{{- $author := site.Params.author -}}
+<div class="h-card site-author">
+  <a class="u-url u-uid p-name site-author__name" rel="me" href="{{ "/" | absURL }}">{{ with $author.name }}{{ . }}{{ else }}{{ site.Title }}{{ end }}</a>
+  {{- with $author.avatar }}
+  <img class="u-photo site-author__photo" src="{{ . }}" alt="" width="48" height="48" loading="lazy" hidden>
+  {{- end }}
+  {{- with site.Params.description }}
+  <p class="p-note site-author__note" hidden>{{ . | plainify }}</p>
+  {{- end }}
+</div>
