@@ -1,8 +1,0 @@
-{{- /* Call a micro.blog microhook if a plug-in provides it.
-       Usage: {{ partial "microhook.html" (dict "name" "after-post" "page" .) }}
-       renders partials/microhook-after-post.html with the page as context.
-       Hook names follow Tiny Theme's so existing plug-ins keep working. */ -}}
-{{- $file := printf "microhook-%s.html" .name -}}
-{{- if templates.Exists (printf "partials/%s" $file) -}}
-  {{- partial $file .page -}}
-{{- end -}}
