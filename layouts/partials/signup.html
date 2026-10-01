@@ -1,0 +1,18 @@
+{{- /* Optional footer module: subscribe links for sites that have one.
+       Off unless site.Params.signup_sites lists site ids, e.g. "weekly, another".
+       Links only, no third-party form posts; each site owns its own signup flow. */ -}}
+{{- with partial "list-param.html" site.Params.signup_sites }}
+{{- $ids := . -}}
+<section class="signup" aria-label="Subscribe">
+  <ul class="signup__list">
+    {{- range hugo.Data.sites.sites }}
+    {{- if and .subscribe_url (in $ids .id) }}
+    <li class="signup__item">
+      <a class="signup__link" href="{{ .subscribe_url }}">Subscribe to {{ .name }}</a>
+      <span class="signup__desc">{{ .description }}</span>
+    </li>
+    {{- end }}
+    {{- end }}
+  </ul>
+</section>
+{{- end }}

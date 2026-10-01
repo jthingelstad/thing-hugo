@@ -1,23 +1,16 @@
 <footer class="site-footer">
   <div class="site-footer__inner">
-    {{ with $.Site.Params.weeklyThingFormUrl }}
-      {{ partial "weekly-thing.html" $ }}
-    {{ end }}
-    {{ with $.Site.Params.anotherThingFormUrl }}
-      {{ partial "another-thing.html" $ }}
-    {{ end }}
+    {{ partial "signup.html" . }}
+    {{ partial "sites-footer.html" . }}
 
     <div class="site-footer__meta">
-      {{ if $.Site.Copyright }}
-        <p class="site-footer__copy">{{ $.Site.Copyright | safeHTML }}</p>
-      {{ else }}
-        <p class="site-footer__copy">© {{ now.Year }} {{ $.Site.Title }}</p>
-      {{ end }}
+      <p class="site-footer__copy">{{ with site.Copyright }}{{ . | safeHTML }}{{ else }}© {{ now.Year }} {{ site.Params.author.name | default site.Title }}{{ end }}</p>
       <p class="site-footer__links">
         <a href="{{ "feed.xml" | absURL }}">RSS</a>
         <a href="{{ "feed.json" | absURL }}">JSON</a>
-        {{ if $.Site.Params.llmsTxtEnabled }}<a href="{{ "llms.txt" | absURL }}">LLMs.txt</a>{{ end }}
+        {{ if site.Params.llmsTxtEnabled }}<a href="{{ "llms.txt" | absURL }}">llms.txt</a>{{ end }}
       </p>
     </div>
+    {{ partial "microhook.html" (dict "name" "footer" "page" .) }}
   </div>
 </footer>

@@ -1,5 +1,22 @@
 {
-  "version": "0.1.0",
+  "version": "2.0.0",
   "title": "Thing Theme",
-  "description": "A clean, opinionated theme for Micro.blog with Pagefind search, LLMs.txt, and support for Weekly Thing / Another Thing signup integration."
+  "description": "Jamie Thingelstad's theme for micro.blog, installed over the Blank design: microformats, Pagefind search, a capped llms.txt and links to Jamie's other sites.",
+  "fields": [
+    {
+      "field": "params.sites_include",
+      "label": "Extra sites to list (ids, comma-separated)",
+      "placeholder": "escape"
+    },
+    {
+      "field": "params.signup_sites",
+      "label": "Subscribe links in the footer (site ids, comma-separated)",
+      "placeholder": "weekly, another"
+    },
+    {
+      "field": "params.llmstxt_recent",
+      "label": "Recent posts listed in llms.txt",
+      "placeholder": "50"
+    }
+  ]
 }

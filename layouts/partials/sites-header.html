@@ -1,0 +1,13 @@
+{{- /* A slim strip above the site header linking Jamie's sites. */ -}}
+{{- $sites := partial "sites.html" . -}}
+{{- if gt (len $sites) 1 }}
+<nav class="sites-strip" aria-label="Jamie's sites">
+  <ul class="sites-strip__list">
+    {{- range $sites }}
+    <li class="sites-strip__item{{ if .current }} sites-strip__item--current{{ end }}">
+      <a href="{{ .url }}"{{ if .current }} aria-current="true"{{ end }} title="{{ .description }}">{{ .short_name | default .name }}</a>
+    </li>
+    {{- end }}
+  </ul>
+</nav>
+{{- end }}

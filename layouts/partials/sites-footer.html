@@ -1,0 +1,17 @@
+{{- /* Footer directory of Jamie's sites, with descriptions and feeds. */ -}}
+{{- $sites := partial "sites.html" . -}}
+{{- if gt (len $sites) 1 }}
+<section class="sites-footer" aria-labelledby="sites-footer-title">
+  <h2 id="sites-footer-title" class="sites-footer__title">Also from Jamie</h2>
+  <ul class="sites-footer__list">
+    {{- range $sites }}
+    {{- if not .current }}
+    <li class="sites-footer__item">
+      <a class="sites-footer__name" href="{{ .url }}">{{ .name }}</a>
+      <span class="sites-footer__desc">{{ .description }}</span>
+    </li>
+    {{- end }}
+    {{- end }}
+  </ul>
+</section>
+{{- end }}

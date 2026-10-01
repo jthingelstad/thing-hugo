@@ -1,0 +1,12 @@
+{{- /* A list setting as a slice. micro.blog plug-in fields are single-line
+       inputs, so a list arrives as "weekly, another"; local TOML or config.json
+       can pass a real slice. Both come back as a slice of trimmed strings. */ -}}
+{{- $out := slice -}}
+{{- if reflect.IsSlice . -}}
+  {{- $out = . -}}
+{{- else if . -}}
+  {{- range split . "," -}}
+    {{- with strings.TrimSpace . }}{{ $out = $out | append . }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

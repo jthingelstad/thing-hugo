@@ -1,0 +1,15 @@
+{{- /* The list of Jamie's sites to show, from data/sites.json (canonical copy:
+       shared/sites.json in the workspace, vendored by sync-shared.sh).
+       Sites with in_publishing_system false are left out unless their id is in
+       site.Params.sites_include. Returns a slice; the current site is marked
+       with "current": true by matching baseURL. Never call these a network. */ -}}
+{{- $include := partial "list-param.html" site.Params.sites_include -}}
+{{- $here := site.BaseURL | strings.TrimSuffix "/" -}}
+{{- $out := slice -}}
+{{- range hugo.Data.sites.sites -}}
+  {{- if or .in_publishing_system (in $include .id) -}}
+    {{- $current := eq (.url | strings.TrimSuffix "/") $here -}}
+    {{- $out = $out | append (merge . (dict "current" $current)) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}
