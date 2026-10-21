@@ -1,0 +1,61 @@
+{{- /* A year's own page (/2026/, Round 4b): every post that year, one line
+       each, month by month, 100 to a page (archive-list.html). The rail,
+       "Find your way", jumps to a month (on whichever page it starts) or to
+       another year. Takes the year's section page. */ -}}
+{{- $typeName := site.Params.contentTypeName | default "post" -}}
+{{- $per := 100 -}}
+{{- $all := (where .RegularPagesRecursive "Type" $typeName).ByDate.Reverse -}}
+{{- $paginator := .Paginate $all $per -}}
+{{- $years := partialCached "year-sections.html" "years" -}}
+{{- $older := "" -}}
+{{- $found := false -}}
+{{- range $years }}{{ if $found }}{{ $older = . }}{{ break }}{{ end }}{{ if eq .Section $.Section }}{{ $found = true }}{{ end }}{{ end -}}
+{{- /* Where each month starts: GroupByDate keeps the newest-first order, so
+       a running count gives the page. */ -}}
+{{- $months := slice -}}
+{{- $n := 0 -}}
+{{- range $all.GroupByDate "01" }}
+  {{- $months = $months | append (dict "id" (printf "m%s" .Key) "name" ((index .Pages 0).Date.Format "Jan") "page" (add (div $n $per) 1)) }}
+  {{- $n = add $n (len .Pages) }}
+{{- end -}}
+<header class="archive-head archive-head--year cols">
+  <div class="archive-head__title">
+    <p class="post-list__kicker"><a href="{{ "archive/" | relURL }}">Archive</a></p>
+    <h1 class="post-list__title">{{ .Section }}</h1>
+  </div>
+  <div class="archive-head__search">{{ partial "search-form.html" (dict "id" "year") }}</div>
+</header>
+<div class="cols">
+  <section class="archive archive--year" aria-label="Posts from {{ .Section }}">
+    {{ partial "archive-list.html" (dict "pages" $paginator.Pages "years" false) }}
+    <nav class="archive-pager" aria-label="More posts">
+      {{- with $paginator.Prev }}
+      <a class="archive-pager__page" href="{{ .URL }}" rel="prev">{{ (index (last 1 .Pages) 0).Date.Format "January" }} and later</a>
+      {{- end }}
+      {{- with $paginator.Next }}
+      <a class="archive-pager__page" href="{{ .URL }}" rel="next">{{ (index .Pages 0).Date.Format "January" }} and earlier</a>
+      {{- end }}
+      {{- with $older }}
+      <a class="archive-pager__year" href="{{ .RelPermalink }}">{{ .Section }}</a>
+      {{- end }}
+    </nav>
+  </section>
+  <aside class="rail rail--find" aria-label="Find your way" data-pagefind-ignore>
+    <section class="rail-section" aria-labelledby="find-months">
+      <h2 id="find-months" class="rail__heading">Months</h2>
+      <ul class="rail-chips">
+        {{- range $months }}
+        <li><a href="{{ if ne .page $paginator.PageNumber }}{{ (index $paginator.Pagers (sub .page 1)).URL }}{{ end }}#{{ .id }}">{{ .name }}</a></li>
+        {{- end }}
+      </ul>
+    </section>
+    <section class="rail-section" aria-labelledby="find-years">
+      <h2 id="find-years" class="rail__heading">Years</h2>
+      <ul class="rail-chips rail-chips--years">
+        {{- range $years }}
+        <li><a href="{{ .RelPermalink }}"{{ if eq .Section $.Section }} aria-current="page"{{ end }}>{{ .Section }}</a></li>
+        {{- end }}
+      </ul>
+    </section>
+  </aside>
+</div>

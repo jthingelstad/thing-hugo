@@ -1,0 +1,22 @@
+{{- /* The photo on a year's tile on /archive/ (Round 4b): the year's first
+       Featured post with a photo, else the first photo from July on, else
+       the year's last photo, else "" (2000 has none). Takes the year's
+       section page; call with partialCached keyed by the year.
+       params.featured_category names the category (default "Featured"). */ -}}
+{{- $typeName := site.Params.contentTypeName | default "post" -}}
+{{- $pages := (where (where .RegularPagesRecursive "Type" $typeName) "Params.photos" "!=" nil).ByDate -}}
+{{- $out := "" -}}
+{{- range where $pages "Params.categories" "intersect" (slice (site.Params.featured_category | default "Featured")) }}
+  {{- with partial "first-image.html" . }}{{ $out = . }}{{ break }}{{ end }}
+{{- end }}
+{{- if not $out }}
+  {{- range where $pages "Date" "ge" (time.AsTime (printf "%s-07-01T00:00:00Z" .Section)) }}
+    {{- with partial "first-image.html" . }}{{ $out = . }}{{ break }}{{ end }}
+  {{- end }}
+{{- end }}
+{{- if not $out }}
+  {{- range $pages.Reverse }}
+    {{- with partial "first-image.html" . }}{{ $out = . }}{{ break }}{{ end }}
+  {{- end }}
+{{- end }}
+{{- return $out -}}

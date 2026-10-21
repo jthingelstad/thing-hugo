@@ -39,6 +39,16 @@
       "placeholder": "/on-this-day/"
     },
     {
+      "field": "params.featured_category",
+      "label": "Category whose photos lead each year on the archive",
+      "placeholder": "Featured"
+    },
+    {
+      "field": "params.photo_proxy",
+      "label": "Photo resizer for thumbnails (blank uses micro.blog's; off uses the originals)",
+      "placeholder": "https://micro.blog/photos/"
+    },
+    {
       "field": "params.llmstxt_recent",
       "label": "Recent posts listed in llms.txt",
       "placeholder": "50"

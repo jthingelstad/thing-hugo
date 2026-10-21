@@ -3,7 +3,8 @@
        list in data/sites.json, so every site points at the same identity.
 
        Visible: the avatar (linked home), the name and, on the home page, the
-       About line (micro.blog's About text, which may carry links). */ -}}
+       About line (micro.blog's About text, which may carry links).
+       Usage: {{ partial "h-card.html" (dict "home" true) }} */ -}}
 {{- $author := site.Params.author -}}
 {{- $name := $author.name | default site.Title -}}
 {{- $note := site.Params.itunes_description | default site.Params.description -}}
@@ -13,6 +14,6 @@
   {{- end }}
   <a class="u-url u-uid p-name site-author__name" rel="me" href="{{ "/" | absURL }}">{{ $name }}</a>
   {{- with $note }}
-  <p class="p-note site-author__note"{{ if not $.IsHome }} hidden{{ end }}>{{ . | safeHTML }}</p>
+  <p class="p-note site-author__note"{{ if not $.home }} hidden{{ end }}>{{ . | safeHTML }}</p>
   {{- end }}
 </div>

@@ -1,0 +1,5 @@
+{{- /* Every year section (/2000/ … /2026/; each year is a section on
+       micro.blog), newest first. Call with partialCached "year-sections.html" "years". */ -}}
+{{- $years := slice -}}
+{{- range site.Sections }}{{ if findRE `^\d{4}$` .Section }}{{ $years = $years | append . }}{{ end }}{{ end -}}
+{{- return sort $years "Section" "desc" -}}

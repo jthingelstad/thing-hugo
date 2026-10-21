@@ -1,28 +1,42 @@
-{{- /* A compact archive: one line per post, grouped by year and month.
+{{- /* A compact archive: one line per post, grouped by month (Round 4b).
        Usage: {{ partial "archive-list.html" (dict "pages" $paginator.Pages "years" true) }}
        pages is one paginator page, so never every post. With years false (a
-       year's own page, whose h1 is the year) months are the top headings. */ -}}
+       year's own page, whose h1 is the year) months are the top headings,
+       with ids m01 to m12 for the rail's month links.
+       Each line: the date, then the title (titled posts, bold) or the
+       opening words (microposts), then a small square of the post's first
+       photo, if it has one. */ -}}
 {{- $years := .years -}}
 {{- range .pages.GroupByDate "2006" }}
+{{- $year := .Key }}
 <section class="archive__year">
   {{- if $years }}
-  <h2 class="archive__year-heading">{{ .Key }}</h2>
+  <h2 class="archive__year-heading">{{ $year }}</h2>
   {{- end }}
   {{- range .Pages.GroupByDate "January" }}
-  <section class="archive__month">
+  {{- $id := printf "m%s" ((index .Pages 0).Date.Format "01") }}
+  {{- if $years }}{{ $id = printf "y%s-%s" $year $id }}{{ end }}
+  <section class="archive__month" aria-labelledby="{{ $id }}">
     {{- if $years }}
-    <h3 class="archive__month-heading">{{ .Key }}</h3>
+    <h3 id="{{ $id }}" class="archive__month-heading">{{ .Key }}</h3>
     {{- else }}
-    <h2 class="archive__month-heading">{{ .Key }}</h2>
+    <h2 id="{{ $id }}" class="archive__month-heading">{{ .Key }}</h2>
     {{- end }}
-    <ul class="archive__posts h-feed">
+    <ol class="archive__posts h-feed">
       {{- range .Pages }}
       <li class="archive__post h-entry">
-        <a class="u-url archive__post-date" href="{{ .Permalink }}"><time class="dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "Jan 2" }}</time></a>
-        <a class="archive__post-link" href="{{ .Permalink }}">{{ if .Title }}<span class="p-name">{{ .Title | markdownify }}</span>{{ else }}{{ partial "title.html" . }}{{ end }}</a>
+        <a class="archive__row u-url" href="{{ .Permalink }}">
+          <time class="archive__date dt-published" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "Jan 2" }}</time>
+          <span class="archive__text">{{ if .Title }}<span class="archive__title p-name">{{ .Title | markdownify }}</span>{{ else }}<span class="archive__words">{{ partial "title.html" . }}</span>{{ end }}</span>
+          {{- with partial "first-image.html" . }}
+          <img class="archive__thumb" src="{{ partial "photo-src.html" (dict "src" . "size" 200) }}" alt="" width="64" height="64" loading="lazy" decoding="async">
+          {{- else }}
+          <span class="archive__thumb archive__thumb--none"></span>
+          {{- end }}
+        </a>
       </li>
       {{- end }}
-    </ul>
+    </ol>
   </section>
   {{- end }}
 </section>
