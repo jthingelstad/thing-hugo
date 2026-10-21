@@ -1,11 +1,13 @@
 {{- /* The one way CSS and JS reach a page. Takes a path under static/assets/
-       ("js/search.js") and returns its URL with ?v=<asset_version>.
+       ("js/search.js") and returns its URL with ?v=<release version>.
 
        micro.blog ignores a plug-in's module mounts (seen live 2026-10-21:
        resources.Get found nothing, so a Hugo Pipes bundle fell back to its
        first file and thing.css never loaded). So there is no minify or
        fingerprint, and theme_seconds does not reliably change when a plug-in
-       is reloaded. asset_version in config.json is the cache buster: bump it,
-       with plugin.json's version, in every release (check-site.mjs fails when
-       they differ). */ -}}
-{{- return printf "%s?v=%v" (printf "assets/%s" . | relURL) (site.Params.asset_version | default site.Params.theme_seconds) -}}
+       is reloaded. The cache buster is data/release.json's version, bumped
+       with plugin.json's in every release (check-site.mjs fails when they
+       differ). Not a config.json param: Pull from GitHub refreshes the
+       plug-in's templates and data but not its params (live 2026-10-21, 2.0.2
+       pulled and pages still said ?v=2.0.1). */ -}}
+{{- return printf "%s?v=%v" (printf "assets/%s" . | relURL) (hugo.Data.release.version | default site.Params.theme_seconds) -}}

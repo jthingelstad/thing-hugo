@@ -140,8 +140,9 @@ Menu links keep Tiny's `page-link {Name}` classes for Custom CSS.
 ## Structure
 
 ```
-config.json                   llmstxt output, ten micro.blog home outputs + llmstxt, params (asset_version)
+config.json                   llmstxt output, ten micro.blog home outputs + llmstxt, params
 plugin.json                   micro.blog plug-in manifest and settings fields
+data/release.json             the release version, the CSS/JS cache buster
 data/sites.json               Jamie's sites (generated copy)
 data/tokens.json              theme-color values (generated copy)
 layouts/
@@ -168,10 +169,12 @@ static/assets/
 ```
 
 All CSS and JS go through `partials/asset.html`, which links the file under
-`static/assets/` with `?v=` and `asset_version` from `config.json`. micro.blog
+`static/assets/` with `?v=` and the version in `data/release.json`. micro.blog
 ignores a plug-in's module mounts, so there is no Hugo Pipes bundle or
-fingerprint and `resources.Get` finds nothing there: bump `asset_version` with
-`plugin.json`'s version in every release so browsers fetch the new files.
+fingerprint and `resources.Get` finds nothing there: bump `data/release.json`
+with `plugin.json`'s version in every release so browsers fetch the new files.
+It is a data file, not a `config.json` param, because Pull from GitHub
+refreshes a plug-in's templates and data but leaves its params as they were.
 
 ## Developing
 
