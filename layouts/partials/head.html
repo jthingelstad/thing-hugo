@@ -3,7 +3,7 @@
 <script>document.documentElement.classList.add("js")</script>
 {{- $description := "" -}}
 {{- if .IsHome -}}
-  {{- $description = site.Params.subtitle | default site.Params.description | plainify | strings.TrimSpace -}}
+  {{- $description = site.Params.subtitle | default "" | plainify | strings.TrimSpace | default (partial "site-description.html" .) -}}
 {{- else -}}
   {{- $description = .Summary | plainify | htmlUnescape | strings.TrimSpace | truncate 200 -}}
 {{- end }}
@@ -15,6 +15,13 @@
 <link rel="alternate" type="text/plain" title="llms.txt" href="{{ "llms.txt" | absURL }}">
 {{- end }}
 
+{{- /* The two faces every page sets text in, fetched alongside the CSS
+       rather than after it, so the text doesn't reflow when they arrive (a
+       titled post shifted 0.159 without, 2026-10-21). thing.css asks for
+       them by plain path, without asset.html's ?v=, and a preload only helps
+       when its URL is the same one the stylesheet asks for. */}}
+<link rel="preload" href="{{ "assets/fonts/inter-latin-wght-normal.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ "assets/fonts/inter-tight-latin-wght-normal.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{{ partial "asset.html" "css/tokens.css" }}">
 <link rel="stylesheet" href="{{ partial "asset.html" "css/thing.css" }}">
 

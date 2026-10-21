@@ -1,0 +1,11 @@
+{{- /* The blog's one-line description, for the home page's description and
+       og:description and for llms.txt. micro.blog fills params.description
+       with "Follow @<username> on Micro.blog." when the blog has none (live
+       2026-10-21), so that is passed over for the About line the header shows
+       (params.itunes_description), then the blog's entry in data/sites.json.
+       Returns plain text. */ -}}
+{{- $d := site.Params.description | default "" | plainify | strings.TrimSpace -}}
+{{- if findRE `^Follow @\S+ on Micro\.blog\.?$` $d }}{{ $d = "" }}{{ end -}}
+{{- if not $d }}{{ $d = site.Params.itunes_description | default "" | plainify | strings.TrimSpace }}{{ end -}}
+{{- if not $d }}{{ with (partialCached "sites-by-id.html" "sites").www }}{{ $d = .description }}{{ end }}{{ end -}}
+{{- return $d -}}

@@ -9,7 +9,7 @@
 {{- $posts := where site.RegularPages "Type" $typeName -}}
 # {{ site.Title }}
 
-{{ with site.Params.description }}> {{ . | plainify }}
+{{ with partial "site-description.html" . }}> {{ . }}
 
 {{ end -}}
 Personal blog of {{ site.Params.author.name | default site.Title }}, writing on the web since 2004. Hosted on micro.blog.
