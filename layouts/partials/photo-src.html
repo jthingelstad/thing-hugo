@@ -1,15 +1,20 @@
 {{- /* A smaller copy of one of Jamie's uploaded photos, for thumbnails.
-       Usage: {{ partial "photo-src.html" (dict "src" $url "size" 200) }}
-       micro.blog serves a fit-resized copy at https://micro.blog/photos/<size>/<url>
-       (a 1.5 MB original comes back as 10 KB at 200). Only the blog's own
-       uploads go through it, at either address (upload-prefixes.html).
-       params.photo_proxy sets another service, or "off" for the originals. */ -}}
+       Usage: {{ partial "photo-src.html" (dict "src" $url "size" 400 ["square" true]) }}
+       micro.blog's resizer has two forms (tried live 2026-10-21):
+       https://micro.blog/photos/<size>x/<url> scales to that width and keeps
+       the photo's shape; https://micro.blog/photos/<size>/<url> also crops a
+       square, as wide as the scaled photo's shorter side. "square" is for
+       square slots only: a 4:3 slot cropping that square again shows a
+       landscape photo zoomed in. Neither form enlarges a photo. Only the
+       blog's own uploads go through it, at either address
+       (upload-prefixes.html). params.photo_proxy sets another service, or
+       "off" for the originals. */ -}}
 {{- $src := .src -}}
 {{- $proxy := site.Params.photo_proxy | default "https://micro.blog/photos/" -}}
 {{- if ne $proxy "off" -}}
   {{- range partialCached "upload-prefixes.html" "prefixes" -}}
     {{- if strings.HasPrefix $src . -}}
-      {{- $src = printf "%s%d/%s" $proxy $.size $src -}}
+      {{- $src = printf "%s%d%s/%s" $proxy $.size (cond (default false $.square) "" "x") $src -}}
       {{- break -}}
     {{- end -}}
   {{- end -}}

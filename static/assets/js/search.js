@@ -70,12 +70,14 @@
       return frag;
     }
 
+    // A result's photo through the resizer's width form, which keeps its
+    // shape for the 4:3 slot (partials/photo-src.html).
     function photo(src) {
       if (!src) return '';
       var proxy = root.getAttribute('data-photo-proxy');
       var uploads = (root.getAttribute('data-uploads') || '').split(' ');
       for (var i = 0; proxy && i < uploads.length; i++) {
-        if (uploads[i] && src.indexOf(uploads[i]) === 0) return proxy + '400/' + src;
+        if (uploads[i] && src.indexOf(uploads[i]) === 0) return proxy + '400x/' + src;
       }
       return src;
     }

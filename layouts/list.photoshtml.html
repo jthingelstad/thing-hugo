@@ -28,7 +28,7 @@
       {{- end }}
     {{- end }}
     {{- if not $alt }}{{ $alt = $page.Title | default (printf "Photo from %s" ($page.Date.Format "January 2, 2006")) }}{{ end -}}
-    <a class="photos-grid-item-link" href="{{ $page.Permalink }}"><img class="photos-grid-item" src="{{ partial "photo-src.html" (dict "src" $src "size" 400) }}" alt="{{ $alt }}" width="300" height="300" loading="lazy" decoding="async"></a>
+    <a class="photos-grid-item-link" href="{{ $page.Permalink }}"><img class="photos-grid-item" src="{{ partial "photo-src.html" (dict "src" $src "size" 400 "square" true) }}" alt="{{ $alt }}" width="300" height="300" loading="lazy" decoding="async"></a>
     {{- end }}
     {{- end }}
   </div>

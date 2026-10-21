@@ -185,7 +185,7 @@
 
   // A thumbnail through the photo resizer when it is one of Jamie's uploads
   // (the section's data-photo-proxy and space-separated data-uploads, as in
-  // partials/photo-src.html).
+  // partials/photo-src.html), in its square form, for square slots only.
   function thumbnail(section, src, size) {
     var proxy = section.getAttribute('data-photo-proxy');
     var uploads = (section.getAttribute('data-uploads') || '').split(' ');
