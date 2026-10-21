@@ -68,4 +68,9 @@
 {{- end }}
 
 {{ partial "extended_head.html" . }}
-{{ partial "microblog_head.html" . }}
+{{- /* micro.blog's head, as Blank writes it, less its canonical. It lists the
+       page's other output formats with each format's rel, and HTML's rel is
+       "canonical": on /archive/ and /photos/, the home page in other
+       formats, that names the home page as theirs. baseof's "canonical"
+       block is the page's one canonical. */}}
+{{ replaceRE `<link rel="canonical"[^>]*>\n?` "" (partial "microblog_head.html" .) | safeHTML }}
