@@ -12,6 +12,6 @@
     {{ partial "post-stream.html" $paginator.Pages }}
     {{ partial "pagination.html" . }}
   </section>
-  {{ partial "rail.html" . }}
+  {{ partial "rail.html" (dict "page" .) }}
 </div>
 {{ end }}

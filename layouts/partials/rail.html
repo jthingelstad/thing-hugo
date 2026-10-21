@@ -1,6 +1,81 @@
-{{- /* The rail: the right column of .cols on list pages (Round 4, R0-1d):
-       Ask Thingy, earlier Weekly Thing issues, Another Thing, On This Day and
-       Browse. Its modules are the next build step; until then this renders
-       nothing and .cols holds the 320px column empty, so the main column
-       already has its final width. Below 900px the rail drops under the main
-       column. */ -}}
+{{- /* The rail: the right column of .cols on list pages (Round 4, R0-1d).
+       Usage: {{ partial "rail.html" (dict "page" . "browse" false) }}
+       browse false leaves out Browse (the archive already lists every
+       category).
+
+       Ask Thingy and Browse are plain HTML. The Weekly Thing and Another
+       Thing lists and On This Day are filled by js/rail.js in the reader's
+       browser, because micro.blog only rebuilds the blog when Jamie posts:
+       - Weekly Thing: the site's Atom feed (titles, dates and links only; the
+         entry HTML carries a Tinylytics pixel and is never parsed as HTML).
+       - Another Thing: the site's index.json.
+       - On This Day: Micro Memories, the service Jamie's On This Day page
+         already uses (params.on_this_day_feed; blank turns it off).
+       All three allow cross-origin reads (checked 2026-10-20). Without
+       JavaScript the lists stay empty and hidden; each section keeps its
+       heading and its link onward. Site names and URLs come from
+       data/sites.json. Below 900px the rail drops under the main column. */ -}}
+{{- $browse := ne .browse false -}}
+{{- $sites := dict -}}
+{{- range hugo.Data.sites.sites }}{{ $sites = merge $sites (dict .id .) }}{{ end -}}
+<aside class="rail" aria-label="More from Jamie" data-pagefind-ignore>
+  {{- with $sites.thingy }}
+  <section class="rail-card rail-card--thingy" aria-labelledby="rail-thingy">
+    <h2 id="rail-thingy" class="rail__heading">Ask {{ .name }}</h2>
+    <p class="rail__blurb">Ask me about coffee, kubb, or 25 years of links.</p>
+    <form class="rail-ask" action="{{ strings.TrimSuffix "/" .url }}/chat/" method="get">
+      <label class="visually-hidden" for="rail-thingy-q">Your question for {{ .name }}</label>
+      <input id="rail-thingy-q" class="rail-ask__input" name="prompt" type="text" placeholder="What has Jamie written about kubb?" required>
+      <button class="rail-ask__button" type="submit">Ask</button>
+    </form>
+  </section>
+  {{- end }}
+
+  {{- with $sites.weekly }}
+  {{- with .feeds.atom }}
+  <section class="rail-section rail-section--weekly" aria-labelledby="rail-weekly" data-rail="atom" data-rail-feed="{{ . }}" data-rail-limit="4">
+    <h2 id="rail-weekly" class="rail__heading"><a href="{{ $sites.weekly.url }}archive/">{{ $sites.weekly.name }}</a></h2>
+    <p class="rail__sub">Recent issues</p>
+    <ol class="rail-list" data-rail-list></ol>
+    <a class="rail__more" href="{{ $sites.weekly.url }}archive/">All issues</a>
+  </section>
+  {{- end }}
+  {{- end }}
+
+  {{- with $sites.another }}
+  {{- with .feeds.json }}
+  <section class="rail-section rail-section--another" aria-labelledby="rail-another" data-rail="another" data-rail-feed="{{ . }}" data-rail-limit="3">
+    <h2 id="rail-another" class="rail__heading"><a href="{{ $sites.another.url }}">{{ $sites.another.name }}</a></h2>
+    <p class="rail__sub">My podcast</p>
+    <ol class="rail-list" data-rail-list></ol>
+    <a class="rail__more" href="{{ $sites.another.subscribe_url | default $sites.another.url }}">Ways to listen</a>
+  </section>
+  {{- end }}
+  {{- end }}
+
+  {{- with site.Params.on_this_day_feed }}
+  {{- $path := site.Params.on_this_day_path | default "/on-this-day/" }}
+  <section class="rail-section rail-section--otd" aria-labelledby="rail-otd" data-rail="otd" data-rail-feed="{{ . }}" data-rail-limit="5">
+    <h2 id="rail-otd" class="rail__heading"><a href="{{ $path | relURL }}">On this day</a></h2>
+    <p class="rail__sub" data-rail-date>In other years</p>
+    <ol class="rail-list" data-rail-list></ol>
+    <a class="rail__more" href="{{ $path | relURL }}">Everything from this day</a>
+  </section>
+  {{- end }}
+
+  {{- if $browse }}
+  {{- $want := partial "list-param.html" site.Params.rail_categories -}}
+  {{- $chips := slice -}}
+  {{- range $want }}{{ $w := lower . }}{{ range site.Taxonomies.categories.Alphabetical }}{{ if eq (lower .Page.Title) $w }}{{ $chips = $chips | append .Page }}{{ end }}{{ end }}{{ end }}
+  <section class="rail-section rail-section--browse" aria-labelledby="rail-browse">
+    <h2 id="rail-browse" class="rail__heading">Browse</h2>
+    <ul class="rail-chips">
+      {{- range $chips }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      {{- end }}
+      <li><a href="{{ "archive/" | relURL }}#archive-categories">All categories</a></li>
+    </ul>
+  </section>
+  {{- end }}
+</aside>
+<script src="{{ partial "asset.html" "js/rail.js" }}" defer></script>

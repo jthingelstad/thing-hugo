@@ -12,6 +12,6 @@
     {{ partial "archive-list.html" (dict "pages" $paginator.Pages "years" true) }}
     {{ partial "pagination.html" . }}
   </section>
-  {{ partial "rail.html" . }}
+  {{ partial "rail.html" (dict "page" .) }}
 </div>
 {{ end }}

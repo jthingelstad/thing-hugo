@@ -35,6 +35,6 @@
     </section>
     {{- end }}
   </section>
-  {{ partial "rail.html" . }}
+  {{ partial "rail.html" (dict "page" . "browse" false) }}
 </div>
 {{ end }}

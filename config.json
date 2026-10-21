@@ -40,6 +40,9 @@
     "llmstxt_recent": 50,
     "sites_include": [],
     "signup_sites": [],
+    "rail_categories": "Weekly Thing, Kubb, Coffee, Minnestar, Pokémon",
+    "on_this_day_feed": "https://micromemories.cleverdevil.io/posts?tz=US/Central",
+    "on_this_day_path": "/on-this-day/",
     "tinylytics_id": "dMNzEVG73Bcq1RisbGRG",
     "tinylytics_options": "hits&kudos=👍&uptime&webring=avatars&countries&publicstats"
   }

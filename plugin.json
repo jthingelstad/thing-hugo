@@ -14,6 +14,21 @@
       "placeholder": "weekly, another"
     },
     {
+      "field": "params.rail_categories",
+      "label": "Categories in the rail's Browse list (names, comma-separated)",
+      "placeholder": "Weekly Thing, Kubb, Coffee, Minnestar, Pokémon"
+    },
+    {
+      "field": "params.on_this_day_feed",
+      "label": "On This Day feed for the rail (Micro Memories posts URL; blank turns it off)",
+      "placeholder": "https://micromemories.cleverdevil.io/posts?tz=US/Central"
+    },
+    {
+      "field": "params.on_this_day_path",
+      "label": "Your On This Day page",
+      "placeholder": "/on-this-day/"
+    },
+    {
       "field": "params.llmstxt_recent",
       "label": "Recent posts listed in llms.txt",
       "placeholder": "50"

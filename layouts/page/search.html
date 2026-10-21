@@ -9,6 +9,6 @@
     {{ with .Content }}<div class="search-page__intro">{{ . }}</div>{{ end }}
     {{ if not (.HasShortcode "search") }}{{ partial "search-ui.html" . }}{{ end }}
   </section>
-  {{ partial "rail.html" . }}
+  {{ partial "rail.html" (dict "page" .) }}
 </div>
 {{ end }}
