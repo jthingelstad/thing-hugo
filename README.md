@@ -7,19 +7,33 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
 - **IndieWeb:** h-entry on every post, reply and page; an author h-card; rel=me;
   `u-in-reply-to` on replies; micro.blog's `microblog_head` and conversations
   kept intact.
-- **Notebook design:** one narrow serif column on white. Newsreader and Source
-  Sans 3 are self-hosted (SIL OFL, `static/assets/fonts/`). Titled posts show an
-  excerpt in lists, microposts show whole, and a pill row under each post holds
-  Kudos, reply links and "Explore with Thingy".
+- **v2 design:** black and white on white, with a dark mode that follows the
+  reader's system. Colour marks only Jamie's other sites: the Weekly Thing
+  (blue), Another Thing (red) and Thingy (tangerine). Inter Tight headings and
+  Inter body, self-hosted (SIL OFL, `static/assets/fonts/`). One 1120px frame
+  shared by the sites strip, header, content and footer; lists add a rail.
+- **Home:** a hello beside a Weekly Thing subscribe card, then the stream.
+  Titled posts show an excerpt, microposts show whole. Stream photos are 4:3
+  crops; three or more become a square grid with a "+N" tile. A post's own
+  page shows its photos whole.
+- **The rail:** Ask Thingy, recent Weekly Thing issues, Another Thing, On This
+  Day and Browse.
+- **Under a post:** Kudos, reply links and "Explore with Thingy", a Weekly Thing
+  card, Keep going (one more post and the podcast), then Earlier / Later.
+- **Archive:** `/archive/` is a photo tile for every year plus the categories;
+  each year page lists every post by month, 100 to a page.
+- **[Pagefind](https://pagefind.app/) search:** the Search page draws results
+  in the theme's style, with Best match / Newest and year and category filters;
+  Ask Thingy is the second path.
+- **Trip days:** a `{{< trip >}}` shortcode draws "Go to day" chips.
 - **Tinylytics built in:** page hits and Kudos, no plug-in needed.
-- **[Pagefind](https://pagefind.app/) search:** per-post indexing with year and
-  category filters, a Search page, and an "Ask Thingy" link as the second path.
 - **[llms.txt](https://llmstxt.org/):** one capped, site-level `/llms.txt`.
 - **Jamie's sites:** a strip above the header and an "Also from Jamie" footer,
   from `data/sites.json`.
-- **Minimal:** one fingerprinted stylesheet built from CSS custom properties; the
-  only scripts are Tinylytics, Pagefind on the Search page, and micro.blog's
-  `conversation.js` and `narration.js`.
+- **Minimal:** one fingerprinted stylesheet built from CSS custom properties.
+  Scripts: the phone menu, the rail's Weekly Thing / Another Thing / On This
+  Day lists, Pagefind on the Search page, Tinylytics, and micro.blog's
+  `conversation.js` and `narration.js`. Every page reads in full without them.
 
 `main` is the original version. `v2` is this rewrite.
 
@@ -44,7 +58,26 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
    (micro.blog discards custom front matter, so a shortcode, not a `layout:`
    field, selects the search UI.) Do not create a page at `/pagefind/`: that path
    belongs to the Pagefind bundle.
-5. Republish and check `/search/`, `/llms.txt` and a post's page source.
+5. Republish and check `/search/`, `/archive/`, a year page, `/llms.txt` and a
+   post's page source.
+
+## Trip days
+
+Put the shortcode at the end of each day's post:
+
+```
+{{< trip "QMSB Trip" >}}
+{{< trip "QMSB Trip" "https://www.thingelstad.com/collections/qmsb-2025" >}}
+{{< trip prefix="QMSB Trip" name="QMSB Trip 2025" url="/collections/qmsb-2025" >}}
+```
+
+The days are the posts whose titles start with the prefix ("QMSB Trip - Day
+7"), oldest first, so earlier days pick up each new one without an edit. Each
+chip shows the "Day N" in its title (else its place in the trip); the post's
+own day is in ink. Posts with the same prefix more than two weeks apart are
+separate trips. The second argument, or `url`, adds "The whole trip". The name
+defaults to the prefix plus the trip's year. Nothing shows until a trip has
+two days or a url.
 
 ## Settings
 
@@ -55,6 +88,13 @@ single-line inputs, so lists are comma-separated.
 | --- | --- | --- |
 | `sites_include` | empty | Ids of sites outside the publishing system to list anyway, e.g. `escape` |
 | `signup_sites` | empty | Ids of sites to show subscribe links for in the footer, e.g. `weekly, another` |
+| `home_greeting` | "Hi, I'm" and the first name | The home page's greeting |
+| `intro` | a sentence about the blog | Home intro beside the Weekly Thing card (Markdown) |
+| `rail_categories` | `Weekly Thing, Kubb, Coffee, Minnestar, Pokémon` | Categories in the rail's Browse list |
+| `on_this_day_feed` | Micro Memories, US/Central | Feed for the rail's On This Day; blank turns it off |
+| `on_this_day_path` | `/on-this-day/` | The full On This Day page |
+| `featured_category` | `Featured` | Category whose camera photos lead each year's tile on `/archive/` |
+| `photo_proxy` | micro.blog's resizer | Thumbnails of `/uploads/` photos; `off` uses the originals |
 | `llmstxt_recent` | `50` | Recent titled posts listed in `/llms.txt` |
 | `tinylytics_id` | the blog's embed id | Tinylytics embed id; blank turns Tinylytics and Kudos off |
 | `tinylytics_options` | `hits&kudos=👍&uptime&webring=avatars&countries&publicstats` | The embed's feature flags |
@@ -88,7 +128,7 @@ Menu links keep Tiny's `page-link {Name}` classes for Custom CSS.
 `design/tokens.css` in the private workspace, copied in by
 `scripts/sync-shared.sh` together with `data/sites.json` (from
 `shared/sites.json`). Edit those, not the copies. `theme-color` is read from
-`--color-accent`.
+`--theme-color` and `--theme-color-dark`.
 
 ## Structure
 
@@ -97,25 +137,26 @@ config.json                   module mounts, llmstxt output, ten micro.blog home
 plugin.json                   micro.blog plug-in manifest and settings fields
 data/sites.json               Jamie's sites (generated copy)
 layouts/
-  _default/{baseof,single,list}.html
-  _default/list.archivehtml.html  /archive/: years and categories
+  _default/{baseof,single,list}.html   list.html also draws the year pages
+  _default/list.archivehtml.html  /archive/: year tiles and categories
   _default/list.photoshtml.html   /photos/: photo grid with alt text
-  index.html                  paginated home
+  index.html                  home: hello, Weekly Thing card, stream, rail
   opengraph.html              social card micro.blog renders to an image
   index.llmstxt.txt           /llms.txt
   replies/section.html        /replies/
   archive/list.html           paginated archive section, if one exists
   page/search.html            search layout (the shortcode is the micro.blog path)
   robots.txt                  allow all + sitemap
-  partials/                   head, header, footer, h-card, asset, post-card,
-                              post-stream, post-meta, post-date, post-actions,
-                              archive-list, tinylytics, pagefind-meta,
-                              reply-context, search-ui, sites*, signup, title, ...
-  shortcodes/{figure,image,search}.html
+  partials/                   head, header, footer, h-card, asset, rail,
+                              post-card, stream-content, post-meta,
+                              post-actions, keep-going, year-page,
+                              archive-list, search-page, search-ui,
+                              pagefind-meta, trip-posts, sites*, ...
+  shortcodes/{figure,image,search,trip}.html
 static/assets/
   css/{tokens,thing}.css      bundled, minified and fingerprinted by partials/asset.html
-  fonts/                      Newsreader and Source Sans 3 (woff2, OFL)
-  js/search.js
+  fonts/                      Inter and Inter Tight (woff2, OFL)
+  js/{nav,sites,search}.js    phone menu; rail lists; the Search page
 ```
 
 All CSS and JS go through `partials/asset.html`. The module mounts list layouts,
