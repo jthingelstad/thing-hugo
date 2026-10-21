@@ -1,13 +1,16 @@
 {{- /* The footer: a strip-grey band on the shared frame. Jamie's micro.blog
        custom footer (custom_footer.html: the licence and notes) closes it,
-       full width, as Tiny placed it inside its footer. */ -}}
+       full width, as Tiny placed it inside its footer. The licence there,
+       CC BY-SA 4.0, is the blog's terms, so the footer carries no
+       copyright line of its own (Jamie, 2026-10-21: "The CC position is
+       right."). */ -}}
 <footer class="site-footer">
   <div class="site-footer__inner frame">
     {{ partial "signup.html" . }}
     {{ partial "sites-footer.html" . }}
 
     <div class="site-footer__meta">
-      <p class="site-footer__copy">{{ with site.Copyright }}{{ . | safeHTML }}{{ else }}© {{ now.Year }} {{ site.Params.author.name | default site.Title }}{{ end }}</p>
+      <h2 class="site-footer__title">Feeds</h2>
       <p class="site-footer__links">
         <a href="{{ "feed.xml" | absURL }}">RSS</a>
         <a href="{{ "feed.json" | absURL }}">JSON</a>
