@@ -35,16 +35,16 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
   Day lists, Pagefind on the Search page, Tinylytics, and micro.blog's
   `conversation.js` and `narration.js`. Every page reads in full without them.
 
-`main` is the original version. `v2` is this rewrite.
-
 ## Install on micro.blog
 
 1. **Design:** set the blog's design to **Blank** and Hugo version to **0.158**.
-2. **Plug-in:** Plug-ins → Find Plug-ins → install from this repository, branch
-   `v2`. (micro.blog layers the plug-in over Blank: Blank supplies
-   `microblog_head` and the feeds; this theme supplies everything else,
-   including the `/archive/` and `/photos/` pages.) If the Tinylytics plug-in is
-   installed, uninstall it: the theme loads Tinylytics itself.
+2. **Plug-in:** Plug-ins → Find Plug-ins → install from this repository
+   (micro.blog installs `main`). micro.blog layers the plug-in over Blank: Blank
+   supplies `microblog_head` and the feeds; this theme supplies everything else,
+   including the `/archive/` and `/photos/` pages. Remove any other theme
+   plug-in (Tiny Theme) so the two don't layer over each other. If the
+   Tinylytics plug-in is installed, uninstall it: the theme loads Tinylytics
+   itself.
 3. **Pagefind:** Design → Actions → enable **Pagefind**. micro.blog runs it on
    every publish and serves the bundle at `/pagefind/`. Search results update
    on the next publish after any theme change.
