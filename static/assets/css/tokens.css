@@ -21,12 +21,17 @@
  * tangerine 4.6:1. The raw WT blue and tangerine are fills, never small text
  * on white.
  *
- * Light only: Jamie wants a white ground, and the design has no dark mode.
+ * White is the ground (Jamie: "particularly with images involved"); dark mode
+ * follows the reader's system setting (Jamie, 2026-10-20: "We do need dark
+ * mode as well"). Dark contrast on #131316: ink 15.7:1, muted 6.9:1, WT text
+ * 7.9:1, AT text 7.7:1, Thingy text 9.0:1, each still AA on its soft card.
+ * The fills keep their light values, so the site colours read the same.
  */
 
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   --theme-color: #ffffff;
+  --theme-color-dark: #131316;
 
   /* Black and white */
   --color-bg: #ffffff;
@@ -105,6 +110,29 @@
   /* Touch */
   --target-min: 44px;
   --target-field: 48px;
+}
+
+/* Dark: the same black-and-white blog, inverted; site colours lightened for
+   text and darkened for card grounds. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #131316;
+    --color-ink: #ececf0;
+    --color-text-soft: #c4c4cc;
+    --color-text-muted: #9d9daa;
+    --color-quote: #d6d6de;
+    --color-quote-bar: #4a4a55;
+    --color-strip: #1e1e23;
+    --color-mark: #34343d;
+    --color-selection: #3d3d47;
+
+    --color-wt-text: #78acf2;
+    --color-wt-soft: #162338;
+    --color-at-text: #f08c76;
+    --color-at-soft: #2b1a17;
+    --color-thingy-text: #f3a274;
+    --color-thingy-soft: #2c1f17;
+  }
 }
 
 /* Phones: the R4 phone board */
