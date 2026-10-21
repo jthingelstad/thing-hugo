@@ -1,12 +1,4 @@
 {
-  "module": {
-    "mounts": [
-      { "source": "layouts", "target": "layouts" },
-      { "source": "static", "target": "static" },
-      { "source": "static/assets", "target": "assets" },
-      { "source": "data", "target": "data" }
-    ]
-  },
   "outputFormats": {
     "llmstxt": {
       "mediaType": "text/plain",
@@ -31,6 +23,7 @@
     ]
   },
   "params": {
+    "asset_version": "2.0.1",
     "contentTypeName": "post",
     "showReadingTime": true,
     "showPostMeta": true,

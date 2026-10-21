@@ -15,15 +15,18 @@
 <link rel="alternate" type="text/plain" title="llms.txt" href="{{ "llms.txt" | absURL }}">
 {{- end }}
 
-<link rel="stylesheet" href="{{ partial "asset.html" (dict "name" "css/site.css" "paths" (slice "css/tokens.css" "css/thing.css")) }}">
+<link rel="stylesheet" href="{{ partial "asset.html" "css/tokens.css" }}">
+<link rel="stylesheet" href="{{ partial "asset.html" "css/thing.css" }}">
 
-{{- /* theme-color has to be a literal; read it from the tokens. */ -}}
-{{- with resources.Get "css/tokens.css" }}
-{{- with findRESubmatch `--theme-color:\s*(#[0-9a-fA-F]{3,8})` .Content 1 }}
-<meta name="theme-color" content="{{ index (index . 0) 1 }}" media="(prefers-color-scheme: light)">
+{{- /* theme-color has to be a literal. sync-shared.sh copies the two values
+       from the tokens into data/tokens.json (the data directory reaches
+       micro.blog; the theme's own CSS files can't be read at build time). */ -}}
+{{- with hugo.Data.tokens }}
+{{- with .theme_color }}
+<meta name="theme-color" content="{{ . }}" media="(prefers-color-scheme: light)">
 {{- end }}
-{{- with findRESubmatch `--theme-color-dark:\s*(#[0-9a-fA-F]{3,8})` .Content 1 }}
-<meta name="theme-color" content="{{ index (index . 0) 1 }}" media="(prefers-color-scheme: dark)">
+{{- with .theme_color_dark }}
+<meta name="theme-color" content="{{ . }}" media="(prefers-color-scheme: dark)">
 {{- end }}
 {{- end }}
 

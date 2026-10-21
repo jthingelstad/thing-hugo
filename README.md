@@ -45,7 +45,7 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
    plug-in (Tiny Theme) so the two don't layer over each other. If the
    Tinylytics plug-in is installed, uninstall it: the theme loads Tinylytics
    itself.
-3. **Pagefind:** Design → Actions → enable **Pagefind**. micro.blog runs it on
+3. **Pagefind:** on the blog's settings page, Edit Actions → add **Pagefind**. micro.blog runs it on
    every publish and serves the bundle at `/pagefind/`. Search results update
    on the next publish after any theme change.
 4. **Search page:** create a page titled **Search** at `/search/` whose body is
@@ -130,15 +130,17 @@ Menu links keep Tiny's `page-link {Name}` classes for Custom CSS.
 `static/assets/css/tokens.css` is **generated**. The source of truth is
 `design/tokens.css` in the private workspace, copied in by
 `scripts/sync-shared.sh` together with `data/sites.json` (from
-`shared/sites.json`). Edit those, not the copies. `theme-color` is read from
-`--theme-color` and `--theme-color-dark`.
+`shared/sites.json`). Edit those, not the copies. `--theme-color` and
+`--theme-color-dark` are also copied into `data/tokens.json` for the
+`theme-color` meta.
 
 ## Structure
 
 ```
-config.json                   module mounts, llmstxt output, ten micro.blog home outputs + llmstxt, params
+config.json                   llmstxt output, ten micro.blog home outputs + llmstxt, params (asset_version)
 plugin.json                   micro.blog plug-in manifest and settings fields
 data/sites.json               Jamie's sites (generated copy)
+data/tokens.json              theme-color values (generated copy)
 layouts/
   _default/{baseof,single,list}.html   list.html also draws the year pages
   _default/list.archivehtml.html  /archive/: year tiles and categories
@@ -157,14 +159,16 @@ layouts/
                               pagefind-meta, trip-posts, sites*, ...
   shortcodes/{figure,image,search,trip}.html
 static/assets/
-  css/{tokens,thing}.css      bundled, minified and fingerprinted by partials/asset.html
+  css/{tokens,thing}.css      linked one each by partials/asset.html
   fonts/                      Inter and Inter Tight (woff2, OFL)
   js/{nav,sites,search}.js    phone menu; rail lists; the Search page
 ```
 
-All CSS and JS go through `partials/asset.html`. The module mounts list layouts,
-static, static/assets→assets and data: declaring any mount drops Hugo's
-defaults, so add one for any new top-level directory.
+All CSS and JS go through `partials/asset.html`, which links the file under
+`static/assets/` with `?v=` and `asset_version` from `config.json`. micro.blog
+ignores a plug-in's module mounts, so there is no Hugo Pipes bundle or
+fingerprint and `resources.Get` finds nothing there: bump `asset_version` with
+`plugin.json`'s version in every release so browsers fetch the new files.
 
 ## Developing
 
