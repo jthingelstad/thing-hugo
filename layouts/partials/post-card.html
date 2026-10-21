@@ -8,7 +8,9 @@
        fewer is shown whole. (.Truncated is unreliable on 0.158: a 140-word
        post with a list reported false.)
        Microposts: shown whole at the lead size; a short one with no photo
-       (30 words or fewer) is set larger still. */ -}}
+       (30 words or fewer) is set larger still.
+       Whole bodies go through stream-content.html, which sets their photos
+       as R3-B's 4:3 crops and square grids. */ -}}
 {{- $cats := "" -}}
 {{- range .Params.categories }}{{ $cats = printf "%s %s" $cats (. | urlize | lower) }}{{ end -}}
 {{- $brief := and (not .Title) (le .WordCount 30) (not (strings.Contains .Content "<img")) -}}
@@ -22,12 +24,12 @@
   <a class="post-card__more" href="{{ .Permalink }}">Keep reading{{ if ne site.Params.showReadingTime false }} · {{ .ReadingTime }} minute{{ if ne .ReadingTime 1 }}s{{ end }}{{ end }}<span class="visually-hidden">: {{ .Title | plainify }}</span></a>
   {{- else }}
   <div class="post-card__content e-content">
-    {{ .Content }}
+    {{ partial "stream-content.html" . }}
   </div>
   {{- end }}
   {{- else }}
   <div class="post-card__content e-content">
-    {{ .Content }}
+    {{ partial "stream-content.html" . }}
   </div>
   {{- end }}
 </article>

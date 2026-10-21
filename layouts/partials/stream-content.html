@@ -1,0 +1,40 @@
+{{- /* A post's body in the stream (Round 3, R3-B). Photos are lifted out of
+       the text and set after it, still inside e-content:
+       - one photo: full width, cropped to 4:3
+       - two: side by side at 4:3 (squares on phones)
+       - three or more: a grid of squares, two across for four, else three;
+         six at most, the sixth a "+N" link to the post when there are more.
+       A post's own page shows its photos whole, where Jamie put them.
+       A photo is an <img> with no width or one wider than 100px; smaller
+       ones (icons, badges, old tracking pixels) stay in the text. Links,
+       paragraphs and figures left empty are removed. */ -}}
+{{- $content := string .Content -}}
+{{- $photos := slice -}}
+{{- range findRE `<img\b[^>]*>` $content }}
+  {{- $w := 0 }}
+  {{- with findRESubmatch `\swidth=["']?(\d+)` . 1 }}{{ $w = int (strings.TrimLeft "0" (index (index . 0) 1) | default "0") }}{{ end }}
+  {{- if or (eq $w 0) (gt $w 100) }}
+    {{- $img := . }}
+    {{- if not (strings.Contains $img "loading=") }}{{ $img = replaceRE `^<img` `<img loading="lazy" decoding="async"` $img }}{{ end }}
+    {{- $photos = $photos | append $img }}
+    {{- $content = replace $content . "" }}
+  {{- end }}
+{{- end }}
+{{- if $photos }}
+  {{- $content = $content | replaceRE `<a\b[^>]*>\s*</a>` "" | replaceRE `<figure\b[^>]*>\s*</figure>` "" | replaceRE `<p>(\s|<br\s*/?>)*</p>` "" }}
+{{- end }}
+{{- $content | safeHTML }}
+{{- with $photos }}
+{{- $n := len . }}
+{{- $shape := "grid" }}
+{{- if eq $n 1 }}{{ $shape = "one" }}{{ else if eq $n 2 }}{{ $shape = "two" }}{{ else if eq $n 4 }}{{ $shape = "four" }}{{ end }}
+<div class="stream-photos stream-photos--{{ $shape }}">
+  {{- range first (cond (gt $n 6) 5 6) . }}
+  {{ . | safeHTML }}
+  {{- end }}
+  {{- if gt $n 6 }}
+  {{- $tile := index . 5 | replaceRE `\salt=("[^"]*"|'[^']*')` "" | replaceRE `^<img` `<img alt=""` }}
+  <a class="stream-photos__more" href="{{ $.Permalink }}" aria-label="See all {{ $n }} photos">{{ $tile | safeHTML }}<span aria-hidden="true">+{{ sub $n 6 }}</span></a>
+  {{- end }}
+</div>
+{{- end }}

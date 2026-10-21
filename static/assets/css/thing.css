@@ -773,6 +773,42 @@ sup a, .footnote-ref { text-decoration: none; font-size: 0.8em; font-weight: var
   border-radius: var(--radius-md) !important;
 }
 
+/* Photos in the stream (R3-B), set by partials/stream-content.html. A
+   post's own page shows them whole. */
+.stream-photos { display: grid; gap: var(--space-2); }
+.stream-photos img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+.stream-photos--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.stream-photos--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.stream-photos--grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.stream-photos--four img,
+.stream-photos--grid img { aspect-ratio: 1; }
+.stream-photos__more {
+  position: relative;
+  display: block;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.stream-photos__more img { border-radius: 0; }
+.stream-photos__more span {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(22 22 26 / 0.55);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+.stream-photos__more:hover span { background: rgb(22 22 26 / 0.7); }
+
 /* micro.blog collections and galleries in post bodies */
 .microblog_collection img { border-radius: var(--radius-md); }
 
@@ -1068,6 +1104,7 @@ a.keep-going__card:hover .keep-going__title { text-decoration: underline; }
 
 /* Phones */
 @media (max-width: 40rem) {
+  .stream-photos--two img { aspect-ratio: 1; }
   .sites-strip__inner { flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; gap: 1.125rem; }
   .sites-strip__label { display: none; }
   .sites-strip__list { flex-wrap: nowrap; gap: 1.125rem; }
