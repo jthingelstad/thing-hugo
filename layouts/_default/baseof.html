@@ -6,8 +6,9 @@
   {{ end }}
   {{ partial "head.html" . }}
   {{- /* /archive/ and /photos/ are the home page in another output format, so
-         .Permalink there is "/"; their templates redefine this block. */}}
-  {{ block "canonical" . }}<link rel="canonical" href="{{ .Permalink }}">{{ end }}
+         .Permalink there is "/"; their templates redefine this block. A
+         list's later pages are their own address, /page/2/ and on. */}}
+  {{ block "canonical" . }}<link rel="canonical" href="{{ with partial "pager.html" . }}{{ .URL | absURL }}{{ else }}{{ .Permalink }}{{ end }}">{{ end }}
 </head>
 <body class="{{ if .IsHome }}is-home {{ end }}kind-{{ .Kind }} type-{{ .Type }}">
   <a class="skip-link" href="#content">Skip to content</a>

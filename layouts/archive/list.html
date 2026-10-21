@@ -2,13 +2,12 @@
        own /archive/ is the ArchiveHTML output of the home page
        (list.archivehtml.html). */ -}}
 {{ define "main" }}
-{{ $typeName := site.Params.contentTypeName | default "post" }}
 <div class="cols">
   <section class="archive">
     <header class="archive__header">
       <h1>{{ .Title | default "Archive" }}</h1>
     </header>
-    {{ $paginator := .Paginate ((where site.RegularPages "Type" $typeName).ByDate.Reverse) 100 }}
+    {{ $paginator := partial "pager.html" . }}
     {{ partial "archive-list.html" (dict "pages" $paginator.Pages "years" true) }}
     {{ partial "pagination.html" . }}
   </section>

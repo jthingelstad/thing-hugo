@@ -1,0 +1,24 @@
+{{- /* A paginated list's pager, the one place each list says what it pages
+       through. The lists (index.html, _default/list.html, year-page.html,
+       replies/section.html, archive/list.html) take their pager from here,
+       and so does baseof's canonical, which runs first: Hugo makes a page's
+       pager on the first call and hands every later call that one, so both
+       must ask for the same posts. Returns false on a page that is not a
+       paginated list. */ -}}
+{{- $typeName := site.Params.contentTypeName | default "post" -}}
+{{- $pager := false -}}
+{{- if .IsHome -}}
+  {{- $pager = .Paginate (where site.RegularPages "Type" $typeName) -}}
+{{- else if eq .Kind "section" "taxonomy" "term" -}}
+  {{- if and (eq .Kind "section") (eq .Section "replies") -}}
+    {{- $pager = .Paginate (where .RegularPagesRecursive "Type" "reply") -}}
+  {{- else if and (eq .Kind "section") (eq .Section "archive") -}}
+    {{- $pager = .Paginate ((where site.RegularPages "Type" $typeName).ByDate.Reverse) 100 -}}
+  {{- else if and (eq .Kind "section") (findRE `^\d{4}$` .Section) -}}
+    {{- /* A year: the same posts year-page.html groups by month. */ -}}
+    {{- $pager = .Paginate ((where .RegularPagesRecursive "Type" $typeName).ByDate.Reverse) 100 -}}
+  {{- else -}}
+    {{- $pager = .Paginate (where .RegularPagesRecursive "Type" $typeName) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $pager -}}

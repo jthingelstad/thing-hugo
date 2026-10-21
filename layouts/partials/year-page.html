@@ -3,9 +3,10 @@
        "Find your way", jumps to a month (on whichever page it starts) or to
        another year. Takes the year's section page. */ -}}
 {{- $typeName := site.Params.contentTypeName | default "post" -}}
-{{- $per := 100 -}}
+{{- /* The posts pager.html pages; $all finds where each month starts. */ -}}
 {{- $all := (where .RegularPagesRecursive "Type" $typeName).ByDate.Reverse -}}
-{{- $paginator := .Paginate $all $per -}}
+{{- $paginator := partial "pager.html" . -}}
+{{- $per := $paginator.PagerSize -}}
 {{- $years := partialCached "year-sections.html" "years" -}}
 {{- $older := "" -}}
 {{- $found := false -}}

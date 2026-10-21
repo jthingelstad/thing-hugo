@@ -2,7 +2,6 @@
        micro.blog, /2008/) is year-page.html: one line a post, 100 to a page,
        with its own rail; everything else is the post stream. */ -}}
 {{ define "main" }}
-{{- $typeName := site.Params.contentTypeName | default "post" -}}
 {{- $isYear := and (eq .Kind "section") (findRE `^\d{4}$` .Section) -}}
 {{- if $isYear }}
 {{ partial "year-page.html" . }}
@@ -20,7 +19,7 @@
       </header>
     {{ end }}
 
-    {{ $paginator := .Paginate (where .RegularPagesRecursive "Type" $typeName) }}
+    {{ $paginator := partial "pager.html" . }}
     {{ partial "post-stream.html" $paginator.Pages }}
 
     {{ partial "pagination.html" . }}

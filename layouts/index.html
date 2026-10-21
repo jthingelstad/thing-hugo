@@ -1,6 +1,5 @@
 {{ define "main" }}
-{{- $typeName := site.Params.contentTypeName | default "post" -}}
-{{- $paginator := .Paginate (where site.RegularPages "Type" $typeName) -}}
+{{- $paginator := partial "pager.html" . -}}
 {{- $first := eq $paginator.PageNumber 1 -}}
 {{- if $first }}
 {{- /* Round 4's hello: the greeting and intro beside the Weekly Thing card,
