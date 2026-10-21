@@ -974,6 +974,46 @@ sup a, .footnote-ref { text-decoration: none; font-size: 0.8em; font-weight: var
 /* micro.blog collections and galleries in post bodies */
 .microblog_collection img { border-radius: var(--radius-md); }
 
+/* Conversations in post bodies ("Blogging with Messages" and six more):
+   div.chat holding .author, .message and .action divs, each .left or
+   .right. Under Tiny, Jamie's Custom CSS styled them. The other voice is on
+   grey, Jamie's side in ink. */
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+.chat > * { margin: 0; }
+.chat .message {
+  max-width: min(85%, 34rem);
+  padding: 0.625rem 1rem;
+  border-radius: 1.25rem;
+  line-height: 1.45;
+}
+.chat .message > * { margin: 0; }
+.chat .message > * + * { margin-top: 0.625rem; }
+.chat .message.left { align-self: flex-start; background: var(--color-strip); color: var(--color-ink); }
+.chat .message.right { align-self: flex-end; background: var(--color-ink); color: var(--color-bg); }
+.chat .message.right a { color: inherit; }
+.chat .message code { background: transparent; color: inherit; }
+.chat .author {
+  margin-top: var(--space-3);
+  padding: 0 1rem;
+  font-size: var(--font-size-meta);
+  font-weight: var(--weight-strong);
+  color: var(--color-text-muted);
+}
+.chat .author.left { align-self: flex-start; }
+.chat .author.right { align-self: flex-end; }
+.chat .action {
+  align-self: center;
+  margin: var(--space-3) 0;
+  font-size: var(--font-size-meta);
+  font-style: italic;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
 /* Pagination */
 .pagination {
   margin-top: var(--stack-posts);
