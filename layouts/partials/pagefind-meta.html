@@ -8,7 +8,11 @@
        titled: present only on posts with a real title, so Search can set
        a micropost as its words rather than a made-up heading.
        sort:  ISO date, which sorts lexically.
-       filters: year and each category. */ -}}
+       filters: year and each category.
+       photo: the post's first photo, for the result's thumbnail. Not
+       Pagefind's own "image" key: a post without one gets Pagefind's guess,
+       the first <img> anywhere on the page (the custom footer's hidden
+       avatar), and every photo-less result would show Jamie's face. */ -}}
 {{- $title := partial "title.html" . -}}
 <div hidden data-pagefind-ignore>
   <span data-pagefind-meta="title">{{ $title }}</span>
@@ -22,6 +26,6 @@
   <span data-pagefind-filter="category">{{ . }}</span>
   {{- end }}
   {{- with partial "first-image.html" . }}
-  <span data-pagefind-meta="image">{{ . }}</span>
+  <span data-pagefind-meta="photo">{{ . }}</span>
   {{- end }}
 </div>

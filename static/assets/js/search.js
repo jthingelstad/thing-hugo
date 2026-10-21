@@ -1,7 +1,7 @@
 // The Search page (Round 4b), drawn from Pagefind's JavaScript API.
 // micro.blog's Pagefind Action builds the index on every publish and serves
 // it at /pagefind/; the theme's markup (partials/pagefind-meta.html) gives
-// each post a title, date, image, titled flag, and year and category filters.
+// each post a title, date, photo, titled flag, and year and category filters.
 //
 // State lives in the address (?q=kubb&sort=newest&year=2025&category=Kubb)
 // so a search can be reloaded or shared. Results come ten at a time. There
@@ -110,7 +110,7 @@
         text.appendChild(p);
       }
       li.appendChild(text);
-      var src = meta.image && safeURL(photo(meta.image));
+      var src = meta.photo && safeURL(photo(meta.photo));
       if (src) {
         var img = el('img', 'search-result__photo');
         img.src = src;
