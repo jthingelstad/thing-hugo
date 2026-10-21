@@ -1,0 +1,24 @@
+{{- /* Gives one <img> tag of Jamie's uploads a srcset of resized copies, so
+       a phone or a 1x screen no longer loads the 2 to 6 MB original.
+       Usage: {{ partial "photo-srcset.html" (dict "img" $tag "sizes" $sizes) }}
+       The copies come from micro.blog's resizer in its width form
+       (photo-src.html), which keeps the photo's shape and never enlarges it,
+       so a small original is served at its own size. src stays the original,
+       for the lightbox, microformats and browsers without srcset. GIFs (they
+       may be animated), a tag with a srcset already and anything that isn't
+       an upload are left alone. Returns the tag. */ -}}
+{{- $img := .img -}}
+{{- $proxy := site.Params.photo_proxy | default "https://micro.blog/photos/" -}}
+{{- if and (ne $proxy "off") (not (strings.Contains $img "srcset=")) -}}
+  {{- with findRESubmatch `\ssrc=["']([^"']+)["']` $img 1 -}}
+    {{- $src := index (index . 0) 1 -}}
+    {{- $upload := false -}}
+    {{- range partialCached "upload-prefixes.html" "prefixes" }}{{ if strings.HasPrefix $src . }}{{ $upload = true }}{{ end }}{{ end -}}
+    {{- if and $upload (not (findRE `(?i)\.gif$|[\s,]` $src)) -}}
+      {{- $set := slice -}}
+      {{- range slice 360 720 1080 1440 }}{{ $set = $set | append (printf "%s%dx/%s %dw" $proxy . $src .) }}{{ end -}}
+      {{- $img = print `<img srcset="` (delimit $set ", ") `" sizes="` $.sizes `"` (strings.TrimPrefix "<img" $img) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $img -}}

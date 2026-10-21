@@ -35,12 +35,19 @@
 {{- $n := len . }}
 {{- $shape := "grid" }}
 {{- if eq $n 1 }}{{ $shape = "one" }}{{ else if eq $n 2 }}{{ $shape = "two" }}{{ else if eq $n 4 }}{{ $shape = "four" }}{{ end }}
+{{- /* Resized copies (photo-srcset.html) sized to the slot: the main column
+       is 42rem beside the rail and the page less its 1rem gutters below
+       56.25rem, halved for two or four, a third for the grid (0.5rem gaps).
+       A 390px phone at 3x then takes the 1080 copy, not the 1440. */}}
+{{- $sizes := dict "one" "(max-width: 56.25rem) calc(100vw - 2rem), 42rem" "two" "(max-width: 56.25rem) calc(50vw - 1.25rem), 21rem" "four" "(max-width: 56.25rem) calc(50vw - 1.25rem), 21rem" "grid" "(max-width: 56.25rem) calc(33vw - 1rem), 14rem" }}
+{{- $set := slice }}
+{{- range first 6 . }}{{ $set = $set | append (partial "photo-srcset.html" (dict "img" . "sizes" (index $sizes $shape))) }}{{ end }}
 <div class="stream-photos stream-photos--{{ $shape }}">
-  {{- range first (cond (gt $n 6) 5 6) . }}
+  {{- range first (cond (gt $n 6) 5 6) $set }}
   {{ . | safeHTML }}
   {{- end }}
   {{- if gt $n 6 }}
-  {{- $tile := index . 5 | replaceRE `\salt=("[^"]*"|'[^']*')` "" | replaceRE `^<img` `<img alt=""` }}
+  {{- $tile := index $set 5 | replaceRE `\salt=("[^"]*"|'[^']*')` "" | replaceRE `^<img` `<img alt=""` }}
   <a class="stream-photos__more" href="{{ $.Permalink }}" aria-label="See all {{ $n }} photos">{{ $tile | safeHTML }}<span aria-hidden="true">+{{ sub $n 6 }}</span></a>
   {{- end }}
 </div>

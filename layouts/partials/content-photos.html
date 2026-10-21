@@ -1,0 +1,20 @@
+{{- /* A post's or page's body for its own page, with resized copies of
+       Jamie's photos (photo-srcset.html). The photos stay whole, where Jamie
+       put them, at the width their tag gives (micro.blog writes width="600"
+       on uploads), up to the 45rem column. A tag without a pixel width is
+       left alone: its size on the page comes from the file, and a srcset
+       would draw a small screenshot at the full column width. So are tags
+       100px wide or less (icons, badges). Returns HTML. */ -}}
+{{- $content := string .Content -}}
+{{- range uniq (findRE `<img\b[^>]*>` $content) -}}
+  {{- $tag := . -}}
+  {{- with findRESubmatch `\swidth=["']?(\d+)(?:["'\s/>]|$)` $tag 1 -}}
+    {{- $w := int (strings.TrimLeft "0" (index (index . 0) 1) | default "0") -}}
+    {{- if gt $w 100 -}}
+      {{- $cap := cond (gt $w 720) 720 $w -}}
+      {{- /* Narrower than the photo, it fills the page less its 1rem gutters. */ -}}
+      {{- $content = replace $content $tag (partial "photo-srcset.html" (dict "img" $tag "sizes" (printf "(max-width: %dpx) calc(100vw - 2rem), %dpx" (add $cap 32) $cap))) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return ($content | safeHTML) -}}
