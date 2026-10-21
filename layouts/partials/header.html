@@ -2,7 +2,11 @@
        and the About line. Everywhere else: a 44px avatar and the name. The
        nav sits at the right on both, and off the home page it ends in a
        Weekly Thing Subscribe button (to the card under a post, else to the
-       Weekly Thing). On phones js/nav.js folds the nav behind a Menu button.
+       Weekly Thing). A long menu (the live one has eleven links) takes its
+       own row under the name, and the button stays up beside the name: the
+       header carries it once for wide screens and once inside the nav for the
+       phone menu, and thing.css shows one. On phones js/nav.js folds the nav
+       behind a Menu button.
        Menu links keep Tiny's "page-link {Name}" classes so Custom CSS that
        targets one item still works.
        Usage: {{ partial "header.html" (dict "page" . "home" .IsHome) }}
@@ -11,9 +15,16 @@
 {{- $page := .page -}}
 {{- $home := .home -}}
 {{- $sites := partialCached "sites-by-id.html" "sites" -}}
+{{- $subscribe := "" -}}
+{{- if not $home }}{{ with $sites.weekly }}{{ with .subscribe_url }}
+  {{- $subscribe = cond (and $page.IsPage (eq $page.Type "post")) "#subscribe" . }}
+{{- end }}{{ end }}{{ end -}}
 <header class="site-header{{ if $home }} site-header--home{{ else }} site-header--compact{{ end }}">
   <div class="site-header__inner frame">
     {{ partial "h-card.html" (dict "home" $home) }}
+    {{- with $subscribe }}
+    <a class="site-header__subscribe" href="{{ . }}">Subscribe</a>
+    {{- end }}
     <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       <span class="visually-hidden">Menu</span>
@@ -33,9 +44,9 @@
         <li class="site-nav__item site-nav__item--search"><a class="page-link Search" href="{{ $search | relURL }}">Search</a></li>
         {{- end }}
         {{- end }}
-        {{- if not $home }}{{ with $sites.weekly }}{{ with .subscribe_url }}
-        <li class="site-nav__item site-nav__item--subscribe"><a href="{{ if and $page.IsPage (eq $page.Type "post") }}#subscribe{{ else }}{{ . }}{{ end }}">Subscribe</a></li>
-        {{- end }}{{ end }}{{ end }}
+        {{- with $subscribe }}
+        <li class="site-nav__item site-nav__item--subscribe"><a href="{{ . }}">Subscribe</a></li>
+        {{- end }}
       </ul>
     </nav>
   </div>

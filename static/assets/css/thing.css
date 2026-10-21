@@ -345,10 +345,11 @@ figcaption, .figure__caption {
 .site-header__inner {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   align-items: center;
-  gap: var(--space-4) 2.5rem;
+  gap: var(--space-4) var(--space-2);
 }
+/* The name takes the slack, so the nav and the Subscribe button sit right. */
+.site-header__inner > .site-author { margin-right: auto; padding-right: 2rem; }
 .site-author {
   display: grid;
   grid-template-columns: auto auto;
@@ -407,13 +408,28 @@ figcaption, .figure__caption {
 }
 .site-nav__item:last-child a { padding-right: 0; }
 .site-nav__item a:hover { text-decoration: underline; }
-.site-nav__item--subscribe { margin-left: var(--space-2); }
+/* Subscribe: after the nav when the menu is short (Round 4 has four links);
+   beside the name, with the nav on its own row, when it runs to seven or
+   more. The nav's own Subscribe item is the phone menu's. */
+.site-nav { order: 1; }
+.site-header__subscribe { order: 2; }
+.site-header__inner:has(.site-nav__item:nth-child(8)) .site-header__subscribe { order: 1; }
+.site-header__inner:has(.site-nav__item:nth-child(8)) .site-nav { order: 2; flex: 1 1 100%; }
+.site-nav__item--subscribe { display: none; }
+.site-header__subscribe,
 .site-nav__item.site-nav__item--subscribe a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
   padding: 0 var(--space-4);
   border-radius: var(--radius-md);
   background: var(--color-wt);
   color: var(--color-on-fill);
+  font-size: var(--font-size-ui);
+  font-weight: var(--weight-strong);
+  text-decoration: none;
 }
+.site-header__subscribe:hover { text-decoration: underline; }
 .site-nav__toggle {
   display: none;
   align-items: center;
@@ -1385,12 +1401,15 @@ a.keep-going__card:hover .keep-going__title { text-decoration: underline; }
   .site-header--home .site-author__photo-link { grid-row: auto; }
   .site-header__inner { flex-wrap: wrap; align-items: flex-start; }
   .site-author { flex: 1 1 0; min-width: 0; }
+  .site-header__inner > .site-author { padding-right: 0; }
   /* The Menu button (js/nav.js); without script the nav stays open. */
   .js .site-nav__toggle { display: inline-flex; }
   .site-nav { flex: 1 1 100%; }
   .js .site-nav:not(.is-open) { display: none; }
   .js .site-nav__list { flex-direction: column; gap: 0; margin: 0; }
   .js .site-nav__item a { padding: 0; width: 100%; }
+  .site-header__subscribe { display: none; }
+  .site-nav__item--subscribe { display: block; }
   .js .site-nav__item--subscribe { margin: var(--space-2) 0 0; }
   .js .site-nav__item.site-nav__item--subscribe a { justify-content: center; }
   .home-hero { margin-bottom: var(--space-7); }
