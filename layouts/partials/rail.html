@@ -12,9 +12,11 @@
        - Weekly Thing: the site's Atom feed (titles, dates and links only; the
          entry HTML carries a Tinylytics pixel and is never parsed as HTML).
        - Another Thing: the site's index.json.
-       - On This Day: Micro Memories, the service Jamie's On This Day page
-         already uses (params.on_this_day_feed; blank turns it off).
-       All three allow cross-origin reads (checked 2026-10-20). Without
+       - On This Day: the theme's day files (partials/otd-days.html), which
+         the On This Day page reads too. params.on_this_day_feed only turns
+         it on or off (blank is off): it named Micro Memories' feed before
+         2.0.8, and micro.blog keeps a setting's value through a Pull.
+       The other sites' feeds allow cross-origin reads (checked 2026-10-20). Without
        JavaScript the lists stay empty and hidden; each section keeps its
        heading and its link onward. Site names and URLs come from
        data/sites.json. Below 900px the rail drops under the main column. */ -}}
@@ -49,7 +51,7 @@
   {{- with site.Params.on_this_day_feed }}
   {{- $path := site.Params.on_this_day_path | default "/on-this-day/" }}
   {{- $proxy := site.Params.photo_proxy | default "https://micro.blog/photos/" }}
-  <section class="rail-section rail-section--otd" aria-labelledby="rail-otd" data-rail="otd" data-rail-feed="{{ . }}" data-rail-limit="5"{{ if ne $proxy "off" }} data-photo-proxy="{{ $proxy }}" data-uploads="{{ delimit (partialCached "upload-prefixes.html" "prefixes") " " }}"{{ end }}>
+  <section class="rail-section rail-section--otd" aria-labelledby="rail-otd" data-rail="otd" data-rail-feed="{{ partialCached "otd-days.html" "otd" }}" data-rail-limit="5"{{ if ne $proxy "off" }} data-photo-proxy="{{ $proxy }}" data-uploads="{{ delimit (partialCached "upload-prefixes.html" "prefixes") " " }}"{{ end }}>
     <h2 id="rail-otd" class="rail__heading"><a href="{{ $path | relURL }}">On this day</a></h2>
     <p class="rail__sub" data-rail-date>In other years</p>
     <ol class="rail-list" data-rail-list></ol>

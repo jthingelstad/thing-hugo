@@ -6,7 +6,7 @@
 //   latest   the latest Weekly Thing card in the home stream (same feed)
 //   another  the rail's Another Thing list (index.json)
 //   episode  the Another Thing card (same index.json)
-//   otd      On This Day (Micro Memories, cached for the day)
+//   otd      On This Day (the blog's own day files, cached for the day)
 // A feed is fetched once however many parts read it. A list that can't be
 // filled stays empty and hidden, a card keeps its fallback text. Remote text
 // goes in with textContent and remote HTML is only parsed inertly
@@ -127,31 +127,20 @@
     });
   }
 
-  // On This Day: Micro Memories returns this day's posts from every year as
-  // h-entry JSON. Keep one post a year (the first with a photo, else the
-  // first with a title, else the first), newest year first.
+  // On This Day: the day file (partials/otd-days.html) lists this day's
+  // posts from every year, oldest first. Keep one post a year (the first
+  // with a photo, else the first with a title, else the first), newest
+  // year first.
   function otdPicks(posts, limit) {
     var thisYear = new Date().getFullYear();
     var byYear = {};
     (posts || []).forEach(function (p) {
-      var pr = p.properties || {};
-      var url = (pr.url || [])[0];
-      var year = parseInt(((pr.published || [])[0] || '').slice(0, 4), 10);
-      if (!url || !year || year >= thisYear) return;
-      var html = (((pr.content || [])[0] || {}).html) || '';
-      var doc = new DOMParser().parseFromString(html, 'text/html');
-      var thumb = null;
-      var imgs = doc.querySelectorAll('img[src]');
-      for (var i = 0; i < imgs.length && !thumb; i++) {
-        var w = parseInt(imgs[i].getAttribute('width') || '0', 10);
-        var src = safeURL(imgs[i].getAttribute('src'));
-        if (src && src.indexOf('https:') === 0 && (w === 0 || w > 2)) thumb = src;
-      }
-      var name = ((pr.name || [])[0] || '').trim();
-      var pick = { url: url, year: year, title: name || words(doc.body.textContent, 70) || 'A photo', thumb: thumb };
-      pick.rank = thumb ? 0 : name ? 1 : 2;
-      var have = byYear[year];
-      if (!have || pick.rank < have.rank) byYear[year] = pick;
+      if (!p || !p.u || !p.y || p.y >= thisYear) return;
+      var thumb = p.p && safeURL(p.p) && p.p.indexOf('https:') === 0 ? p.p : null;
+      var pick = { url: p.u, year: p.y, title: p.t || words(p.x, 70) || 'A photo', thumb: thumb };
+      pick.rank = thumb ? 0 : p.t ? 1 : 2;
+      var have = byYear[p.y];
+      if (!have || pick.rank < have.rank) byYear[p.y] = pick;
     });
     return Object.keys(byYear)
       .map(function (y) { return byYear[y]; })
@@ -159,18 +148,21 @@
       .slice(0, limit);
   }
 
-  function todayKey() {
-    return 'thing-rail-otd:' + new Date().toLocaleDateString('en-CA', { timeZone: TZ });
+  function today() {
+    return new Date().toLocaleDateString('en-CA', { timeZone: TZ });
   }
 
-  // Micro Memories is slow (seconds), so keep today's picks for the day.
+  // Keep today's picks for the day, so a page view after the first reads
+  // no file at all. The key names the file the picks came from: before
+  // 2.0.8 they came from Micro Memories.
   function otd(feed, limit) {
-    var key = todayKey();
+    var day = today().slice(5, 10);
+    var key = 'thing-rail-otd:' + today() + ':' + feed;
     try {
       var saved = JSON.parse(window.localStorage.getItem(key) || 'null');
       if (saved) return Promise.resolve(saved);
     } catch (e) { /* storage blocked: fetch every time */ }
-    return get(feed, 'json').then(function (posts) {
+    return get(feed + day + '.json', 'json').then(function (posts) {
       var picks = otdPicks(posts, limit);
       try {
         for (var i = window.localStorage.length - 1; i >= 0; i--) {

@@ -1,0 +1,19 @@
+{{- /* {{< on-this-day >}} — put this in the body of the micro.blog page at
+       /on-this-day/, after its intro. It shows the posts from today's date
+       in other years, newest year first, drawn by js/on-this-day.js from
+       the day files (partials/otd-days.html), so it stays current though
+       micro.blog only rebuilds when Jamie posts. ?d=MM-DD shows another
+       day; the day links step through the calendar. data-photo-proxy and
+       data-uploads put photos through the resizer, as search does. */ -}}
+{{- $proxy := site.Params.photo_proxy | default "https://micro.blog/photos/" -}}
+<div id="otd" class="otd" data-otd="{{ partialCached "otd-days.html" "otd" }}"{{ if ne $proxy "off" }} data-photo-proxy="{{ $proxy }}" data-uploads="{{ delimit (partialCached "upload-prefixes.html" "prefixes") " " }}"{{ end }}>
+  <nav class="otd__nav" aria-label="Other days" data-otd-nav hidden>
+    <a class="otd__step" rel="prev" data-otd-prev></a>
+    <h2 class="otd__day" data-otd-day></h2>
+    <a class="otd__step" rel="next" data-otd-next></a>
+  </nav>
+  <p class="search-results__status" role="status" data-otd-status></p>
+  <div class="otd__years" data-otd-list></div>
+  <noscript><p class="search-results__status">On This Day needs JavaScript to know the date. The <a href="{{ "archive/" | relURL }}">archive</a> lists every post a year at a time.</p></noscript>
+</div>
+<script src="{{ partial "asset.html" "js/on-this-day.js" }}" defer></script>
