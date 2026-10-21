@@ -2,50 +2,89 @@
 /*
  * www.thingelstad.com design tokens: the source of truth.
  *
- * Direction B, "Notebook" (chosen 2026-10-01): one narrow serif column on a
- * white ground, copper accent from Thingy's blog colour, sans only for small
- * meta and controls. Canvas: https://claude.ai/artifact/Gx94FDkFzMjQnAaNjDzEzE
+ * The v2 design, settled in the discovery rounds of 2026-10-08 on the canvas
+ * https://claude.ai/artifact/VEF9sppJBioJK1Yx1f7fUc (Round 4 is the final
+ * review):
+ *   - Type R1-B: Inter Tight for headings, Inter for everything else, both
+ *     self-hosted (OFL).
+ *   - Colour R2-B: the blog is black and white. Colour belongs only to the
+ *     Weekly Thing (blue), Another Thing (red) and Thingy (tangerine).
+ *   - Layout R0-1d: a main column and a 320px rail on one shared grid, so the
+ *     sites strip, header, content and footer all line up.
  *
  * scripts/sync-shared.sh copies this file to thing-hugo/static/assets/css/tokens.css.
- * Never edit the synced copy. head.html reads the first --color-accent below
- * for <meta name="theme-color">.
+ * Never edit the synced copy. head.html reads --theme-color below for
+ * <meta name="theme-color">.
  *
- * Contrast (WCAG AA): raw copper is 4.2:1 on white, so it is reserved for
- * graphics (the play disc, rules). Text uses --color-link (6.6:1) and
- * --color-mark (5.3:1) in light; the dark values are lightened to match.
+ * Contrast (WCAG AA, all on white unless noted): muted 6.8:1 (6.1 on strip),
+ * WT text 6.3:1, AT 5.2:1, Thingy text 5.5:1; white on WT blue 4.9:1, navy on
+ * tangerine 4.6:1. The raw WT blue and tangerine are fills, never small text
+ * on white.
+ *
+ * Light only: Jamie wants a white ground, and the design has no dark mode.
  */
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
+  --theme-color: #ffffff;
 
-  /* Palette, light */
+  /* Black and white */
   --color-bg: #ffffff;
-  --color-surface: #f4f4f1;
-  --color-text: #191919;
-  --color-text-muted: #595955;
-  --color-text-faint: #6b6b66;
-  --color-border: #e6e6e2;
-  --color-rule: #e6e6e2;
-  --color-accent: #b86131;
-  --color-link: #975028;
-  --color-mark: #a2552b;
-  --color-on-mark: #ffffff;
-  --color-selection: #f3dccd;
+  --color-ink: #16161a;          /* text, links, buttons */
+  --color-text: var(--color-ink);
+  --color-text-soft: #3d3d47;    /* blurbs, intros */
+  --color-text-muted: #5a5a66;   /* dates, labels */
+  --color-quote: #2a2a33;        /* blockquote text */
+  --color-quote-bar: #d6d6de;
+  --color-strip: #f3f3f5;        /* sites strip, footer, chips, quiet buttons */
+  --color-mark: #e4e4ea;         /* search hits */
+  --color-selection: #dcdce4;
 
-  /* Type: Newsreader reads, Source Sans 3 labels (both self-hosted, OFL) */
-  --font-serif: "Newsreader", "Iowan Old Style", "Charter", "Georgia", serif;
-  --font-sans: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  /* The other sites: the only colour on the blog */
+  --color-wt: #1f6fd6;           /* fill */
+  --color-wt-text: #1a5eb6;      /* text and links on white */
+  --color-wt-soft: #edf3fc;      /* card ground */
+  --color-at: #c63a20;           /* fill, and text on white */
+  --color-at-text: #c63a20;
+  --color-at-soft: #fbf1ef;
+  --color-thingy: #e8672a;       /* fill */
+  --color-thingy-on: #1b2540;    /* text on the tangerine fill */
+  --color-thingy-text: #b5461a;  /* text and links on white */
+  --color-thingy-soft: #fcede5;
+  --color-on-fill: #ffffff;      /* text on the WT and AT fills */
+
+  /* Type */
+  --font-heading: "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --font-size-base: 1.25rem;     /* 20px body */
-  --line-height-base: 1.65;
-  --font-size-micro: 1.4375rem;  /* 23px: microposts in the stream, lead paragraphs */
-  --font-size-micro-single: 2.5rem; /* 40px: a micropost on its own page */
-  --font-size-h1: 3.25rem;       /* 52px: titled post */
-  --font-size-h2: 2.25rem;       /* 36px: titles in the stream */
-  --font-size-meta: 0.875rem;    /* 14px sans */
-  --font-size-label: 0.8125rem;  /* 13px sans caps */
-  --font-size-ui: 0.9375rem;     /* 15px sans: nav, buttons */
-  --measure: 38rem;
+  --font-size-base: 1.1875rem;   /* 19px body */
+  --line-height-base: 1.6;
+  --font-size-lead: 1.15em;      /* a micropost's text in the stream */
+  --font-size-brief: 1.75rem;    /* 28px: a short micropost with no photo */
+  --font-size-hero: 3.375rem;    /* 54px: home greeting */
+  --font-size-h1: 3.5rem;        /* 56px: titled post */
+  --font-size-title: 2.25rem;    /* 36px: titles in the stream */
+  --font-size-h2: 1.875rem;      /* 30px: headings inside a post, cards */
+  --font-size-h3: 1.375rem;      /* 22px: rail headings */
+  --font-size-site-name: 2.125rem; /* 34px home, see --font-size-site-name-compact */
+  --font-size-site-name-compact: 1.5rem; /* 24px everywhere else */
+  --font-size-ui: 1.0625rem;     /* 17px: nav, buttons */
+  --font-size-small: 1rem;       /* 16px: rail blurbs, footer */
+  --font-size-meta: 0.9375rem;   /* 15px: dates */
+  --font-size-label: 0.875rem;   /* 14px: kickers, strip */
+  --weight-heading: 800;
+  --weight-strong: 600;
+  --tracking-heading: -0.02em;
+  --tracking-label: 0.06em;
+
+  /* Grid: one frame for strip, header, content and footer */
+  --page-max: 70rem;             /* 1120px */
+  --gutter: 1.5rem;              /* 24px side padding */
+  --rail: 20rem;                 /* 320px */
+  --col-gap: 5rem;               /* 80px between main and rail */
+  --row-gap: 3rem;               /* 48px when the rail drops below */
+  --measure: 45rem;              /* 720px: a post on its own page */
+  --stack-posts: 4rem;           /* 64px between posts in the stream */
 
   /* Space scale */
   --space-1: 0.25rem;
@@ -54,31 +93,33 @@
   --space-4: 1rem;
   --space-5: 1.5rem;
   --space-6: 2rem;
-  --space-7: 2.5rem;
-  --space-8: 4rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
 
   /* Radius */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-pill: 999px;
+  --radius-sm: 6px;              /* thumbnails */
+  --radius-md: 8px;              /* photos, buttons, inputs */
+  --radius-lg: 12px;             /* cards */
+  --radius-pill: 999px;          /* chips */
 
   /* Touch */
   --target-min: 44px;
+  --target-field: 48px;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Phones: the R4 phone board */
+@media (max-width: 40rem) {
   :root {
-    --color-bg: #121212;
-    --color-surface: #1d1c1b;
-    --color-text: #ededea;
-    --color-text-muted: #a6a59f;
-    --color-text-faint: #a6a59f;
-    --color-border: #2d2c2a;
-    --color-rule: #2d2c2a;
-    --color-accent: #c6815a;
-    --color-link: #cf9473;
-    --color-mark: #c6815a;
-    --color-on-mark: #121212;
-    --color-selection: #5a3520;
+    --font-size-base: 1.125rem;  /* 18px */
+    --font-size-brief: 1.5rem;
+    --font-size-hero: 2.375rem;  /* 38px */
+    --font-size-h1: 2.375rem;
+    --font-size-title: 1.75rem;
+    --font-size-h2: 1.5rem;
+    --font-size-site-name: 1.5625rem; /* 25px */
+    --font-size-site-name-compact: 1.375rem;
+    --font-size-meta: 0.875rem;
+    --gutter: 1rem;              /* 16px */
+    --stack-posts: 3.5rem;       /* 56px */
   }
 }

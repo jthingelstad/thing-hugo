@@ -8,7 +8,7 @@
   {{ partial "reply-context.html" . }}
   {{- if .Title }}
   <header class="post__header">
-    {{- if not $isPage }}{{ partial "post-meta.html" (dict "page" . "style" "label" "year" true) }}{{ end }}
+    {{- if not $isPage }}{{ partial "post-meta.html" (dict "page" . "year" true "reading" true) }}{{ end }}
     <h1 class="post__title p-name">{{ .Title | markdownify }}</h1>
   </header>
   {{- end }}
@@ -24,7 +24,6 @@
   </div>
 
   {{- if not $isPage }}
-  <div class="dinkus" aria-hidden="true">· · ·</div>
   <footer class="post__footer" data-pagefind-ignore>
     {{- if .Title }}
     {{- with .Params.categories }}
@@ -32,7 +31,7 @@
     <p class="post__filed">Filed under {{ range $i, $c := . }}{{ if $i }}{{ if eq $i $last }} and {{ else }}, {{ end }}{{ end }}<a class="p-category" href="{{ printf "categories/%s/" (urlize $c) | absURL }}">{{ $c }}</a>{{ end }}</p>
     {{- end }}
     {{- else }}
-    {{ partial "post-meta.html" (dict "page" . "style" "line" "long" true "categories" true) }}
+    {{ partial "post-meta.html" (dict "page" . "long" true "categories" true) }}
     {{- end }}
     {{ partial "post-actions.html" . }}
   </footer>

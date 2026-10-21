@@ -14,7 +14,11 @@
   {{ partial "sites-header.html" . }}
   {{ partial "header.html" . }}
 
-  <main id="content" class="content">
+  {{- /* Everything sits in one frame (.frame, --page-max wide) so the sites
+         strip, header, content and footer share edges. List pages split it
+         into the main column and the rail (.cols); a post's own page centres
+         one --measure column inside it. */}}
+  <main id="content" class="content frame">
     {{ block "main" . }}{{ end }}
   </main>
 

@@ -3,9 +3,12 @@
 {{ define "title" }}<title>Search · {{ site.Title }}</title>{{ end }}
 
 {{ define "main" }}
-<section class="search-page">
-  <h1>{{ .Title | default "Search" }}</h1>
-  {{ with .Content }}<div class="search-page__intro">{{ . }}</div>{{ end }}
-  {{ if not (.HasShortcode "search") }}{{ partial "search-ui.html" . }}{{ end }}
-</section>
+<div class="cols">
+  <section class="search-page">
+    <h1>{{ .Title | default "Search" }}</h1>
+    {{ with .Content }}<div class="search-page__intro">{{ . }}</div>{{ end }}
+    {{ if not (.HasShortcode "search") }}{{ partial "search-ui.html" . }}{{ end }}
+  </section>
+  {{ partial "rail.html" . }}
+</div>
 {{ end }}

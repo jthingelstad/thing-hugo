@@ -1,22 +1,25 @@
-{{- /* One post in a list (home, categories, replies).
+{{- /* One post in a list (home, categories, replies). Every card opens with
+       its date.
 
-       Titled posts: copper date label, the title, then an excerpt and "Read
-       the post" when there is more to read. The excerpt is micro.blog's
-       summary field when Jamie wrote one (custom_summary), else Hugo's summary
-       (the text before <!--more-->, or the opening words). A titled post of
-       60 words or fewer is shown whole. (.Truncated is unreliable on 0.158:
-       a 140-word post with a list reported false.)
-       Microposts: shown whole, set large, with the date line underneath. */ -}}
+       Titled posts: the title, then an excerpt and "Keep reading · N minutes"
+       when there is more to read. The excerpt is micro.blog's summary field
+       when Jamie wrote one (custom_summary), else Hugo's summary (the text
+       before <!--more-->, or the opening words). A titled post of 60 words or
+       fewer is shown whole. (.Truncated is unreliable on 0.158: a 140-word
+       post with a list reported false.)
+       Microposts: shown whole at the lead size; a short one with no photo
+       (30 words or fewer) is set larger still. */ -}}
 {{- $cats := "" -}}
 {{- range .Params.categories }}{{ $cats = printf "%s %s" $cats (. | urlize | lower) }}{{ end -}}
-<article class="post-card type-{{ .Type }} h-entry{{ if .Title }} post-card--titled{{ else }} post-card--note post-card--titleless{{ end }}{{ $cats }}">
+{{- $brief := and (not .Title) (le .WordCount 30) (not (strings.Contains .Content "<img")) -}}
+<article class="post-card type-{{ .Type }} h-entry{{ if .Title }} post-card--titled{{ else }} post-card--note post-card--titleless{{ end }}{{ if $brief }} post-card--brief{{ end }}{{ $cats }}">
   {{ partial "reply-context.html" . }}
+  {{ partial "post-meta.html" (dict "page" . "year" true) }}
   {{- if .Title }}
-  {{ partial "post-meta.html" (dict "page" . "style" "label") }}
   <h2 class="post-card__title p-name"><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h2>
   {{- if or .Params.custom_summary (gt .WordCount 60) }}
   <p class="post-card__summary p-summary">{{ .Summary | plainify | htmlUnescape | strings.TrimSpace | truncate 280 }}</p>
-  <a class="post-card__more" href="{{ .Permalink }}">Read the post<span class="visually-hidden">: {{ .Title | plainify }}</span></a>
+  <a class="post-card__more" href="{{ .Permalink }}">Keep reading{{ if ne site.Params.showReadingTime false }} · {{ .ReadingTime }} minute{{ if ne .ReadingTime 1 }}s{{ end }}{{ end }}<span class="visually-hidden">: {{ .Title | plainify }}</span></a>
   {{- else }}
   <div class="post-card__content e-content">
     {{ .Content }}
@@ -26,6 +29,5 @@
   <div class="post-card__content e-content">
     {{ .Content }}
   </div>
-  {{ partial "post-meta.html" (dict "page" . "style" "line" "categories" true) }}
   {{- end }}
 </article>

@@ -9,7 +9,7 @@
 {{- $note := site.Params.itunes_description | default site.Params.description -}}
 <div class="h-card site-author">
   {{- with $author.avatar }}
-  <a class="site-author__photo-link" href="{{ "/" | relURL }}" tabindex="-1" aria-hidden="true"><img class="u-photo site-author__photo" src="{{ . }}" alt="{{ site.Title }} Profile Photo" width="76" height="76"></a>
+  <a class="site-author__photo-link" href="{{ "/" | relURL }}" tabindex="-1" aria-hidden="true"><img class="u-photo site-author__photo" src="{{ . }}" alt="{{ site.Title }} Profile Photo" width="64" height="64"></a>
   {{- end }}
   <a class="u-url u-uid p-name site-author__name" rel="me" href="{{ "/" | absURL }}">{{ $name }}</a>
   {{- with $note }}

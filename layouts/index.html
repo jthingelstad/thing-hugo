@@ -1,14 +1,17 @@
 {{ define "main" }}
-<section class="home">
-  {{ with site.Params.intro }}
-    <div class="home__intro">
-      {{ . | markdownify }}
-    </div>
-  {{ end }}
+<div class="cols">
+  <section class="home">
+    {{ with site.Params.intro }}
+      <div class="home__intro">
+        {{ . | markdownify }}
+      </div>
+    {{ end }}
 
-  {{ $typeName := site.Params.contentTypeName | default "post" }}
-  {{ $paginator := .Paginate (where site.RegularPages "Type" $typeName) }}
-  {{ partial "post-stream.html" $paginator.Pages }}
-  {{ partial "pagination.html" . }}
-</section>
+    {{ $typeName := site.Params.contentTypeName | default "post" }}
+    {{ $paginator := .Paginate (where site.RegularPages "Type" $typeName) }}
+    {{ partial "post-stream.html" $paginator.Pages }}
+    {{ partial "pagination.html" . }}
+  </section>
+  {{ partial "rail.html" . }}
+</div>
 {{ end }}

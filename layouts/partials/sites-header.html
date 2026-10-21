@@ -1,13 +1,19 @@
-{{- /* A slim strip above the site header linking Jamie's sites. */ -}}
+{{- /* The sites strip above the site header, linking Jamie's sites. The blog
+       is black and white; each other site's link carries that site's colour
+       (sites-strip__item--<id> in thing.css). The current site shows its
+       short name ("Blog"), the others their full names. */ -}}
 {{- $sites := partial "sites.html" . -}}
 {{- if gt (len $sites) 1 }}
 <nav class="sites-strip" aria-label="Jamie's sites">
-  <ul class="sites-strip__list">
-    {{- range $sites }}
-    <li class="sites-strip__item{{ if .current }} sites-strip__item--current{{ end }}">
-      <a href="{{ .url }}"{{ if .current }} aria-current="true"{{ end }} title="{{ .description }}">{{ .short_name | default .name }}</a>
-    </li>
-    {{- end }}
-  </ul>
+  <div class="sites-strip__inner frame">
+    <span class="sites-strip__label">Jamie's sites</span>
+    <ul class="sites-strip__list">
+      {{- range $sites }}
+      <li class="sites-strip__item sites-strip__item--{{ .id }}{{ if .current }} sites-strip__item--current{{ end }}">
+        <a href="{{ .url }}"{{ if .current }} aria-current="page"{{ end }} title="{{ .description }}">{{ if .current }}{{ .short_name | default .name }}{{ else }}{{ .name }}{{ end }}</a>
+      </li>
+      {{- end }}
+    </ul>
+  </div>
 </nav>
 {{- end }}

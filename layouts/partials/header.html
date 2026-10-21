@@ -1,9 +1,10 @@
-{{- /* Notebook header. Home: centred avatar, name, About line, then the nav.
-       Everywhere else: a compact row, avatar and name left, nav right.
+{{- /* The site header, on the shared frame. Home: a 64px avatar, the name
+       and the About line. Everywhere else: a 44px avatar and the name. The
+       nav sits at the right on both.
        Menu links keep Tiny's "page-link {Name}" classes so Custom CSS that
        targets one item still works. */ -}}
 <header class="site-header{{ if .IsHome }} site-header--home{{ else }} site-header--compact{{ end }}">
-  <div class="site-header__inner">
+  <div class="site-header__inner frame">
     {{ partial "h-card.html" . }}
     <nav class="site-nav" aria-label="Main">
       <ul class="site-nav__list">
@@ -24,6 +25,3 @@
     </nav>
   </div>
 </header>
-{{- if .IsHome }}
-<div class="site-rule" aria-hidden="true"></div>
-{{- end }}
