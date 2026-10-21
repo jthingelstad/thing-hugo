@@ -12,8 +12,17 @@
     {{ if .Title }}
       <header class="post-list__header">
         <h1 class="post-list__title">{{ .Title }}</h1>
+        {{- /* A category's intro (Jamie's Coffee page) arrives through
+               micro.blog's microhook-category-header partial as a
+               div.microblog_category_intro, the way Tiny shows it. */ -}}
+        {{- $hook := "" }}
+        {{- if templates.Exists "partials/microhook-category-header.html" }}{{ $hook = partial "microhook-category-header.html" . | strings.TrimSpace }}{{ end }}
+        {{- with $hook }}
+        <div class="post-list__intro">{{ . | safeHTML }}</div>
+        {{- else }}
         {{ with .Description }}<div class="post-list__intro">{{ . | markdownify }}</div>{{ end }}
         {{ with .Content }}<div class="post-list__intro">{{ . }}</div>{{ end }}
+        {{- end }}
       </header>
     {{ end }}
 
