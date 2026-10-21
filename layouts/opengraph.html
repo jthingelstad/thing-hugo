@@ -1,8 +1,13 @@
-<div style="background-color: #ffffff; color: #191919; padding: 40px; font-family: 'Newsreader', 'Iowan Old Style', Georgia, serif; line-height: 1.4;" data-content-background="#ffffff" data-avatar-background="#b86131"{{ with site.Params.custom_avatar }} data-avatar-url="{{ . }}"{{ end }}>
+{{- /* The social card. micro.blog renders this one itself with plain Go
+       templates, not Hugo: only .Title, .Summary and .Site.Params exist, and
+       no Hugo functions (site, plainify, truncate...). Using one fails the
+       card ("function "site" not defined", 2026-10-21). check-opengraph.go
+       parses it the same way. */ -}}
+<div style="background-color: #ffffff; color: #16161a; padding: 40px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; line-height: 1.4;" data-content-background="#ffffff" data-avatar-background="#16161a"{{ with .Site.Params.custom_avatar }} data-avatar-url="{{ . }}"{{ end }}>
   {{- with .Title }}
-  <b style="font-size: 30px; font-weight: 500; line-height: 1.15; margin-bottom: 16px; display: block;">{{ . }}</b>
+  <b style="font-family: 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; font-size: 30px; font-weight: 600; line-height: 1.15; margin-bottom: 16px; display: block;">{{ . }}</b>
   {{- end }}
   {{- with .Summary }}
-  <p style="font-size: 20px; line-height: 1.45; margin: 0;">{{ . | plainify | htmlUnescape | truncate 220 }}</p>
+  <p style="font-size: 20px; line-height: 1.45; margin: 0; color: #3d3d47;">{{ . }}</p>
   {{- end }}
 </div>
