@@ -3,6 +3,10 @@
 // it at /pagefind/; the theme's markup (partials/pagefind-meta.html) gives
 // each post a title, date, photo, titled flag, and year and category filters.
 //
+// It searches as you type (2.0.11), as the Weekly Thing's search does: a
+// pause of TYPING ms runs the search, Enter runs it at once, and the last
+// results stay up until the next ones arrive.
+//
 // State lives in the address (?q=kubb&sort=newest&year=2025&category=Kubb)
 // so a search can be reloaded or shared. Results come ten at a time. There
 // are no counts anywhere, by design. Excerpt HTML from Pagefind is rebuilt
@@ -10,6 +14,7 @@
 (function () {
   var PAGE = 10;
   var CATEGORIES = 8;
+  var TYPING = 250;
 
   function start() {
     var root = document.getElementById('search-results');
@@ -36,6 +41,8 @@
     var shown = 0;
     var run = 0;
     var pagefind = null;
+    var typing = 0;
+    var typed = false;
 
     if (input && state.q) input.value = state.q;
     if (sortGroup) sortGroup.hidden = false;
@@ -48,6 +55,18 @@
     }
 
     function say(text) { status.textContent = text; }
+
+    // Tinylytics counts clicks on data-tinylytics-event elements.
+    function track(name, value) {
+      var sink = el('button');
+      sink.type = 'button';
+      sink.hidden = true;
+      sink.setAttribute('data-tinylytics-event', name);
+      sink.setAttribute('data-tinylytics-event-value', value);
+      document.body.appendChild(sink);
+      sink.click();
+      sink.remove();
+    }
 
     function save() {
       var p = new URLSearchParams();
@@ -128,12 +147,15 @@
       return li;
     }
 
-    function showMore(token) {
+    // fresh: a new search's first page, which replaces the list only once
+    // it has loaded, so typing never flashes an empty list.
+    function showMore(token, fresh) {
       var next = results.slice(shown, shown + PAGE);
       shown += next.length;
       more.hidden = true;
       return Promise.all(next.map(function (r) { return r.data(); })).then(function (data) {
         if (token !== run) return;
+        if (fresh) list.textContent = '';
         data.forEach(function (d) {
           var li = card(d);
           if (li) list.appendChild(li);
@@ -185,18 +207,19 @@
 
     function search() {
       var token = ++run;
+      window.clearTimeout(typing);
       save();
       drawSort();
-      list.textContent = '';
       more.hidden = true;
-      results = [];
-      shown = 0;
       if (!state.q) {
+        list.textContent = '';
+        results = [];
+        shown = 0;
         say('');
         drawFilters(null);
         return;
       }
-      say('Searching…');
+      if (!list.firstChild) say('Searching…');
       var filters = {};
       if (state.year.length) filters.year = { any: state.year };
       if (state.category.length) filters.category = { any: state.category };
@@ -204,14 +227,16 @@
       if (state.sort === 'newest') opts.sort = { date: 'desc' };
       pagefind.search(state.q, opts).then(function (found) {
         if (token !== run || !found) return;
+        shown = 0;
         results = found.results || [];
         drawFilters(found.totalFilters);
         if (!results.length) {
+          list.textContent = '';
           say('Nothing in the blog matches “' + state.q + '”' + (state.year.length || state.category.length ? ' with those filters.' : '. Try fewer words, or ask Thingy.'));
           return;
         }
         say('Results for “' + state.q + '”');
-        return showMore(token);
+        return showMore(token, true);
       }).catch(function () {
         if (token === run) say('Search is not working right now. The archive lists every post by year.');
       });
@@ -233,6 +258,24 @@
         state.q = input.value.trim();
         search();
       });
+      // Typing searches once the reader pauses; Pagefind starts fetching the
+      // word's index chunks straight away. The first typed search on a page
+      // is counted (search.live), as a submit is.
+      input.addEventListener('input', function () {
+        if (!pagefind) return;
+        var q = input.value.trim();
+        window.clearTimeout(typing);
+        if (q === state.q) return;
+        if (q) pagefind.preload(q);
+        typing = window.setTimeout(function () {
+          state.q = q;
+          if (q && !typed) {
+            typed = true;
+            track('search.live', 'search');
+          }
+          search();
+        }, TYPING);
+      });
     }
 
     import(root.getAttribute('data-pagefind') || '/pagefind/pagefind.js').then(function (pf) {
@@ -242,7 +285,11 @@
       // Search results only count the filters Pagefind has loaded, and it
       // loads them all here.
       return pagefind.filters();
-    }).then(search).catch(function () {
+    }).then(function () {
+      // Whatever was typed while Pagefind loaded.
+      if (input) state.q = input.value.trim();
+      search();
+    }).catch(function () {
       say('Search is not working right now. The archive lists every post by year.');
     });
   }
