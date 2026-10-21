@@ -31,8 +31,12 @@
          has none. */}}
   <script src="{{ partial "asset.html" "js/sites.js" }}" defer></script>
   <script src="{{ partial "asset.html" "js/nav.js" }}" defer></script>
+  {{- /* Plug-in scripts, deferred so none holds up the page (the Video
+         streaming plug-in's hls.js is 151 KB on every page). Deferred
+         scripts still run in order, before DOMContentLoaded, which is when
+         the installed ones (studio.js, poststats.js) start work. */}}
   {{ range site.Params.plugins_js }}
-  <script src="{{ . }}"></script>
+  <script src="{{ . }}" defer></script>
   {{ end }}
   {{ partial "extended_footer.html" . }}
   {{ partial "tinylytics.html" . }}
