@@ -1,9 +1,11 @@
 {{- /* A page's display title. Microposts have none, so use their opening
-       words, then the date. Returns a string. Used for <title>, og:title,
+       words (the ellipsis set against the last word: truncate's default puts
+       a space before it, and year-page rows wrapped a lone "…"), then the
+       date. Returns a string. Used for <title>, og:title,
        Pagefind's title meta and llms.txt so they all agree. */ -}}
 {{- $t := .Title -}}
 {{- if and (not $t) .IsPage -}}
-  {{- $t = .Summary | plainify | htmlUnescape | strings.TrimSpace | truncate 60 -}}
+  {{- $t = .Summary | plainify | htmlUnescape | strings.TrimSpace | truncate 60 "…" -}}
   {{- if not $t }}{{ $t = .Date.Format "January 2, 2006" }}{{ end -}}
 {{- end -}}
 {{- return $t -}}
