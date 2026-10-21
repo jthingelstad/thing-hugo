@@ -116,8 +116,11 @@ From micro.blog's own settings: `description`, `author.{name,avatar,username}`,
 
 ## Plug-ins and microhooks
 
-The theme calls no Tiny-style microhooks: what the blog used them for is built in.
-It does detect the partials these micro.blog plug-ins ship and adds each one to
+The theme calls one Tiny-style microhook, `microhook-category-header.html`,
+because micro.blog delivers category intros through it (Jamie's Coffee page).
+What the blog used the others for is built in, as are the styles post bodies
+lean on: `.callout`, `.aside`, `.alert` and the `.chat` conversation markup
+(Tiny-era Custom CSS no longer needs to carry them). It does detect the partials these micro.blog plug-ins ship and adds each one to
 the pill row under a post: Reply by Email (`reply-by-email.html`), Conversation
 Link (`conversation-link.html`) and Reply on Mastodon (`reply-on-mastodon.html`).
 Menu links keep Tiny's `page-link {Name}` classes for Custom CSS.
