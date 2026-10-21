@@ -15,12 +15,6 @@
 <link rel="alternate" type="text/plain" title="llms.txt" href="{{ "llms.txt" | absURL }}">
 {{- end }}
 
-{{- /* Pagefind's stylesheet goes before the theme's when the page uses it. */ -}}
-{{- if .HasShortcode "search" }}
-<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
-{{- else if eq .Layout "search" }}
-<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
-{{- end }}
 <link rel="stylesheet" href="{{ partial "asset.html" (dict "name" "css/site.css" "paths" (slice "css/tokens.css" "css/thing.css")) }}">
 
 {{- /* theme-color has to be a literal; read it from the tokens. */ -}}

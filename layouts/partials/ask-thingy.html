@@ -1,13 +1,14 @@
 {{- /* The Ask Thingy card: a question box that opens Thingy's chat with the
        question asked (/chat/?prompt=). Plain HTML, no script.
        Usage: {{ partial "ask-thingy.html" (dict "id" "rail" "class" "") }}
-       id keeps the label/input pair unique when a page has two cards. */ -}}
+       id keeps the label/input pair unique when a page has two cards; an
+       optional blurb replaces params.thingy_blurb. */ -}}
 {{- $sites := partialCached "sites-by-id.html" "sites" -}}
 {{- $id := .id | default "rail" -}}
 {{- with $sites.thingy }}
 <section class="rail-card rail-card--thingy{{ with $.class }} {{ . }}{{ end }}" aria-labelledby="thingy-{{ $id }}" data-pagefind-ignore>
   <h2 id="thingy-{{ $id }}" class="rail__heading">Ask {{ .name }}</h2>
-  <p class="rail__blurb">{{ site.Params.thingy_blurb | default "Ask me about coffee, kubb, or 25 years of links." }}</p>
+  <p class="rail__blurb">{{ $.blurb | default site.Params.thingy_blurb | default "Ask me about coffee, kubb, or 25 years of links." }}</p>
   <form class="rail-ask" action="{{ strings.TrimSuffix "/" .url }}/chat/" method="get">
     <label class="visually-hidden" for="thingy-q-{{ $id }}">Your question for {{ .name }}</label>
     <input id="thingy-q-{{ $id }}" class="rail-ask__input" name="prompt" type="text" placeholder="{{ site.Params.thingy_placeholder | default "What has Jamie written about kubb?" }}" required>

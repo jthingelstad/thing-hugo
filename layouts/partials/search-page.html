@@ -1,0 +1,39 @@
+{{- /* The Search page (Round 4b): the title and search box, Best match /
+       Newest beside them, then the results with Year and Category filters
+       and Ask Thingy in the rail. Results are drawn by js/search.js from
+       Pagefind's JavaScript API (micro.blog builds the index on every
+       publish and serves it at /pagefind/). Without JavaScript the box still
+       submits, and the results area says to browse the archive instead.
+       The page's own text, which holds {{< search >}}, sits above the
+       results; a page without the shortcode (layout: search) gets the
+       results added after its text. */ -}}
+<header class="archive-head search-head cols">
+  <div class="search-head__main">
+    <h1 class="post-list__title">{{ .Title | default "Search" }}</h1>
+    {{ partial "search-form.html" (dict "id" "search") }}
+  </div>
+  <div class="search-sort" role="group" aria-label="Sort" data-search-sort hidden>
+    <span class="search-sort__label">Sort</span>
+    <button class="search-sort__button" type="button" data-sort="best" aria-pressed="true">Best match</button>
+    <button class="search-sort__button" type="button" data-sort="newest" aria-pressed="false">Newest</button>
+  </div>
+</header>
+<div class="cols">
+  <section class="search-page" aria-label="Results">
+    {{- with .Content }}
+    <div class="search-page__text">{{ . }}</div>
+    {{- end }}
+    {{- if not (.HasShortcode "search") }}{{ partial "search-ui.html" . }}{{ end }}
+  </section>
+  <aside class="rail rail--search" aria-label="Narrow the results" data-pagefind-ignore>
+    <section class="rail-section" aria-labelledby="filter-year" data-search-filter="year" hidden>
+      <h2 id="filter-year" class="rail__heading">Year</h2>
+      <ul class="rail-chips" data-search-chips></ul>
+    </section>
+    <section class="rail-section" aria-labelledby="filter-category" data-search-filter="category" hidden>
+      <h2 id="filter-category" class="rail__heading">Category</h2>
+      <ul class="rail-chips" data-search-chips></ul>
+    </section>
+    {{ partial "ask-thingy.html" (dict "id" "search" "blurb" "A question instead of a keyword? Thingy reads the blog, the Weekly Thing and the podcast.") }}
+  </aside>
+</div>

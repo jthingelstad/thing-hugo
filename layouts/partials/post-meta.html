@@ -6,9 +6,10 @@
        year:       always show the year.
        reading:    add "· N minute read".
        categories: add the categories.
-       The hidden p-author keeps the h-entry's author. */ -}}
+       The hidden p-author keeps the h-entry's author. Search skips the line
+       (data-pagefind-ignore); the date is in Pagefind's meta. */ -}}
 {{- $p := .page -}}
-<div class="post-meta">
+<div class="post-meta" data-pagefind-ignore>
   {{ partial "post-date.html" (dict "page" $p "long" .long "year" .year) }}
   {{- if and .reading (ne site.Params.showReadingTime false) $p.WordCount }}
   <span class="post-meta__sep" aria-hidden="true">·</span> <span class="post-meta__reading">{{ $p.ReadingTime }} minute read</span>

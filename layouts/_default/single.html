@@ -1,4 +1,10 @@
 {{ define "main" }}
+{{- /* micro.blog's Search page is an ordinary page whose body is
+       {{< search >}} (custom front matter is discarded), so the shortcode is
+       what selects the search layout. */}}
+{{- if .HasShortcode "search" }}
+{{ partial "search-page.html" . }}
+{{- else }}
 {{- $isPost := eq .Type "post" -}}
 {{- $isPage := eq .Type "page" -}}
 {{- /* A short note with no photo is set large on its own page. */ -}}
@@ -61,5 +67,6 @@
   </nav>
   {{- end }}
 </div>
+{{- end }}
 {{- end }}
 {{ end }}

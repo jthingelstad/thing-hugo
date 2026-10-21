@@ -1,13 +1,20 @@
-{{- /* Pagefind index metadata for a post. Hidden; Pagefind reads attributes.
+{{- /* Pagefind index metadata for a post. Hidden, and data-pagefind-ignore
+       keeps its text out of the searchable words (Pagefind still reads the
+       meta, filters and sort inside it).
        micro.blog runs Pagefind itself (the Pagefind publishing Action), so
        changes here take effect on the next publish.
 
        title: partials/title.html (microposts get their opening words).
+       titled: present only on posts with a real title, so Search can set
+       a micropost as its words rather than a made-up heading.
        sort:  ISO date, which sorts lexically.
        filters: year and each category. */ -}}
 {{- $title := partial "title.html" . -}}
-<div hidden>
+<div hidden data-pagefind-ignore>
   <span data-pagefind-meta="title">{{ $title }}</span>
+  {{- if .Title }}
+  <span data-pagefind-meta="titled">1</span>
+  {{- end }}
   <span data-pagefind-meta="date">{{ .Date.Format "January 2, 2006" }}</span>
   <span data-pagefind-sort="date">{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</span>
   <span data-pagefind-filter="year">{{ .Date.Year }}</span>
