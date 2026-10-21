@@ -1,7 +1,8 @@
 {{- /* /photos/: micro.blog's PhotosHTML output of the home page (replaces
        Blank's list.photoshtml.html). Same list as Blank, the first photo of
        every post that has one, newest first, with each photo's alt text from
-       photos_alt and the grid styled by the theme instead of inline styles.
+       photos_alt (else the post's own <img>), and the grid styled by the
+       theme instead of inline styles.
        Narrated posts list an .mp3 in photos; partials/first-image.html skips it. */ -}}
 {{ define "title" }}<title>Photos · {{ site.Title }}</title>{{ end }}
 {{ define "canonical" }}<link rel="canonical" href="{{ "photos/" | absURL }}">{{ end }}
@@ -18,6 +19,14 @@
     {{- with $src }}
     {{- $alt := "" -}}
     {{- range $i, $p := $page.Params.photos }}{{ if and (eq $p $src) (not $alt) }}{{ with $page.Params.photos_alt }}{{ if lt $i (len .) }}{{ $alt = index . $i }}{{ end }}{{ end }}{{ end }}{{ end -}}
+    {{- /* No photos_alt: the alt on the photo's <img> in the post, then the
+           post's title or date, so every link here has a name. */ -}}
+    {{- if not $alt }}
+      {{- range findRE `<img[^>]+>` $page.Content }}
+        {{- if in . $src }}{{ with findRESubmatch `\balt="([^"]*)"` . 1 }}{{ $alt = index (index . 0) 1 | htmlUnescape | strings.TrimSpace }}{{ end }}{{ break }}{{ end }}
+      {{- end }}
+    {{- end }}
+    {{- if not $alt }}{{ $alt = $page.Title | default (printf "Photo from %s" ($page.Date.Format "January 2, 2006")) }}{{ end -}}
     <a class="photos-grid-item-link" href="{{ $page.Permalink }}"><img class="photos-grid-item" src="{{ $src }}" alt="{{ $alt }}" width="300" height="300" loading="lazy" decoding="async"></a>
     {{- end }}
     {{- end }}
