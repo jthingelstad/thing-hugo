@@ -7,5 +7,5 @@
 <form class="search-form" action="{{ site.Params.search_path | default "/search/" | relURL }}" method="get" role="search">
   <label class="visually-hidden" for="{{ .id }}-q">Search the blog</label>
   <input id="{{ .id }}-q" class="search-form__input" type="search" name="q" placeholder="{{ $placeholder }}"{{ with .value }} value="{{ . }}"{{ end }}>
-  <button class="search-form__button" type="submit">Search</button>
+  <button class="search-form__button" type="submit" data-tinylytics-event="search.submit" data-tinylytics-event-value="{{ .id }}">Search</button>
 </form>

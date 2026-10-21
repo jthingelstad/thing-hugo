@@ -1,11 +1,12 @@
 {{- /* Another Thing as a card: the latest episode (js/sites.js, from
        index.json) and where to listen. In the home stream on phones, and
-       under a post. Usage: {{ partial "at-card.html" (dict "class" "") }} */ -}}
+       under a post. Usage: {{ partial "at-card.html" (dict "class" "" "place" "post") }}
+       place names it in the another.card Tinylytics event. */ -}}
 {{- $sites := partialCached "sites-by-id.html" "sites" -}}
 {{- with $sites.another }}
 <section class="at-card{{ with $.class }} {{ . }}{{ end }}" aria-label="{{ .name }}"{{ with .feeds.json }} data-rail="episode" data-rail-feed="{{ . }}"{{ end }} data-pagefind-ignore>
   <p class="at-card__kicker" data-episode-kicker>{{ .name }} · my podcast</p>
-  <h2 class="at-card__title"><a href="{{ .url }}" data-episode-link data-episode-title>{{ .name }}</a></h2>
-  <a class="at-card__more" href="{{ .subscribe_url | default .url }}">Ways to listen</a>
+  <h2 class="at-card__title"><a href="{{ .url }}" data-episode-link data-episode-title data-tinylytics-event="another.card" data-tinylytics-event-value="{{ $.place | default "post" }}.episode">{{ .name }}</a></h2>
+  <a class="at-card__more" href="{{ .subscribe_url | default .url }}" data-tinylytics-event="another.card" data-tinylytics-event-value="{{ $.place | default "post" }}.listen">Ways to listen</a>
 </section>
 {{- end }}

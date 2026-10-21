@@ -23,6 +23,6 @@
   <li>{{ partial "reply-on-mastodon.html" . }}</li>
   {{- end }}
   {{- with $thingy }}
-  <li><a class="explore-with-thingy" href="{{ strings.TrimSuffix "/" . }}/chat/?explore={{ $.Permalink | urlquery }}">Explore with Thingy</a></li>
+  <li><a class="explore-with-thingy" href="{{ strings.TrimSuffix "/" . }}/chat/?explore={{ $.Permalink | urlquery }}" data-tinylytics-event="thingy.explore" data-tinylytics-event-value="{{ $.RelPermalink }}">Explore with Thingy</a></li>
   {{- end }}
 </ul>

@@ -3,9 +3,16 @@
        script fills in). site.Params.tinylytics_id is the site's public embed
        id; tinylytics_options are the embed's features, as in Tinylytics' own
        snippet. If the Tinylytics micro.blog plug-in is still installed it
-       loads the same script, so the theme stands down rather than count twice. */ -}}
+       loads the same script, so the theme stands down rather than count twice.
+       events and beacon are always added: the data-tinylytics-event clicks
+       (Subscribe, Explore and Ask Thingy, the Another Thing card, the sites
+       strip, search) only count with events, and beacon keeps a click that
+       leaves the page. Added here, not in the setting's default, because
+       Pull from GitHub doesn't refresh a plug-in's params. */ -}}
 {{- with site.Params.tinylytics_id }}
 {{- if not (templates.Exists "partials/plugin_tinylytics.html") }}
-<script src="https://tinylytics.app/embed/{{ . }}.js{{ with site.Params.tinylytics_options }}?{{ . | safeURL }}{{ end }}" defer></script>
+{{- $opts := site.Params.tinylytics_options | default "" -}}
+{{- range slice "events" "beacon" }}{{ if not (in (split $opts "&") .) }}{{ $opts = cond (eq $opts "") . (printf "%s&%s" $opts .) }}{{ end }}{{ end }}
+<script src="https://tinylytics.app/embed/{{ . }}.js{{ with $opts }}?{{ . | safeURL }}{{ end }}" defer></script>
 {{- end }}
 {{- end }}

@@ -21,9 +21,9 @@
   <p class="subscribe-card__blurb">Every weekend I send a letter with the things I read and thought about during the week. It’s not a product. It’s a letter. I’d love it if you read along.</p>
   {{- end }}
   <p class="subscribe-card__actions">
-    <a class="subscribe-card__button" href="{{ . }}">Subscribe</a>
+    <a class="subscribe-card__button" href="{{ . }}" data-tinylytics-event="subscribe.card" data-tinylytics-event-value="{{ $variant }}">Subscribe</a>
     {{- if ne $variant "hero" }}
-    <a class="subscribe-card__more" href="{{ $wt.url }}archive/">Read past issues</a>
+    <a class="subscribe-card__more" href="{{ $wt.url }}archive/" data-tinylytics-event="subscribe.past_issues" data-tinylytics-event-value="{{ $variant }}">Read past issues</a>
     {{- end }}
   </p>
   <p class="subscribe-card__proof">Free, every weekend · No tracking, no ads · Unsubscribe anytime</p>

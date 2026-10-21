@@ -5,7 +5,8 @@
        the current one differs only in its class and aria-current. Every link
        carries ?ref=sites-strip-<this site's id> so the Tinylytics Sources
        report on the destination shows the visits this strip sent (left off
-       when no site matches baseURL, as under serve.sh). */ -}}
+       when no site matches baseURL, as under serve.sh), and a strip.click
+       event naming the destination, so the blog's own report counts them. */ -}}
 {{- $sites := partial "sites.html" . -}}
 {{- $origin := "" -}}
 {{- range $sites }}{{ if .current }}{{ $origin = .id }}{{ end }}{{ end -}}
@@ -18,7 +19,7 @@
       {{- $href := .url -}}
       {{- with $origin }}{{ $href = printf "%s%sref=sites-strip-%s" $href (cond (strings.Contains $href "?") "&" "?") . }}{{ end }}
       <li class="sites-strip__item sites-strip__item--{{ .id }}{{ if .current }} sites-strip__item--current{{ end }}">
-        <a href="{{ $href }}"{{ if .current }} aria-current="true"{{ end }} title="{{ .description }}">{{ .strip_label | default .name }}</a>
+        <a href="{{ $href }}"{{ if .current }} aria-current="true"{{ end }} title="{{ .description }}" data-tinylytics-event="strip.click" data-tinylytics-event-value="{{ .id }}">{{ .strip_label | default .name }}</a>
       </li>
       {{- end }}
     </ul>

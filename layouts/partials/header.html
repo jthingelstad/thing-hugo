@@ -23,7 +23,7 @@
   <div class="site-header__inner frame">
     {{ partial "h-card.html" (dict "home" $home) }}
     {{- with $subscribe }}
-    <a class="site-header__subscribe" href="{{ . }}">Subscribe</a>
+    <a class="site-header__subscribe" href="{{ . }}" data-tinylytics-event="subscribe.header" data-tinylytics-event-value="button">Subscribe</a>
     {{- end }}
     <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -45,7 +45,7 @@
         {{- end }}
         {{- end }}
         {{- with $subscribe }}
-        <li class="site-nav__item site-nav__item--subscribe"><a href="{{ . }}">Subscribe</a></li>
+        <li class="site-nav__item site-nav__item--subscribe"><a href="{{ . }}" data-tinylytics-event="subscribe.header" data-tinylytics-event-value="menu">Subscribe</a></li>
         {{- end }}
       </ul>
     </nav>

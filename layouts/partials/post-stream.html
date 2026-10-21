@@ -14,7 +14,7 @@
   {{- if $modules }}
   {{- if eq $i 2 }}{{ partial "wt-latest.html" . }}{{ end }}
   {{- if eq $i 3 }}{{ partial "ask-thingy.html" (dict "id" "stream" "class" "only-narrow") }}{{ end }}
-  {{- if eq $i 5 }}{{ partial "at-card.html" (dict "class" "only-narrow") }}{{ end }}
+  {{- if eq $i 5 }}{{ partial "at-card.html" (dict "class" "only-narrow" "place" "home") }}{{ end }}
   {{- end }}
   {{- end }}
 </div>
