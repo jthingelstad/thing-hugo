@@ -617,6 +617,14 @@ figcaption, .figure__caption {
 .post__nav-title { font-size: var(--font-size-ui); font-weight: var(--weight-strong); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .post__nav-link:hover .post__nav-title { text-decoration-thickness: 2px; }
 
+/* The Not Found page: search, then Ask Thingy, under Jamie's text */
+.not-found__find {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
 /* Replies from micro.blog (conversation.js) */
 .microblog_conversation {
   margin-top: var(--space-6);
@@ -653,10 +661,13 @@ figcaption, .figure__caption {
   color: var(--color-ink);
   font: inherit;
 }
-.microblog_reply_button,
+/* conversation.js writes <p class="microblog_reply_button"><input
+   type="submit" value="Post"></p>, disabled until the reader signs in. Only
+   the input is the button; styling the paragraph too drew a full-width black
+   bar with "Post" off to one side. */
+.microblog_reply_button { margin-top: var(--space-2); display: flex; justify-content: flex-end; }
 .microblog_reply_button input,
 .microblog_reply_button button {
-  margin-top: var(--space-2);
   min-height: var(--target-min);
   padding: 0 1.125rem;
   border: 0;
@@ -667,6 +678,13 @@ figcaption, .figure__caption {
   font-weight: var(--weight-strong);
   cursor: pointer;
 }
+.microblog_reply_button input:disabled,
+.microblog_reply_button button:disabled {
+  background: var(--color-mark);
+  color: var(--color-text-muted);
+  cursor: default;
+}
+.microblog_reply_textarea textarea:disabled { cursor: default; }
 
 /* Post-body classes Jamie uses (from Tiny's conventions) */
 .post__content aside,
@@ -1236,7 +1254,9 @@ a.tinylytics_webring { text-decoration: none; }
 .home-hero__intro > * + * { margin-top: var(--space-3); }
 
 /* The Weekly Thing subscribe card: Weekly Thing blue, white type. The
-   button goes to the Weekly Thing's own (Turnstile-checked) form. */
+   button goes to the Weekly Thing's own (Turnstile-checked) form. The small
+   lines stay solid white: white on the blue is 4.88:1, and at 90% opacity
+   it fell under AA's 4.5:1 (axe, 2026-10-21). */
 .subscribe-card {
   padding: 1.75rem;
   border-radius: var(--radius-lg);
@@ -1249,7 +1269,6 @@ a.tinylytics_webring { text-decoration: none; }
   font-weight: var(--weight-strong);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  opacity: 0.9;
 }
 .subscribe-card__title { margin-top: 6px; font-size: var(--font-size-h2); color: inherit; }
 .subscribe-card__blurb { margin-top: 10px; font-size: var(--font-size-ui); line-height: 1.5; }
@@ -1277,7 +1296,7 @@ a.tinylytics_webring { text-decoration: none; }
 .subscribe-card__button:hover { text-decoration: underline; }
 .subscribe-card--hero .subscribe-card__button { flex: 1 1 100%; }
 .subscribe-card__more { color: inherit; font-size: var(--font-size-small); font-weight: var(--weight-strong); }
-.subscribe-card__proof { margin-top: var(--space-3); font-size: var(--font-size-label); opacity: 0.92; }
+.subscribe-card__proof { margin-top: var(--space-3); font-size: var(--font-size-label); }
 .subscribe-card a:focus-visible { outline-color: #ffffff; }
 
 /* The latest Weekly Thing, in the home stream */

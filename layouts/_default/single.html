@@ -29,6 +29,15 @@
     {{ .Content }}
   </div>
 
+  {{- /* The Not Found page is Jamie's micro.blog page at /404.html/; under its
+         text, a way to look for what the old link pointed at. */}}
+  {{- if and $isPage (strings.HasPrefix .RelPermalink "/404") }}
+  <div class="not-found__find" data-pagefind-ignore>
+    {{ partial "search-form.html" (dict "id" "notfound") }}
+    {{ partial "ask-thingy.html" (dict "id" "notfound" "blurb" "Or ask Thingy, which reads the blog, the Weekly Thing and the podcast.") }}
+  </div>
+  {{- end }}
+
   {{- if not $isPage }}
   <footer class="post__footer" data-pagefind-ignore>
     {{- if .Title }}
