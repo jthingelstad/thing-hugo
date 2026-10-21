@@ -3,15 +3,22 @@
        Usage: {{ partial "wt-subscribe.html" (dict "variant" "hero") }}
        hero: beside the home greeting. post: under a post.
 
-       The button goes to the Weekly Thing's own form. There is deliberately
-       no email box here: since 2026-10-14 every Weekly Thing signup passes
-       Cloudflare Turnstile on weekly.thingelstad.com, and a form posting
-       straight to Buttondown is the path the bot signups used. */ -}}
+       The card takes the address itself (2.0.11): js/subscribe.js shows the
+       form and sends it to the Librarian's /auth, the calls the Weekly Thing
+       website's own forms make, Turnstile check included. The form has no
+       action and nothing here posts to Buttondown: since 2026-10-14 every
+       Weekly Thing signup passes Cloudflare Turnstile, and a form straight to
+       Buttondown is the path the bot signups used. data/signup.json holds
+       the API, the public Turnstile site key and the ref (source:blog in
+       Buttondown); the placement is blog-home or blog-post, the sources
+       /auth knows. Without JavaScript, or without data/signup.json, the
+       Subscribe button goes to the Weekly Thing's form as before. */ -}}
 {{- $sites := partialCached "sites-by-id.html" "sites" -}}
 {{- $variant := .variant | default "post" -}}
+{{- $signup := hugo.Data.signup -}}
 {{- with $sites.weekly }}{{ with .subscribe_url }}
 {{- $wt := $sites.weekly }}
-<section id="subscribe" class="subscribe-card subscribe-card--{{ $variant }}" aria-labelledby="subscribe-title" data-pagefind-ignore>
+<section id="subscribe" class="subscribe-card subscribe-card--{{ $variant }}" aria-labelledby="subscribe-title" data-pagefind-ignore{{ with $signup }} data-signup data-api="{{ .api }}" data-site-key="{{ .turnstile_site_key }}" data-ref="{{ .ref }}" data-source="{{ cond (eq $variant "hero") "blog-home" "blog-post" }}"{{ end }}>
   {{- if eq $variant "hero" }}
   <p class="subscribe-card__kicker">Weekend reading since 2017</p>
   <h2 id="subscribe-title" class="subscribe-card__title">{{ $wt.name }}</h2>
@@ -20,12 +27,24 @@
   <h2 id="subscribe-title" class="subscribe-card__title">Get the {{ $wt.name }}</h2>
   <p class="subscribe-card__blurb">Every weekend I send a letter with the things I read and thought about during the week. It’s not a product. It’s a letter. I’d love it if you read along.</p>
   {{- end }}
+  {{- with $signup }}
+  <form class="subscribe-card__form" data-signup-form novalidate hidden>
+    <label class="visually-hidden" for="subscribe-email">Email address</label>
+    <input class="subscribe-card__input" id="subscribe-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+    <button class="subscribe-card__button" type="submit" data-tinylytics-event="subscribe.card" data-tinylytics-event-value="{{ $variant }}">Subscribe</button>
+  </form>
+  <div class="subscribe-card__check" data-signup-turnstile></div>
+  <p class="subscribe-card__status" role="status" data-signup-status></p>
+  {{- end }}
   <p class="subscribe-card__actions">
-    <a class="subscribe-card__button" href="{{ . }}" data-tinylytics-event="subscribe.card" data-tinylytics-event-value="{{ $variant }}">Subscribe</a>
+    <a class="subscribe-card__button" href="{{ . }}" data-signup-fallback data-tinylytics-event="subscribe.card" data-tinylytics-event-value="{{ $variant }}">Subscribe</a>
     {{- if ne $variant "hero" }}
     <a class="subscribe-card__more" href="{{ $wt.url }}archive/" data-tinylytics-event="subscribe.past_issues" data-tinylytics-event-value="{{ $variant }}">Read past issues</a>
     {{- end }}
   </p>
   <p class="subscribe-card__proof">Free, every weekend · No tracking, no ads · Unsubscribe anytime</p>
 </section>
+{{- with $signup }}
+<script src="{{ partial "asset.html" "js/subscribe.js" }}" defer></script>
+{{- end }}
 {{- end }}{{ end }}

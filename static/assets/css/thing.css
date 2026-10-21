@@ -1283,10 +1283,11 @@ a.tinylytics_webring { text-decoration: none; }
 .home-hero__intro { margin-top: var(--space-4); font-size: 1.2em; line-height: 1.45; }
 .home-hero__intro > * + * { margin-top: var(--space-3); }
 
-/* The Weekly Thing subscribe card: Weekly Thing blue, white type. The
-   button goes to the Weekly Thing's own (Turnstile-checked) form. The small
-   lines stay solid white: white on the blue is 4.88:1, and at 90% opacity
-   it fell under AA's 4.5:1 (axe, 2026-10-21). */
+/* The Weekly Thing subscribe card: Weekly Thing blue, white type. With
+   JavaScript it takes the address (js/subscribe.js, 2.0.11): a white field
+   and an ink button; without, the white button goes to the Weekly Thing's
+   own form. The small lines stay solid white: white on the blue is 4.88:1,
+   and at 90% opacity it fell under AA's 4.5:1 (axe, 2026-10-21). */
 .subscribe-card {
   padding: 1.75rem;
   border-radius: var(--radius-lg);
@@ -1327,7 +1328,52 @@ a.tinylytics_webring { text-decoration: none; }
 .subscribe-card--hero .subscribe-card__button { flex: 1 1 100%; }
 .subscribe-card__more { color: inherit; font-size: var(--font-size-small); font-weight: var(--weight-strong); }
 .subscribe-card__proof { margin-top: var(--space-3); font-size: var(--font-size-label); }
-.subscribe-card a:focus-visible { outline-color: #ffffff; }
+.subscribe-card a:focus-visible,
+.subscribe-card button:focus-visible,
+.subscribe-card input:focus-visible { outline-color: #ffffff; }
+.subscribe-card [hidden] { display: none; }
+.subscribe-card__form {
+  margin-top: 1.125rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+/* The placeholder grey is 6.9:1 on the white field. */
+.subscribe-card__input {
+  flex: 1 1 14rem;
+  min-width: 0;
+  min-height: var(--target-field);
+  padding: 0 0.875rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: #16161a;
+  font: inherit;
+  font-size: var(--font-size-ui);
+}
+.subscribe-card__input::placeholder { color: #5a5a66; opacity: 1; }
+.subscribe-card__form .subscribe-card__button {
+  flex: 0 0 auto;
+  border: 0;
+  background: #16161a;
+  color: #ffffff;
+  cursor: pointer;
+}
+.subscribe-card__form .subscribe-card__button:disabled { cursor: progress; }
+.subscribe-card--hero .subscribe-card__form > * { flex: 1 1 100%; }
+.subscribe-card__check:not(:empty) { margin-top: var(--space-3); }
+.subscribe-card__status:not(:empty) { margin-top: var(--space-3); font-size: var(--font-size-small); font-weight: var(--weight-strong); line-height: 1.5; }
+.subscribe-card__status button {
+  margin-left: 0.25em;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
 
 /* The latest Weekly Thing, in the home stream */
 .wt-latest {
