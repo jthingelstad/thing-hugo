@@ -1,10 +1,13 @@
-{{- /* The rail: the right column of .cols on list pages (Round 4, R0-1d).
+{{- /* The rail: the right column of .cols on list pages and posts (Round 4,
+       R0-1d; posts since 2.0.12).
        Usage: {{ partial "rail.html" (dict "page" . "browse" false "home" true) }}
        browse false leaves out Browse (the archive already lists every
        category). home true is the home page's first page, where the stream
        carries the latest Weekly Thing (so the rail lists earlier issues)
        and, on phones, Ask Thingy and Another Thing (so the rail drops them
-       below 900px).
+       below 900px). post true is a post's own page, where the rail stacks
+       under Keep going (an Another Thing card) and the post's Explore with
+       Thingy, so it drops the same two below 900px.
 
        Ask Thingy and Browse are plain HTML. The Weekly Thing and Another
        Thing lists and On This Day are filled by js/sites.js in the reader's
@@ -22,9 +25,10 @@
        data/sites.json. Below 900px the rail drops under the main column. */ -}}
 {{- $browse := ne .browse false -}}
 {{- $home := .home | default false -}}
+{{- $narrow := or $home (.post | default false) -}}
 {{- $sites := partialCached "sites-by-id.html" "sites" -}}
 <aside class="rail" aria-label="More from Jamie" data-pagefind-ignore>
-  {{- partial "ask-thingy.html" (dict "id" "rail" "class" (cond $home "hide-narrow" "")) }}
+  {{- partial "ask-thingy.html" (dict "id" "rail" "class" (cond $narrow "hide-narrow" "")) }}
 
   {{- with $sites.weekly }}
   {{- with .feeds.atom }}
@@ -39,7 +43,7 @@
 
   {{- with $sites.another }}
   {{- with .feeds.json }}
-  <section class="rail-section rail-section--another{{ if $home }} hide-narrow{{ end }}" aria-labelledby="rail-another" data-rail="another" data-rail-feed="{{ . }}" data-rail-limit="3">
+  <section class="rail-section rail-section--another{{ if $narrow }} hide-narrow{{ end }}" aria-labelledby="rail-another" data-rail="another" data-rail-feed="{{ . }}" data-rail-limit="3">
     <h2 id="rail-another" class="rail__heading"><a href="{{ $sites.another.url }}">{{ $sites.another.name }}</a></h2>
     <p class="rail__sub">My podcast</p>
     <ol class="rail-list" data-rail-list></ol>

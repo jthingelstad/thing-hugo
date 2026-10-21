@@ -9,6 +9,13 @@
 {{- $isPage := eq .Type "page" -}}
 {{- /* A short note with no photo is set large on its own page. */ -}}
 {{- $brief := and (not .Title) (le .WordCount 30) (not (strings.Contains .Content "<img")) -}}
+{{- /* A post sits in the main column with the rail beside it, as list pages
+       do (Jamie, 2026-10-21). Pages stay one centred column. The rail is the
+       same on every post, so it is built once. */ -}}
+{{- if $isPost }}
+<div class="cols post-cols">
+<div class="post-cols__main">
+{{- end }}
 <article class="post post--single type-{{ .Type }} h-entry{{ if .Title }} post--titled{{ else }} post--note post--titleless{{ end }}{{ if $brief }} post--brief{{ end }}{{ range .Params.categories }} {{ . | urlize | lower }}{{ end }}"{{ if $isPost }} data-pagefind-body{{ end }}>
   {{- if $isPost }}{{ partial "pagefind-meta.html" . }}{{ end }}
   {{ partial "reply-context.html" . }}
@@ -76,6 +83,9 @@
     {{- end }}
   </nav>
   {{- end }}
+</div>
+</div>
+{{ partialCached "rail.html" (dict "post" true) "post" }}
 </div>
 {{- end }}
 {{- end }}

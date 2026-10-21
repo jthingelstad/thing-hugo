@@ -489,7 +489,9 @@ figcaption, .figure__caption {
 
 .reply-to { color: var(--color-text-muted); font-size: var(--font-size-meta); margin-bottom: var(--space-1); }
 
-/* A post's own page: one centred column */
+/* A page's own page: one centred column. A post's sits in the main column
+   of .cols beside the rail (.post-cols), the stream's width, and the rail
+   starts level with it. */
 .post--single {
   max-width: var(--measure);
   margin-left: auto;
@@ -497,6 +499,12 @@ figcaption, .figure__caption {
   padding-top: var(--space-6);
   display: flex;
   flex-direction: column;
+}
+.post-cols .post--single,
+.post-cols .post-after { max-width: none; margin-left: 0; margin-right: 0; }
+.post-cols > .rail { padding-top: var(--space-6); }
+@media (max-width: 56.25rem) {
+  .post-cols > .rail { padding-top: 0; }
 }
 .post__header { display: flex; flex-direction: column; gap: 0.625rem; }
 .post__title { font-size: var(--font-size-h1); }
