@@ -1,10 +1,13 @@
 {{- /* The rail: the right column of .cols on list pages (Round 4, R0-1d).
-       Usage: {{ partial "rail.html" (dict "page" . "browse" false) }}
+       Usage: {{ partial "rail.html" (dict "page" . "browse" false "home" true) }}
        browse false leaves out Browse (the archive already lists every
-       category).
+       category). home true is the home page's first page, where the stream
+       carries the latest Weekly Thing (so the rail lists earlier issues)
+       and, on phones, Ask Thingy and Another Thing (so the rail drops them
+       below 900px).
 
        Ask Thingy and Browse are plain HTML. The Weekly Thing and Another
-       Thing lists and On This Day are filled by js/rail.js in the reader's
+       Thing lists and On This Day are filled by js/sites.js in the reader's
        browser, because micro.blog only rebuilds the blog when Jamie posts:
        - Weekly Thing: the site's Atom feed (titles, dates and links only; the
          entry HTML carries a Tinylytics pixel and is never parsed as HTML).
@@ -16,26 +19,16 @@
        heading and its link onward. Site names and URLs come from
        data/sites.json. Below 900px the rail drops under the main column. */ -}}
 {{- $browse := ne .browse false -}}
-{{- $sites := dict -}}
-{{- range hugo.Data.sites.sites }}{{ $sites = merge $sites (dict .id .) }}{{ end -}}
+{{- $home := .home | default false -}}
+{{- $sites := partialCached "sites-by-id.html" "sites" -}}
 <aside class="rail" aria-label="More from Jamie" data-pagefind-ignore>
-  {{- with $sites.thingy }}
-  <section class="rail-card rail-card--thingy" aria-labelledby="rail-thingy">
-    <h2 id="rail-thingy" class="rail__heading">Ask {{ .name }}</h2>
-    <p class="rail__blurb">Ask me about coffee, kubb, or 25 years of links.</p>
-    <form class="rail-ask" action="{{ strings.TrimSuffix "/" .url }}/chat/" method="get">
-      <label class="visually-hidden" for="rail-thingy-q">Your question for {{ .name }}</label>
-      <input id="rail-thingy-q" class="rail-ask__input" name="prompt" type="text" placeholder="What has Jamie written about kubb?" required>
-      <button class="rail-ask__button" type="submit">Ask</button>
-    </form>
-  </section>
-  {{- end }}
+  {{- partial "ask-thingy.html" (dict "id" "rail" "class" (cond $home "hide-narrow" "")) }}
 
   {{- with $sites.weekly }}
   {{- with .feeds.atom }}
-  <section class="rail-section rail-section--weekly" aria-labelledby="rail-weekly" data-rail="atom" data-rail-feed="{{ . }}" data-rail-limit="4">
+  <section class="rail-section rail-section--weekly" aria-labelledby="rail-weekly" data-rail="atom" data-rail-feed="{{ . }}" data-rail-limit="4"{{ if $home }} data-rail-skip="1"{{ end }}>
     <h2 id="rail-weekly" class="rail__heading"><a href="{{ $sites.weekly.url }}archive/">{{ $sites.weekly.name }}</a></h2>
-    <p class="rail__sub">Recent issues</p>
+    <p class="rail__sub">{{ if $home }}Earlier issues{{ else }}Recent issues{{ end }}</p>
     <ol class="rail-list" data-rail-list></ol>
     <a class="rail__more" href="{{ $sites.weekly.url }}archive/">All issues</a>
   </section>
@@ -44,7 +37,7 @@
 
   {{- with $sites.another }}
   {{- with .feeds.json }}
-  <section class="rail-section rail-section--another" aria-labelledby="rail-another" data-rail="another" data-rail-feed="{{ . }}" data-rail-limit="3">
+  <section class="rail-section rail-section--another{{ if $home }} hide-narrow{{ end }}" aria-labelledby="rail-another" data-rail="another" data-rail-feed="{{ . }}" data-rail-limit="3">
     <h2 id="rail-another" class="rail__heading"><a href="{{ $sites.another.url }}">{{ $sites.another.name }}</a></h2>
     <p class="rail__sub">My podcast</p>
     <ol class="rail-list" data-rail-list></ol>
@@ -78,4 +71,3 @@
   </section>
   {{- end }}
 </aside>
-<script src="{{ partial "asset.html" "js/rail.js" }}" defer></script>

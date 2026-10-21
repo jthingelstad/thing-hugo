@@ -40,6 +40,8 @@
     "llmstxt_recent": 50,
     "sites_include": [],
     "signup_sites": [],
+    "home_greeting": "",
+    "intro": "I write here about technology, AI, the open web, photography and family. Every weekend I send a letter with the things I read and thought about during the week.",
     "rail_categories": "Weekly Thing, Kubb, Coffee, Minnestar, Pokémon",
     "on_this_day_feed": "https://micromemories.cleverdevil.io/posts?tz=US/Central",
     "on_this_day_path": "/on-this-day/",

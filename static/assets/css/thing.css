@@ -404,6 +404,26 @@ figcaption, .figure__caption {
 }
 .site-nav__item:last-child a { padding-right: 0; }
 .site-nav__item a:hover { text-decoration: underline; }
+.site-nav__item--subscribe { margin-left: var(--space-2); }
+.site-nav__item.site-nav__item--subscribe a {
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-wt);
+  color: var(--color-on-fill);
+}
+.site-nav__toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--target-min);
+  height: var(--target-min);
+  margin-right: calc(-1 * var(--space-2));
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-ink);
+  cursor: pointer;
+}
 
 /* The stream */
 .posts { display: flex; flex-direction: column; gap: var(--stack-posts); }
@@ -887,8 +907,164 @@ a.tinylytics_webring { text-decoration: none; }
 .search-page__also { margin-top: var(--space-6); color: var(--color-text-soft); font-size: var(--font-size-small); }
 .search-page__also a[href*="//thingy.thingelstad.com"] { color: var(--color-thingy-text); font-weight: var(--weight-strong); }
 
-/* Home intro */
-.home__intro { font-size: 1.2em; line-height: 1.45; margin-bottom: var(--space-7); }
+/* Home hello (Round 4): greeting and intro beside the Weekly Thing card,
+   on the same two columns as the stream and rail. */
+.home-hero { align-items: center; margin-bottom: var(--space-8); }
+.home-hero__title { font-size: var(--font-size-hero); line-height: 1.05; }
+.home-hero__intro { margin-top: var(--space-4); font-size: 1.2em; line-height: 1.45; }
+.home-hero__intro > * + * { margin-top: var(--space-3); }
+
+/* The Weekly Thing subscribe card: Weekly Thing blue, white type. The
+   button goes to the Weekly Thing's own (Turnstile-checked) form. */
+.subscribe-card {
+  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-wt);
+  color: var(--color-on-fill);
+  scroll-margin-top: var(--space-5);
+}
+.subscribe-card__kicker {
+  font-size: var(--font-size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+.subscribe-card__title { margin-top: 6px; font-size: var(--font-size-h2); color: inherit; }
+.subscribe-card__blurb { margin-top: 10px; font-size: var(--font-size-ui); line-height: 1.5; }
+.subscribe-card__actions {
+  margin-top: 1.125rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+.subscribe-card__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--target-field);
+  padding: 0 1.375rem;
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: #16161a;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-ui);
+  font-weight: var(--weight-heading);
+  text-decoration: none;
+}
+.subscribe-card__button:hover { text-decoration: underline; }
+.subscribe-card--hero .subscribe-card__button { flex: 1 1 100%; }
+.subscribe-card__more { color: inherit; font-size: var(--font-size-small); font-weight: var(--weight-strong); }
+.subscribe-card__proof { margin-top: var(--space-3); font-size: var(--font-size-label); opacity: 0.92; }
+.subscribe-card a:focus-visible { outline-color: #ffffff; }
+
+/* The latest Weekly Thing, in the home stream */
+.wt-latest {
+  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-wt-soft);
+}
+.wt-latest__kicker {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-wt-text);
+}
+.wt-latest__title { margin-top: var(--space-2); font-size: 1.75rem; line-height: 1.15; }
+.wt-latest__title a { color: var(--color-ink); text-decoration: none; }
+.wt-latest__title a:hover { text-decoration: underline; }
+.wt-latest__summary { margin-top: 10px; font-size: 1.125rem; }
+.wt-latest__actions {
+  margin-top: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-small);
+  font-weight: var(--weight-strong);
+}
+.wt-latest__actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  padding: 0 1.125rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+}
+.wt-latest__read { background: var(--color-wt); color: var(--color-on-fill); }
+.wt-latest__listen { background: var(--color-bg); color: var(--color-wt-text); }
+.wt-latest__actions .wt-latest__email { padding: 0 var(--space-3); color: var(--color-wt-text); text-decoration: underline; }
+.wt-latest__read:hover, .wt-latest__listen:hover { text-decoration: underline; }
+
+/* Another Thing as a card (home stream on phones, Keep going) */
+.at-card {
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--color-at-soft);
+  display: flex;
+  flex-direction: column;
+}
+.at-card__kicker { font-size: var(--font-size-label); font-weight: var(--weight-strong); color: var(--color-at-text); }
+.at-card__title { margin-top: 6px; font-size: var(--font-size-h3); line-height: 1.2; }
+.at-card__title a { color: var(--color-ink); text-decoration: none; }
+.at-card__title a:hover { text-decoration: underline; }
+.at-card__more {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: var(--target-min);
+  margin-top: var(--space-1);
+  font-size: var(--font-size-meta);
+  font-weight: var(--weight-strong);
+  color: var(--color-at-text);
+}
+
+/* Under a post: the subscribe card, Keep going, Earlier / Later */
+.post-after {
+  max-width: var(--measure);
+  margin: var(--space-8) auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+.post-after .post__nav { margin-top: 0; }
+.keep-going {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-4);
+}
+.keep-going__card { min-width: 0; }
+a.keep-going__card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--color-strip);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+.keep-going__kicker { font-size: var(--font-size-label); font-weight: var(--weight-strong); color: var(--color-text-muted); }
+.keep-going__title {
+  margin-top: 6px;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
+  font-weight: var(--weight-heading);
+  line-height: 1.2;
+  letter-spacing: var(--tracking-heading);
+}
+a.keep-going__card:hover .keep-going__title { text-decoration: underline; }
+
+/* Stream cards that only make sense when the rail has dropped below
+   (phones and narrow windows), and rail parts those cards replace. */
+.only-narrow { display: none; }
+@media (max-width: 56.25rem) {
+  .only-narrow { display: block; }
+  .at-card.only-narrow { display: flex; }
+  .hide-narrow { display: none; }
+}
 
 /* Phones */
 @media (max-width: 40rem) {
@@ -900,6 +1076,18 @@ a.tinylytics_webring { text-decoration: none; }
   .site-author { grid-template-columns: auto minmax(0, 1fr); }
   .site-author__note { grid-column: 1 / -1; margin-top: var(--space-3); }
   .site-header--home .site-author__photo-link { grid-row: auto; }
+  .site-header__inner { flex-wrap: wrap; align-items: flex-start; }
+  .site-author { flex: 1 1 0; min-width: 0; }
+  /* The Menu button (js/nav.js); without script the nav stays open. */
+  .js .site-nav__toggle { display: inline-flex; }
+  .site-nav { flex: 1 1 100%; }
+  .js .site-nav:not(.is-open) { display: none; }
+  .js .site-nav__list { flex-direction: column; gap: 0; margin: 0; }
+  .js .site-nav__item a { padding: 0; width: 100%; }
+  .js .site-nav__item--subscribe { margin: var(--space-2) 0 0; }
+  .js .site-nav__item.site-nav__item--subscribe a { justify-content: center; }
+  .home-hero { margin-bottom: var(--space-7); }
+  .subscribe-card, .wt-latest { padding: 1.375rem; }
   .content { padding-top: var(--space-6); }
   .post--single { padding-top: var(--space-2); }
   .post-list__header { margin-bottom: var(--space-6); }

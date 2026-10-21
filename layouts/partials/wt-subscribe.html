@@ -1,0 +1,31 @@
+{{- /* The Weekly Thing subscribe card, in Weekly Thing blue (id="subscribe",
+       the header's Subscribe button jumps here).
+       Usage: {{ partial "wt-subscribe.html" (dict "variant" "hero") }}
+       hero: beside the home greeting. post: under a post.
+
+       The button goes to the Weekly Thing's own form. There is deliberately
+       no email box here: since 2026-10-14 every Weekly Thing signup passes
+       Cloudflare Turnstile on weekly.thingelstad.com, and a form posting
+       straight to Buttondown is the path the bot signups used. */ -}}
+{{- $sites := partialCached "sites-by-id.html" "sites" -}}
+{{- $variant := .variant | default "post" -}}
+{{- with $sites.weekly }}{{ with .subscribe_url }}
+{{- $wt := $sites.weekly }}
+<section id="subscribe" class="subscribe-card subscribe-card--{{ $variant }}" aria-labelledby="subscribe-title" data-pagefind-ignore>
+  {{- if eq $variant "hero" }}
+  <p class="subscribe-card__kicker">Weekend reading since 2017</p>
+  <h2 id="subscribe-title" class="subscribe-card__title">{{ $wt.name }}</h2>
+  <p class="subscribe-card__blurb">Every weekend I send a letter with the things I read and thought about during the week.</p>
+  {{- else }}
+  <h2 id="subscribe-title" class="subscribe-card__title">Get the {{ $wt.name }}</h2>
+  <p class="subscribe-card__blurb">Every weekend I send a letter with the things I read and thought about during the week. It’s not a product. It’s a letter. I’d love it if you read along.</p>
+  {{- end }}
+  <p class="subscribe-card__actions">
+    <a class="subscribe-card__button" href="{{ . }}">Subscribe</a>
+    {{- if ne $variant "hero" }}
+    <a class="subscribe-card__more" href="{{ $wt.url }}archive/">Read past issues</a>
+    {{- end }}
+  </p>
+  <p class="subscribe-card__proof">Free, every weekend · No tracking, no ads · Unsubscribe anytime</p>
+</section>
+{{- end }}{{ end }}

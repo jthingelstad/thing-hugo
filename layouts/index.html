@@ -1,17 +1,28 @@
 {{ define "main" }}
+{{- $typeName := site.Params.contentTypeName | default "post" -}}
+{{- $paginator := .Paginate (where site.RegularPages "Type" $typeName) -}}
+{{- $first := eq $paginator.PageNumber 1 -}}
+{{- if $first }}
+{{- /* Round 4's hello: the greeting and intro beside the Weekly Thing card,
+       in the same two columns as the stream and rail below. The intro is
+       the intro setting (Markdown); the greeting defaults to the author's
+       first name. */ -}}
+{{- $name := site.Params.author.name | default site.Title -}}
+<section class="home-hero cols" aria-labelledby="home-hello">
+  <div class="home-hero__text">
+    <h1 id="home-hello" class="home-hero__title">{{ site.Params.home_greeting | default (printf "Hi, I’m %s." (index (split $name " ") 0)) }}</h1>
+    {{- with site.Params.intro }}
+    <div class="home-hero__intro">{{ . | markdownify }}</div>
+    {{- end }}
+  </div>
+  {{ partial "wt-subscribe.html" (dict "variant" "hero") }}
+</section>
+{{- end }}
 <div class="cols">
-  <section class="home">
-    {{ with site.Params.intro }}
-      <div class="home__intro">
-        {{ . | markdownify }}
-      </div>
-    {{ end }}
-
-    {{ $typeName := site.Params.contentTypeName | default "post" }}
-    {{ $paginator := .Paginate (where site.RegularPages "Type" $typeName) }}
-    {{ partial "post-stream.html" $paginator.Pages }}
+  <section class="home" aria-label="Posts">
+    {{ partial "post-stream.html" (dict "pages" $paginator.Pages "modules" $first) }}
     {{ partial "pagination.html" . }}
   </section>
-  {{ partial "rail.html" (dict "page" .) }}
+  {{ partial "rail.html" (dict "page" . "home" $first) }}
 </div>
 {{ end }}

@@ -1,0 +1,5 @@
+{{- /* data/sites.json as a dict keyed by site id ("weekly", "another",
+       "thingy", …). Call it with partialCached "sites-by-id.html" "sites". */ -}}
+{{- $sites := dict -}}
+{{- range hugo.Data.sites.sites }}{{ $sites = merge $sites (dict .id .) }}{{ end -}}
+{{- return $sites -}}

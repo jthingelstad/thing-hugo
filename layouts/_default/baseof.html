@@ -26,6 +26,11 @@
     {{ partial "footer.html" . }}
   {{ end }}
 
+  {{- /* Fills whatever comes from Jamie's other sites (the rail lists, the
+         latest Weekly Thing and Another Thing cards). Harmless where a page
+         has none. */}}
+  <script src="{{ partial "asset.html" "js/sites.js" }}" defer></script>
+  <script src="{{ partial "asset.html" "js/nav.js" }}" defer></script>
   {{ range site.Params.plugins_js }}
   <script src="{{ . }}"></script>
   {{ end }}

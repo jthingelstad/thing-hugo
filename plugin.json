@@ -14,6 +14,16 @@
       "placeholder": "weekly, another"
     },
     {
+      "field": "params.home_greeting",
+      "label": "Home greeting (blank: “Hi, I’m” and your first name)",
+      "placeholder": "Hi, I’m Jamie."
+    },
+    {
+      "field": "params.intro",
+      "label": "Home intro, beside the Weekly Thing card (Markdown, one paragraph)",
+      "placeholder": "I write here about technology, AI, the open web, photography and family."
+    },
+    {
       "field": "params.rail_categories",
       "label": "Categories in the rail's Browse list (names, comma-separated)",
       "placeholder": "Weekly Thing, Kubb, Coffee, Minnestar, Pokémon"
