@@ -89,7 +89,7 @@ single-line inputs, so lists are comma-separated.
 
 | Setting | Default | Purpose |
 | --- | --- | --- |
-| `sites_include` | empty | Ids of sites outside the publishing system to list anyway, e.g. `escape` |
+| `sites_include` | empty | Ids of sites left out of the strip (`in_sites_strip` false) to list anyway, e.g. `escape` |
 | `signup_sites` | empty | Ids of sites to show subscribe links for in the footer, e.g. `weekly, another` |
 | `home_greeting` | "Hi, I'm" and the first name | The home page's greeting |
 | `intro` | a sentence about the blog | Home intro beside the Weekly Thing card (Markdown) |

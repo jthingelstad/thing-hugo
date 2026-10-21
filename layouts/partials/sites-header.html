@@ -10,7 +10,7 @@
     <ul class="sites-strip__list">
       {{- range $sites }}
       <li class="sites-strip__item sites-strip__item--{{ .id }}{{ if .current }} sites-strip__item--current{{ end }}">
-        <a href="{{ .url }}"{{ if .current }} aria-current="page"{{ end }} title="{{ .description }}">{{ if .current }}{{ .short_name | default .name }}{{ else }}{{ .name }}{{ end }}</a>
+        <a href="{{ .url }}"{{ if .current }} aria-current="true"{{ end }} title="{{ .description }}">{{ if .current }}{{ .short_name | default .name }}{{ else }}{{ .name }}{{ end }}</a>
       </li>
       {{- end }}
     </ul>

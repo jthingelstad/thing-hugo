@@ -20,7 +20,7 @@ Personal blog of {{ site.Params.author.name | default site.Title }}, writing on 
 - Archive (every post): {{ "archive/" | absURL }}
 - Feed (RSS): {{ "feed.xml" | absURL }}
 - Feed (JSON): {{ "feed.json" | absURL }}
-{{- range hugo.Data.sites.sites }}{{ if and .in_publishing_system (ne .id "www") }}
+{{- range hugo.Data.sites.sites }}{{ if and .in_sites_strip (ne .id "www") }}
 - {{ .name }}: {{ .url }} ({{ .description }})
 {{- end }}{{ end }}
 
