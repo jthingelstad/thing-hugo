@@ -1,9 +1,10 @@
 {{- /* Where js/search.js puts the results, from {{< search >}} or the search
        layout. The search box and the filters are in search-page.html.
-       data-photo-proxy and data-uploads let result photos come through the
-       same resizer as other thumbnails (photo-src.html). */ -}}
+       data-photo-proxy and data-uploads (the upload prefixes, space-separated)
+       let result photos come through the same resizer as other thumbnails
+       (photo-src.html). */ -}}
 {{- $proxy := site.Params.photo_proxy | default "https://micro.blog/photos/" -}}
-<div id="search-results" class="search-results" data-pagefind="{{ "pagefind/pagefind.js" | relURL }}"{{ if ne $proxy "off" }} data-photo-proxy="{{ $proxy }}" data-uploads="{{ printf "%suploads/" site.BaseURL }}"{{ end }}>
+<div id="search-results" class="search-results" data-pagefind="{{ "pagefind/pagefind.js" | relURL }}"{{ if ne $proxy "off" }} data-photo-proxy="{{ $proxy }}" data-uploads="{{ delimit (partialCached "upload-prefixes.html" "prefixes") " " }}"{{ end }}>
   <p class="search-results__status" role="status" data-search-status></p>
   <ol class="search-results__list" data-search-list></ol>
   <button class="search-results__more" type="button" data-search-more hidden>More results</button>

@@ -48,7 +48,8 @@
 
   {{- with site.Params.on_this_day_feed }}
   {{- $path := site.Params.on_this_day_path | default "/on-this-day/" }}
-  <section class="rail-section rail-section--otd" aria-labelledby="rail-otd" data-rail="otd" data-rail-feed="{{ . }}" data-rail-limit="5">
+  {{- $proxy := site.Params.photo_proxy | default "https://micro.blog/photos/" }}
+  <section class="rail-section rail-section--otd" aria-labelledby="rail-otd" data-rail="otd" data-rail-feed="{{ . }}" data-rail-limit="5"{{ if ne $proxy "off" }} data-photo-proxy="{{ $proxy }}" data-uploads="{{ delimit (partialCached "upload-prefixes.html" "prefixes") " " }}"{{ end }}>
     <h2 id="rail-otd" class="rail__heading"><a href="{{ $path | relURL }}">On this day</a></h2>
     <p class="rail__sub" data-rail-date>In other years</p>
     <ol class="rail-list" data-rail-list></ol>

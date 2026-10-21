@@ -2,7 +2,8 @@
        Blank's list.photoshtml.html). Same list as Blank, the first photo of
        every post that has one, newest first, with each photo's alt text from
        photos_alt (else the post's own <img>), and the grid styled by the
-       theme instead of inline styles.
+       theme instead of inline styles. Tiles come through the photo resizer
+       (photo-src.html); the original URL still finds the alt text.
        Narrated posts list an .mp3 in photos; partials/first-image.html skips it. */ -}}
 {{ define "title" }}<title>Photos · {{ site.Title }}</title>{{ end }}
 {{ define "canonical" }}<link rel="canonical" href="{{ "photos/" | absURL }}">{{ end }}
@@ -27,7 +28,7 @@
       {{- end }}
     {{- end }}
     {{- if not $alt }}{{ $alt = $page.Title | default (printf "Photo from %s" ($page.Date.Format "January 2, 2006")) }}{{ end -}}
-    <a class="photos-grid-item-link" href="{{ $page.Permalink }}"><img class="photos-grid-item" src="{{ $src }}" alt="{{ $alt }}" width="300" height="300" loading="lazy" decoding="async"></a>
+    <a class="photos-grid-item-link" href="{{ $page.Permalink }}"><img class="photos-grid-item" src="{{ partial "photo-src.html" (dict "src" $src "size" 400) }}" alt="{{ $alt }}" width="300" height="300" loading="lazy" decoding="async"></a>
     {{- end }}
     {{- end }}
   </div>

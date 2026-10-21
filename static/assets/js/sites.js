@@ -183,6 +183,18 @@
     });
   }
 
+  // A thumbnail through the photo resizer when it is one of Jamie's uploads
+  // (the section's data-photo-proxy and space-separated data-uploads, as in
+  // partials/photo-src.html).
+  function thumbnail(section, src, size) {
+    var proxy = section.getAttribute('data-photo-proxy');
+    var uploads = (section.getAttribute('data-uploads') || '').split(' ');
+    for (var i = 0; src && proxy && i < uploads.length; i++) {
+      if (uploads[i] && src.indexOf(uploads[i]) === 0) return proxy + size + '/' + src;
+    }
+    return src;
+  }
+
   function fill(section, nodes) {
     var list = section.querySelector('[data-rail-list]');
     if (!list) return;
@@ -233,7 +245,7 @@
       var date = section.querySelector('[data-rail-date]');
       if (date) date.textContent = monthDay(new Date()) + ', in other years';
       return otd(feed, limit).then(function (picks) {
-        fill(section, picks.map(function (p) { return item(p.url, String(p.year), p.title, p.thumb); }));
+        fill(section, picks.map(function (p) { return item(p.url, String(p.year), p.title, thumbnail(section, p.thumb, 200)); }));
       });
     }
   };

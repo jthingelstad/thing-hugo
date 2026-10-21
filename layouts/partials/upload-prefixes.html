@@ -1,0 +1,8 @@
+{{- /* Where Jamie's uploaded photos live, for the thumbnail resizer
+       (photo-src.html, and js/search.js and js/sites.js through data-uploads).
+       micro.blog's API and exports give the blog's own /uploads/ address, but
+       the content micro.blog hands Hugo carries its CDN's
+       (https://cdn.uploads.micro.blog/<site id>/...; seen live 2026-10-21,
+       when every thumbnail on the year pages was a 2 to 6 MB original).
+       Returns a slice of URL prefixes. */ -}}
+{{- return slice (printf "%suploads/" site.BaseURL) "https://cdn.uploads.micro.blog/" -}}

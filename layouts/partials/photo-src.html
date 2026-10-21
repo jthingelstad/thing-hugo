@@ -2,11 +2,16 @@
        Usage: {{ partial "photo-src.html" (dict "src" $url "size" 200) }}
        micro.blog serves a fit-resized copy at https://micro.blog/photos/<size>/<url>
        (a 1.5 MB original comes back as 10 KB at 200). Only the blog's own
-       uploads go through it. params.photo_proxy sets another service, or
-       "off" for the originals. */ -}}
+       uploads go through it, at either address (upload-prefixes.html).
+       params.photo_proxy sets another service, or "off" for the originals. */ -}}
 {{- $src := .src -}}
 {{- $proxy := site.Params.photo_proxy | default "https://micro.blog/photos/" -}}
-{{- if and (ne $proxy "off") (strings.HasPrefix $src (printf "%suploads/" site.BaseURL)) -}}
-  {{- $src = printf "%s%d/%s" $proxy .size $src -}}
+{{- if ne $proxy "off" -}}
+  {{- range partialCached "upload-prefixes.html" "prefixes" -}}
+    {{- if strings.HasPrefix $src . -}}
+      {{- $src = printf "%s%d/%s" $proxy $.size $src -}}
+      {{- break -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
 {{- return $src -}}
