@@ -42,9 +42,11 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
    (micro.blog installs `main`). micro.blog layers the plug-in over Blank: Blank
    supplies `microblog_head` and the feeds; this theme supplies everything else,
    including the `/archive/` and `/photos/` pages. Remove any other theme
-   plug-in (Tiny Theme) so the two don't layer over each other. If the
-   Tinylytics plug-in is installed, uninstall it: the theme loads Tinylytics
-   itself.
+   plug-in (Tiny Theme) so the two don't layer over each other: a template it
+   has and this theme lacks (Tiny's `post/single.html`) still wins. Remove the
+   **Search page** plug-in (it owns `/search/`) and **Archive with months**
+   (it replaces `/archive/`). If the Tinylytics plug-in is installed,
+   uninstall it: the theme loads Tinylytics itself.
 3. **Pagefind:** on the blog's settings page, Edit Actions → add **Pagefind**. micro.blog runs it on
    every publish and serves the bundle at `/pagefind/`. Search results update
    on the next publish after any theme change.
@@ -56,8 +58,9 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
    ```
 
    (micro.blog discards custom front matter, so a shortcode, not a `layout:`
-   field, selects the search UI.) Do not create a page at `/pagefind/`: that path
-   belongs to the Pagefind bundle.
+   field, selects the search UI.) Leave "Include this page in your blog
+   navigation" off: the header adds its own Search link. Do not create a page
+   at `/pagefind/`: that path belongs to the Pagefind bundle.
 5. Republish and check `/search/`, `/archive/`, a year page, `/llms.txt` and a
    post's page source.
 
@@ -116,9 +119,9 @@ From micro.blog's own settings: `description`, `author.{name,avatar,username}`,
 
 ## Plug-ins and microhooks
 
-The theme calls one Tiny-style microhook, `microhook-category-header.html`,
-because micro.blog delivers category intros through it (Jamie's Coffee page).
-What the blog used the others for is built in, as are the styles post bodies
+The theme calls no Tiny-style microhooks. A category's Intro (set on
+micro.blog's Categories page) is the category page's content, and the theme
+shows it under the title. What the blog used microhooks for is built in, as are the styles post bodies
 lean on: `.callout`, `.aside`, `.alert` and the `.chat` conversation markup
 (Tiny-era Custom CSS no longer needs to carry them). It does detect the partials these micro.blog plug-ins ship and adds each one to
 the pill row under a post: Reply by Email (`reply-by-email.html`), Conversation
@@ -143,10 +146,10 @@ data/sites.json               Jamie's sites (generated copy)
 data/tokens.json              theme-color values (generated copy)
 layouts/
   _default/{baseof,single,list}.html   list.html also draws the year pages
-  _default/list.archivehtml.html  /archive/: year tiles and categories
-  _default/list.photoshtml.html   /photos/: photo grid with alt text
+  list.archivehtml.html       /archive/: year tiles and categories
+  list.photoshtml.html        /photos/: photo grid with alt text
   index.html                  home: hello, Weekly Thing card, stream, rail
-  opengraph.html              social card micro.blog renders to an image
+  opengraph.html              social card micro.blog renders to an image (plain Go templates, no Hugo functions)
   index.llmstxt.txt           /llms.txt
   replies/section.html        /replies/
   archive/list.html           paginated archive section, if one exists
