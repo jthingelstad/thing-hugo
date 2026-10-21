@@ -394,9 +394,12 @@ figcaption, .figure__caption {
   font-size: var(--font-size-ui);
   font-weight: var(--weight-strong);
 }
+/* gap: Jamie's Custom CSS puts an emoji in ::before, a flex item whose
+   trailing space collapses. */
 .site-nav__item a {
   display: inline-flex;
   align-items: center;
+  gap: 0.3em;
   min-height: var(--target-min);
   padding: 0 var(--space-3);
   color: var(--color-ink);
@@ -1031,6 +1034,14 @@ a.tinylytics_webring { text-decoration: none; }
 .site-footer__links { display: flex; flex-wrap: wrap; gap: 0 var(--space-4); }
 .site-footer__links a { display: inline-flex; align-items: center; min-height: var(--target-min); }
 .custom_footer, .site-footer .h-card { font-size: var(--font-size-label); }
+.site-footer__custom {
+  flex: 1 1 100%;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-quote-bar);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+.site-footer__custom > * + * { margin-top: var(--space-2); }
 
 .sites-footer { flex: 1 1 28rem; max-width: 40rem; }
 .sites-footer__title {

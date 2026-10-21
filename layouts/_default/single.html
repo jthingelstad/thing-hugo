@@ -40,6 +40,7 @@
     {{ partial "post-meta.html" (dict "page" . "long" true "categories" true) }}
     {{- end }}
     {{ partial "post-actions.html" . }}
+    {{- partial "syndication.html" . }}
   </footer>
   {{- end }}
 

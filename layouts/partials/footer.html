@@ -1,4 +1,6 @@
-{{- /* The footer: a strip-grey band on the shared frame. */ -}}
+{{- /* The footer: a strip-grey band on the shared frame. Jamie's micro.blog
+       custom footer (custom_footer.html: the licence and notes) closes it,
+       full width, as Tiny placed it inside its footer. */ -}}
 <footer class="site-footer">
   <div class="site-footer__inner frame">
     {{ partial "signup.html" . }}
@@ -12,5 +14,8 @@
         {{ if site.Params.llmsTxtEnabled }}<a href="{{ "llms.txt" | absURL }}">llms.txt</a>{{ end }}
       </p>
     </div>
+    {{- with partial "custom_footer.html" . }}{{ if strings.TrimSpace . }}
+    <div class="site-footer__custom custom_footer">{{ . }}</div>
+    {{- end }}{{ end }}
   </div>
 </footer>

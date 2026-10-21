@@ -17,6 +17,7 @@
 <article class="post-card type-{{ .Type }} h-entry{{ if .Title }} post-card--titled{{ else }} post-card--note post-card--titleless{{ end }}{{ if $brief }} post-card--brief{{ end }}{{ $cats }}">
   {{ partial "reply-context.html" . }}
   {{ partial "post-meta.html" (dict "page" . "year" true) }}
+  {{- partial "syndication.html" . }}
   {{- if .Title }}
   <h2 class="post-card__title p-name"><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h2>
   {{- if or .Params.custom_summary (gt .WordCount 60) }}

@@ -1,0 +1,8 @@
+{{- /* Where micro.blog cross-posted this post: .Params.bluesky.url (an at://
+       URI), as a hidden u-syndication link inside the h-entry. Tiny put it
+       only on list pages and Blank's partial only on home; it belongs on
+       the post too. printf keeps html/template from blanking the at://
+       scheme, as Blank does. */ -}}
+{{- with .Params.bluesky }}{{ if reflect.IsMap . }}{{ with index . "url" }}
+<a class="u-syndication" {{ printf "href=%q" . | safeHTMLAttr }} hidden>Also on Bluesky</a>
+{{- end }}{{ end }}{{ end -}}
