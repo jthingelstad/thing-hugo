@@ -912,6 +912,62 @@ sup a, .footnote-ref { text-decoration: none; font-size: 0.8em; font-weight: var
 }
 .stream-photos__more:hover span { background: rgb(22 22 26 / 0.7); }
 
+/* A trip's days (shortcodes/trip.html, R4-3): chips on a grey card, the
+   current day in ink. */
+.post__content > .trip-days,
+.post-card__content > .trip-days { margin-top: var(--space-5); }
+.trip-days {
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-strip);
+}
+.trip-days__label {
+  margin: 0;
+  font-size: var(--font-size-meta);
+  font-weight: var(--weight-strong);
+  line-height: 1.4;
+}
+.post__content .trip-days__list,
+.post-card__content .trip-days__list {
+  list-style: none;
+  margin: 0.625rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.post__content .trip-days__list li + li,
+.post-card__content .trip-days__list li + li { margin-top: 0; }
+.trip-days__list a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 0.5rem;
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-size: var(--font-size-small);
+  font-weight: var(--weight-strong);
+  line-height: 1;
+  text-decoration: none;
+}
+.trip-days__list a:hover { background: var(--color-mark); }
+.trip-days__list a[aria-current],
+.trip-days__list a[aria-current]:hover { background: var(--color-ink); color: var(--color-bg); }
+.trip-days__all {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 6px;
+  color: var(--color-ink);
+  font-size: var(--font-size-small);
+  font-weight: var(--weight-strong);
+}
+.post-card--note .trip-days,
+.post--note .trip-days { font-size: var(--font-size-base); line-height: 1.6; }
+
 /* micro.blog collections and galleries in post bodies */
 .microblog_collection img { border-radius: var(--radius-md); }
 

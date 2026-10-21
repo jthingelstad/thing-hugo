@@ -7,8 +7,15 @@
        A post's own page shows its photos whole, where Jamie put them.
        A photo is an <img> with no width or one wider than 100px; smaller
        ones (icons, badges, old tracking pixels) stay in the text. Links,
-       paragraphs and figures left empty are removed. */ -}}
+       paragraphs and figures left empty are removed. A trip's day chips
+       (shortcodes/trip.html) move after the photos, and the day marked
+       current is no longer this page. */ -}}
 {{- $content := string .Content -}}
+{{- $trip := "" -}}
+{{- with findRE `<nav class="trip-days"[\s\S]*?</nav>` $content 1 }}
+  {{- $trip = replace (index . 0) ` aria-current="page"` ` aria-current="true"` }}
+  {{- $content = replace $content (index . 0) "" }}
+{{- end -}}
 {{- $photos := slice -}}
 {{- range findRE `<img\b[^>]*>` $content }}
   {{- $w := 0 }}
@@ -37,4 +44,7 @@
   <a class="stream-photos__more" href="{{ $.Permalink }}" aria-label="See all {{ $n }} photos">{{ $tile | safeHTML }}<span aria-hidden="true">+{{ sub $n 6 }}</span></a>
   {{- end }}
 </div>
+{{- end }}
+{{- with $trip }}
+{{ . | safeHTML }}
 {{- end }}
