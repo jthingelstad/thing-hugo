@@ -1,5 +1,5 @@
 {
-  "version": "2.0.7",
+  "version": "2.0.8",
   "title": "Thing Theme",
   "description": "Jamie Thingelstad's theme for micro.blog, installed over the Blank design: microformats, Pagefind search, a capped llms.txt and links to Jamie's other sites.",
   "fields": [
@@ -30,8 +30,8 @@
     },
     {
       "field": "params.on_this_day_feed",
-      "label": "On This Day feed for the rail (Micro Memories posts URL; blank turns it off)",
-      "placeholder": "https://micromemories.cleverdevil.io/posts?tz=US/Central"
+      "label": "On This Day in the rail (any text turns it on, blank turns it off)",
+      "placeholder": "on"
     },
     {
       "field": "params.on_this_day_path",
