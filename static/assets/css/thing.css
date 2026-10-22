@@ -135,6 +135,8 @@ summary:focus-visible {
 .p-summary a[href*="//another.thingelstad.com"] { color: var(--color-at-text); }
 .e-content a[href*="//thingy.thingelstad.com"],
 .p-summary a[href*="//thingy.thingelstad.com"] { color: var(--color-thingy-text); }
+.e-content a[href*="//thingelstad.xyz"],
+.p-summary a[href*="//thingelstad.xyz"] { color: var(--color-xyz-text); }
 
 strong, b { font-weight: var(--weight-strong); }
 
@@ -338,6 +340,7 @@ figcaption, .figure__caption {
 .sites-strip__item--weekly a { color: var(--color-wt-text); }
 .sites-strip__item--another a { color: var(--color-at-text); }
 .sites-strip__item--thingy a { color: var(--color-thingy-text); }
+.sites-strip__item--xyz a { color: var(--color-xyz-text); }
 
 /* Header */
 .site-header { padding-top: var(--space-5); }
@@ -1137,6 +1140,7 @@ a.tinylytics_webring { text-decoration: none; }
 .sites-footer__item--weekly .sites-footer__name { color: var(--color-wt-text); }
 .sites-footer__item--another .sites-footer__name { color: var(--color-at-text); }
 .sites-footer__item--thingy .sites-footer__name { color: var(--color-thingy-text); }
+.sites-footer__item--xyz .sites-footer__name { color: var(--color-xyz-text); }
 .sites-footer__desc,
 .signup__desc { color: var(--color-text-muted); }
 

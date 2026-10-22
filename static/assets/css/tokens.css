@@ -8,7 +8,9 @@
  *   - Type R1-B: Inter Tight for headings, Inter for everything else, both
  *     self-hosted (OFL).
  *   - Colour R2-B: the blog is black and white. Colour belongs only to the
- *     Weekly Thing (blue), Another Thing (red) and Thingy (tangerine).
+ *     Weekly Thing (blue), Another Thing (crimson), Thingy (tangerine) and
+ *     Things I've built (green); crimson and green since 2026-10-22, the
+ *     values in the domain's shared/tokens.css.
  *   - Layout R0-1d: a main column and a 320px rail on one shared grid, so the
  *     sites strip, header, content and footer all line up.
  *
@@ -49,14 +51,17 @@
   --color-wt: #1f6fd6;           /* fill */
   --color-wt-text: #1a5eb6;      /* text and links on white */
   --color-wt-soft: #edf3fc;      /* card ground */
-  --color-at: #c63a20;           /* fill, and text on white */
-  --color-at-text: #c63a20;
-  --color-at-soft: #fbf1ef;
+  --color-at: #b3123f;           /* crimson (2026-10-22): fill, and text on white */
+  --color-at-text: #b3123f;
+  --color-at-soft: #fbeef2;
   --color-thingy: #e8672a;       /* fill */
   --color-thingy-on: #1b2540;    /* text on the tangerine fill */
   --color-thingy-text: #b5461a;  /* text and links on white */
   --color-thingy-soft: #fcede5;
-  --color-on-fill: #ffffff;      /* text on the WT and AT fills */
+  --color-xyz: #1d7348;          /* Things I've built green (2026-10-22): fill, and text on white */
+  --color-xyz-text: #1d7348;
+  --color-xyz-soft: #ebf5ef;
+  --color-on-fill: #ffffff;      /* text on the WT, AT and xyz fills */
 
   /* Type */
   --font-heading: "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
@@ -128,10 +133,12 @@
 
     --color-wt-text: #78acf2;
     --color-wt-soft: #162338;
-    --color-at-text: #f08c76;
-    --color-at-soft: #2b1a17;
+    --color-at-text: #f58aa3;
+    --color-at-soft: #2b1820;
     --color-thingy-text: #f3a274;
     --color-thingy-soft: #2c1f17;
+    --color-xyz-text: #74d3a0;
+    --color-xyz-soft: #14261c;
   }
 }
 
