@@ -1,16 +1,19 @@
 {{- /* The latest Weekly Thing, in the home stream after the third post
        (Round 4). js/sites.js fills in the issue from the Atom feed; without
-       script the card still links to the Weekly Thing and its signup. */ -}}
+       script the card still links to the Weekly Thing and its signup. Its
+       links carry ?ref=www-card (data-ref for the ones js/sites.js fills). */ -}}
 {{- $sites := partialCached "sites-by-id.html" "sites" -}}
 {{- with $sites.weekly }}{{ with .feeds.atom }}
 {{- $wt := $sites.weekly }}
-<aside class="wt-latest" aria-labelledby="wt-latest-title" data-site-name="{{ $wt.name }}" data-rail="latest" data-rail-feed="{{ . }}" data-pagefind-ignore>
+{{- $ref := partial "site-ref.html" "card" }}
+{{- $home := partial "ref-url.html" (dict "url" $wt.url "place" "card") }}
+<aside class="wt-latest" aria-labelledby="wt-latest-title" data-site-name="{{ $wt.name }}" data-rail="latest" data-rail-feed="{{ . }}"{{ with $ref }} data-ref="{{ . }}"{{ end }} data-pagefind-ignore>
   <p class="wt-latest__kicker" data-latest-kicker>The {{ $wt.name }}</p>
-  <h2 id="wt-latest-title" class="wt-latest__title"><a href="{{ $wt.url }}" data-latest-link data-latest-title>Read the latest issue</a></h2>
+  <h2 id="wt-latest-title" class="wt-latest__title"><a href="{{ $home }}" data-latest-link data-latest-title>Read the latest issue</a></h2>
   <p class="wt-latest__summary" data-latest-summary>{{ $wt.description }}</p>
   <p class="wt-latest__actions">
-    <a class="wt-latest__read" href="{{ $wt.url }}" data-latest-link>Read the issue</a>
-    <a class="wt-latest__listen" href="{{ $wt.url }}podcast/">Listen</a>
+    <a class="wt-latest__read" href="{{ $home }}" data-latest-link>Read the issue</a>
+    <a class="wt-latest__listen" href="{{ partial "ref-url.html" (dict "url" (printf "%spodcast/" $wt.url) "place" "card") }}">Listen</a>
     {{- with $wt.subscribe_url }}
     <a class="wt-latest__email" href="#subscribe">Get it by email</a>
     {{- end }}

@@ -11,6 +11,8 @@
 // filled stays empty and hidden, a card keeps its fallback text. Remote text
 // goes in with textContent and remote HTML is only parsed inertly
 // (DOMParser), never inserted, so nothing from a feed runs or loads.
+// A part with data-ref (partials/site-ref.html) tags the links it fills
+// that go to another of Jamie's sites with ?ref=, as the theme's own do.
 (function () {
   var TZ = 'America/Chicago';
   var fetched = {};
@@ -91,9 +93,25 @@
     if (n && text) n.textContent = text;
   }
 
+  // Add the part's ref to a link on another site; leave this site's links
+  // and a link that already names a ref alone.
+  function withRef(href, root) {
+    var ref = root.getAttribute('data-ref');
+    if (!ref) return href;
+    try {
+      var url = new URL(href);
+      if (url.origin === window.location.origin || url.searchParams.has('ref')) return href;
+      url.searchParams.set('ref', ref);
+      return url.href;
+    } catch (e) {
+      return href;
+    }
+  }
+
   function setLinks(root, sel, href) {
     var url = safeURL(href);
     if (!url) return;
+    url = withRef(url, root);
     Array.prototype.forEach.call(root.querySelectorAll(sel), function (a) { a.href = url; });
   }
 
@@ -190,7 +208,11 @@
   function fill(section, nodes) {
     var list = section.querySelector('[data-rail-list]');
     if (!list) return;
-    nodes.filter(Boolean).forEach(function (n) { list.appendChild(n); });
+    nodes.filter(Boolean).forEach(function (n) {
+      var a = n.querySelector('a');
+      if (a) a.href = withRef(a.href, section);
+      list.appendChild(n);
+    });
   }
 
   var kinds = {

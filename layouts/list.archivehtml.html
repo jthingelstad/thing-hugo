@@ -14,7 +14,7 @@
 <header class="archive-head cols">
   <div class="archive-head__title">
     <h1 class="post-list__title">Archive</h1>
-    <p class="post-list__intro">Every post{{ with $years }} since {{ (index (last 1 .) 0).Section }}{{ end }}, by year and by category. Pick a year to see it month by month.</p>
+    <p class="post-list__intro">Every post, by year and by category. Pick a year to see it month by month.</p>
   </div>
   <div class="archive-head__search">{{ partial "search-form.html" (dict "id" "archive") }}</div>
 </header>

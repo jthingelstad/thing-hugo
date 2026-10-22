@@ -1,5 +1,6 @@
 {{- /* Footer directory of Jamie's sites, with descriptions. Each name carries
-       its site's colour (sites-footer__item--<id> in thing.css). */ -}}
+       its site's colour (sites-footer__item--<id> in thing.css) and its link
+       ?ref=www-footer. */ -}}
 {{- $sites := partial "sites.html" . -}}
 {{- if gt (len $sites) 1 }}
 <section class="sites-footer" aria-labelledby="sites-footer-title">
@@ -8,7 +9,7 @@
     {{- range $sites }}
     {{- if not .current }}
     <li class="sites-footer__item sites-footer__item--{{ .id }}">
-      <a class="sites-footer__name" href="{{ .url }}">{{ .name }}</a>
+      <a class="sites-footer__name" href="{{ partial "ref-url.html" (dict "url" .url "place" "footer") }}">{{ .name }}</a>
       <span class="sites-footer__desc">{{ .description }}</span>
     </li>
     {{- end }}

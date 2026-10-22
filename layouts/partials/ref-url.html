@@ -1,0 +1,11 @@
+{{- /* A link to another of Jamie's sites with its ref: ?ref=www-<place>, or
+       &ref= when the link has a query. Text in posts is content and keeps its
+       links as written; only the theme's own links go through here.
+       Usage: {{ partial "ref-url.html" (dict "url" .url "place" "footer") }} */ -}}
+{{- $url := .url -}}
+{{- with partial "site-ref.html" .place }}
+  {{- $hash := "" -}}
+  {{- if strings.Contains $url "#" }}{{ $parts := split $url "#" }}{{ $url = index $parts 0 }}{{ $hash = printf "#%s" (delimit (after 1 $parts) "#") }}{{ end -}}
+  {{- $url = printf "%s%sref=%s%s" $url (cond (strings.Contains $url "?") "&" "?") . $hash -}}
+{{- end -}}
+{{- return $url -}}

@@ -1,0 +1,9 @@
+{{- /* The ref a link to another of Jamie's sites carries: <this site's id>-<place>
+       (domain AGENTS.md, "Links between the sites"), so the Tinylytics Sources
+       report on the destination shows which links people follow. Empty when
+       no site in data/sites.json matches baseURL (serve.sh), as in the strip.
+       Usage: {{ partial "site-ref.html" "rail" }} gives "www-rail". */ -}}
+{{- $here := site.BaseURL | strings.TrimSuffix "/" -}}
+{{- $ref := "" -}}
+{{- range hugo.Data.sites.sites }}{{ if eq (.url | strings.TrimSuffix "/") $here }}{{ $ref = printf "%s-%s" .id $ }}{{ end }}{{ end -}}
+{{- return $ref -}}

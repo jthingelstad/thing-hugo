@@ -22,32 +22,36 @@
        The other sites' feeds allow cross-origin reads (checked 2026-10-20). Without
        JavaScript the lists stay empty and hidden; each section keeps its
        heading and its link onward. Site names and URLs come from
-       data/sites.json. Below 900px the rail drops under the main column. */ -}}
+       data/sites.json. Links to the other sites carry ?ref=www-rail, and the
+       lists' links get the same from data-ref (js/sites.js). Below 900px the
+       rail drops under the main column. */ -}}
 {{- $browse := ne .browse false -}}
 {{- $home := .home | default false -}}
 {{- $narrow := or $home (.post | default false) -}}
 {{- $sites := partialCached "sites-by-id.html" "sites" -}}
+{{- $ref := partial "site-ref.html" "rail" -}}
 <aside class="rail" aria-label="More from Jamie" data-pagefind-ignore>
   {{- partial "ask-thingy.html" (dict "id" "rail" "class" (cond $narrow "hide-narrow" "")) }}
 
   {{- with $sites.weekly }}
   {{- with .feeds.atom }}
-  <section class="rail-section rail-section--weekly" aria-labelledby="rail-weekly" data-rail="atom" data-rail-feed="{{ . }}" data-rail-limit="4"{{ if $home }} data-rail-skip="1"{{ end }}>
-    <h2 id="rail-weekly" class="rail__heading"><a href="{{ $sites.weekly.url }}archive/">{{ $sites.weekly.name }}</a></h2>
+  <section class="rail-section rail-section--weekly" aria-labelledby="rail-weekly" data-rail="atom" data-rail-feed="{{ . }}" data-rail-limit="4"{{ if $home }} data-rail-skip="1"{{ end }}{{ with $ref }} data-ref="{{ . }}"{{ end }}>
+    {{- $archive := partial "ref-url.html" (dict "url" (printf "%sarchive/" $sites.weekly.url) "place" "rail") }}
+    <h2 id="rail-weekly" class="rail__heading"><a href="{{ $archive }}">{{ $sites.weekly.name }}</a></h2>
     <p class="rail__sub">{{ if $home }}Earlier issues{{ else }}Recent issues{{ end }}</p>
     <ol class="rail-list" data-rail-list></ol>
-    <a class="rail__more" href="{{ $sites.weekly.url }}archive/">All issues</a>
+    <a class="rail__more" href="{{ $archive }}">All issues</a>
   </section>
   {{- end }}
   {{- end }}
 
   {{- with $sites.another }}
   {{- with .feeds.json }}
-  <section class="rail-section rail-section--another{{ if $narrow }} hide-narrow{{ end }}" aria-labelledby="rail-another" data-rail="another" data-rail-feed="{{ . }}" data-rail-limit="3">
-    <h2 id="rail-another" class="rail__heading"><a href="{{ $sites.another.url }}">{{ $sites.another.name }}</a></h2>
+  <section class="rail-section rail-section--another{{ if $narrow }} hide-narrow{{ end }}" aria-labelledby="rail-another" data-rail="another" data-rail-feed="{{ . }}" data-rail-limit="3"{{ with $ref }} data-ref="{{ . }}"{{ end }}>
+    <h2 id="rail-another" class="rail__heading"><a href="{{ partial "ref-url.html" (dict "url" $sites.another.url "place" "rail") }}">{{ $sites.another.name }}</a></h2>
     <p class="rail__sub">My podcast</p>
     <ol class="rail-list" data-rail-list></ol>
-    <a class="rail__more" href="{{ $sites.another.subscribe_url | default $sites.another.url }}">Ways to listen</a>
+    <a class="rail__more" href="{{ partial "ref-url.html" (dict "url" ($sites.another.subscribe_url | default $sites.another.url) "place" "rail") }}">Ways to listen</a>
   </section>
   {{- end }}
   {{- end }}

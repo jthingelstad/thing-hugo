@@ -6,7 +6,7 @@
        Link and Reply on Mastodon appear when their micro.blog plug-in is
        installed (the plug-in ships the partial). Explore with
        Thingy is the theme's own and opens Thingy on this post, using the
-       Thingy URL from data/sites.json. */ -}}
+       Thingy URL from data/sites.json, with &ref=www-post. */ -}}
 {{- $thingy := "" -}}
 {{- range hugo.Data.sites.sites }}{{ if eq .id "thingy" }}{{ $thingy = .url }}{{ end }}{{ end -}}
 <ul class="reply-buttons" data-pagefind-ignore>
@@ -23,6 +23,6 @@
   <li>{{ partial "reply-on-mastodon.html" . }}</li>
   {{- end }}
   {{- with $thingy }}
-  <li><a class="explore-with-thingy" href="{{ strings.TrimSuffix "/" . }}/chat/?explore={{ $.Permalink | urlquery }}" data-tinylytics-event="thingy.explore" data-tinylytics-event-value="{{ $.RelPermalink }}">Explore with Thingy</a></li>
+  <li><a class="explore-with-thingy" href="{{ partial "ref-url.html" (dict "url" (printf "%s/chat/?explore=%s" (strings.TrimSuffix "/" .) ($.Permalink | urlquery)) "place" "post") }}" data-tinylytics-event="thingy.explore" data-tinylytics-event-value="{{ $.RelPermalink }}">Explore with Thingy</a></li>
   {{- end }}
 </ul>

@@ -8,7 +8,7 @@
     {{- range hugo.Data.sites.sites }}
     {{- if and .subscribe_url (in $ids .id) }}
     <li class="signup__item">
-      <a class="signup__link" href="{{ .subscribe_url }}">Subscribe to {{ .name }}</a>
+      <a class="signup__link" href="{{ partial "ref-url.html" (dict "url" .subscribe_url "place" "footer") }}">Subscribe to {{ .name }}</a>
       <span class="signup__desc">{{ .description }}</span>
     </li>
     {{- end }}

@@ -17,7 +17,7 @@
 {{- $sites := partialCached "sites-by-id.html" "sites" -}}
 {{- $subscribe := "" -}}
 {{- if not $home }}{{ with $sites.weekly }}{{ with .subscribe_url }}
-  {{- $subscribe = cond (and $page.IsPage (eq $page.Type "post")) "#subscribe" . }}
+  {{- $subscribe = cond (and $page.IsPage (eq $page.Type "post")) "#subscribe" (partial "ref-url.html" (dict "url" . "place" "nav")) }}
 {{- end }}{{ end }}{{ end -}}
 <header class="site-header{{ if $home }} site-header--home{{ else }} site-header--compact{{ end }}">
   <div class="site-header__inner frame">

@@ -12,7 +12,8 @@
        the API, the public Turnstile site key and the ref (source:blog in
        Buttondown); the placement is blog-home or blog-post, the sources
        /auth knows. Without JavaScript, or without data/signup.json, the
-       Subscribe button goes to the Weekly Thing's form as before. */ -}}
+       Subscribe button goes to the Weekly Thing's form as before, with
+       ?ref=www-card like the card's other link. */ -}}
 {{- $sites := partialCached "sites-by-id.html" "sites" -}}
 {{- $variant := .variant | default "post" -}}
 {{- $signup := hugo.Data.signup -}}
@@ -37,9 +38,9 @@
   <p class="subscribe-card__status" role="status" data-signup-status></p>
   {{- end }}
   <p class="subscribe-card__actions">
-    <a class="subscribe-card__button" href="{{ . }}" data-signup-fallback data-tinylytics-event="subscribe.card" data-tinylytics-event-value="{{ $variant }}">Subscribe</a>
+    <a class="subscribe-card__button" href="{{ partial "ref-url.html" (dict "url" . "place" "card") }}" data-signup-fallback data-tinylytics-event="subscribe.card" data-tinylytics-event-value="{{ $variant }}">Subscribe</a>
     {{- if ne $variant "hero" }}
-    <a class="subscribe-card__more" href="{{ $wt.url }}archive/" data-tinylytics-event="subscribe.past_issues" data-tinylytics-event-value="{{ $variant }}">Read past issues</a>
+    <a class="subscribe-card__more" href="{{ partial "ref-url.html" (dict "url" (printf "%sarchive/" $wt.url) "place" "card") }}" data-tinylytics-event="subscribe.past_issues" data-tinylytics-event-value="{{ $variant }}">Read past issues</a>
     {{- end }}
   </p>
   <p class="subscribe-card__proof">Free, every weekend · No tracking, no ads · Unsubscribe anytime</p>

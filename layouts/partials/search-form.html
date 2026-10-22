@@ -1,9 +1,10 @@
 {{- /* The blog's search box: a plain GET to the Search page, which runs
        Pagefind on ?q=. Usage: {{ partial "search-form.html" (dict "id" "archive") }}
-       Optional "value" fills the box. */ -}}
+       Optional "value" fills the box. The years count from 2004, when the
+       blog started; the few posts dated earlier were added later. */ -}}
 {{- $years := partialCached "year-sections.html" "years" -}}
 {{- $placeholder := "Search the blog" -}}
-{{- with $years }}{{ $placeholder = printf "Search %d years" (sub now.Year (int (index (last 1 .) 0).Section)) }}{{ end -}}
+{{- with $years }}{{ $placeholder = printf "Search %d years" (sub now.Year 2004) }}{{ end -}}
 <form class="search-form" action="{{ site.Params.search_path | default "/search/" | relURL }}" method="get" role="search">
   <label class="visually-hidden" for="{{ .id }}-q">Search the blog</label>
   <input id="{{ .id }}-q" class="search-form__input" type="search" name="q" placeholder="{{ $placeholder }}"{{ with .value }} value="{{ . }}"{{ end }}>
