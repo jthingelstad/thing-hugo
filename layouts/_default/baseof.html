@@ -6,8 +6,10 @@
   {{ end }}
   {{ partial "head.html" . }}
   {{- /* /archive/ and /photos/ are the home page in another output format, so
-         .Permalink there is "/"; their templates redefine this block. A
-         list's later pages are their own address, /page/2/ and on. */}}
+         .Permalink there is "/" and the description is the home page's;
+         their templates redefine these two blocks. A list's later pages are
+         their own address, /page/2/ and on. */}}
+  {{ block "meta" . }}{{ partial "meta.html" (dict "page" .) }}{{ end }}
   {{ block "canonical" . }}<link rel="canonical" href="{{ with partial "pager.html" . }}{{ .URL | absURL }}{{ else }}{{ .Permalink }}{{ end }}">{{ end }}
 </head>
 <body class="{{ if .IsHome }}is-home {{ end }}kind-{{ .Kind }} type-{{ .Type }}">

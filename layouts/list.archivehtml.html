@@ -7,6 +7,8 @@
        Each year's photo is picked at build time (year-photo.html) and served
        through micro.blog's resizer (photo-src.html). */ -}}
 {{ define "title" }}<title>Archive · {{ site.Title }}</title>{{ end }}
+{{ define "meta" }}{{ partial "meta.html" (dict "page" . "title" "Archive" "url" ("archive/" | absURL)
+  "description" (printf "Every post on %s's blog, by year and by category." site.Title)) }}{{ end }}
 {{ define "canonical" }}<link rel="canonical" href="{{ "archive/" | absURL }}">{{ end }}
 {{ define "header" }}{{ partial "header.html" (dict "page" . "home" false) }}{{ end }}
 {{ define "main" }}

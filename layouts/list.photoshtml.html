@@ -6,6 +6,8 @@
        (photo-src.html); the original URL still finds the alt text.
        Narrated posts list an .mp3 in photos; partials/first-image.html skips it. */ -}}
 {{ define "title" }}<title>Photos · {{ site.Title }}</title>{{ end }}
+{{ define "meta" }}{{ partial "meta.html" (dict "page" . "title" "Photos" "url" ("photos/" | absURL)
+  "description" (printf "The first photo from every post on %s's blog, newest first." site.Title)) }}{{ end }}
 {{ define "canonical" }}<link rel="canonical" href="{{ "photos/" | absURL }}">{{ end }}
 {{ define "header" }}{{ partial "header.html" (dict "page" . "home" false) }}{{ end }}
 {{ define "main" }}
