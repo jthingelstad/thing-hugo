@@ -23,10 +23,25 @@
 <meta property="og:description" content="{{ $description }}">
 <meta property="og:url" content="{{ .url | default $p.Permalink }}">
 <meta property="og:type" content="{{ if $p.IsPage }}article{{ else }}website{{ end }}">
-{{- $image := partial "first-image.html" $p -}}
+{{- /* A post's share image is its card from cards.thingelstad.com (drawn
+       from the post: its words, date and categories, and its first photo).
+       micro.blog gives Hugo no last-edit date, so ?v= is a hash of what the
+       card shows, and an edited post gets a new card. Anything else keeps
+       the first photo, else the avatar. */ -}}
+{{- $card := "" -}}
+{{- if and $p.IsPage (findRE `^/\d{4}/\d{2}/\d{2}/[A-Za-z0-9_-]+\.html$` $p.RelPermalink) -}}
+  {{- $v := substr (md5 (print $p.Title $p.Date.Unix $p.Params.categories $p.RawContent)) 0 10 -}}
+  {{- $card = printf "https://cards.thingelstad.com/www%s.png?v=%s" (strings.TrimSuffix ".html" $p.RelPermalink) $v -}}
+{{- end -}}
+{{- $image := $card | default (partial "first-image.html" $p) -}}
 {{- if not $image }}{{ with site.Params.author.avatar }}{{ $image = . }}{{ end }}{{ end -}}
 {{- with $image }}
 <meta property="og:image" content="{{ . | absURL }}">
+{{- end }}
+{{- with $card }}
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{{ $title | default site.Title }}">
 {{- end }}
 {{- if $p.IsPage }}
 <meta property="article:published_time" content="{{ $p.Date.Format "2006-01-02T15:04:05Z07:00" }}">
@@ -34,4 +49,4 @@
 <meta property="article:tag" content="{{ . }}">
 {{- end }}
 {{- end }}
-<meta name="twitter:card" content="{{ if $p.Params.photos }}summary_large_image{{ else }}summary{{ end }}">
+<meta name="twitter:card" content="{{ if or $card $p.Params.photos }}summary_large_image{{ else }}summary{{ end }}">
