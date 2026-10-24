@@ -192,8 +192,9 @@ figcaption, .figure__caption {
 }
 .skip-link:focus { left: var(--space-3); top: var(--space-3); }
 
-/* The grid. One frame for everything; list pages split it into the main
-   column and the rail; a post's own page centres one --measure column. */
+/* The grid. One frame for everything; list pages, posts and pages split it
+   into the main column and the rail; the Not Found page centres one
+   --measure column. */
 .frame {
   width: 100%;
   max-width: var(--page-max);
@@ -294,6 +295,10 @@ figcaption, .figure__caption {
 .rail-section--weekly .rail__more { color: var(--color-wt-text); }
 .rail-section--another .rail-item__kicker,
 .rail-section--another .rail__more { color: var(--color-at-text); }
+/* The Blogroll: each site's name, its host under it, closer set than the
+   lists above (they carry dates and photos; these are one line and a host). */
+.rail-section--blogroll .rail-list { gap: var(--space-2); }
+.rail-item__host { font-size: var(--font-size-label); color: var(--color-text-muted); overflow-wrap: anywhere; }
 
 .rail-chips {
   list-style: none;
@@ -492,9 +497,9 @@ figcaption, .figure__caption {
 
 .reply-to { color: var(--color-text-muted); font-size: var(--font-size-meta); margin-bottom: var(--space-1); }
 
-/* A page's own page: one centred column. A post's sits in the main column
-   of .cols beside the rail (.post-cols), the stream's width, and the rail
-   starts level with it. */
+/* A post's or a page's own page sits in the main column of .cols beside
+   the rail (.post-cols), the stream's width, and the rail starts level with
+   it. The Not Found page is one centred column. */
 .post--single {
   max-width: var(--measure);
   margin-left: auto;

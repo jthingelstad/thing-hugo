@@ -10,9 +10,14 @@
 {{- /* A short note with no photo is set large on its own page. */ -}}
 {{- $brief := and (not .Title) (le .WordCount 30) (not (strings.Contains .Content "<img")) -}}
 {{- /* A post sits in the main column with the rail beside it, as list pages
-       do (Jamie, 2026-10-21). Pages stay one centred column. The rail is the
-       same on every post, so it is built once. */ -}}
-{{- if $isPost }}
+       do (Jamie, 2026-10-21), and so does a page (About, Lists, On This
+       Day...; 2.0.20). The Not Found page stays one centred column: it
+       carries its own search and Ask Thingy. The rail is the same on every
+       post, and on every page but On This Day (which leaves out the rail's
+       own On this day), so it is built once for each. */ -}}
+{{- $notFound := and $isPage (strings.HasPrefix .RelPermalink "/404") -}}
+{{- $cols := or $isPost (and $isPage (not $notFound)) -}}
+{{- if $cols }}
 <div class="cols post-cols">
 <div class="post-cols__main">
 {{- end }}
@@ -38,7 +43,7 @@
 
   {{- /* The Not Found page is Jamie's micro.blog page at /404.html/; under its
          text, a way to look for what the old link pointed at. */}}
-  {{- if and $isPage (strings.HasPrefix .RelPermalink "/404") }}
+  {{- if $notFound }}
   <div class="not-found__find" data-pagefind-ignore>
     {{ partial "search-form.html" (dict "id" "notfound") }}
     {{ partial "ask-thingy.html" (dict "id" "notfound" "blurb" "Or ask Thingy, which reads the blog, the Weekly Thing, the podcast and Things I’ve built.") }}
@@ -84,8 +89,15 @@
   </nav>
   {{- end }}
 </div>
+{{- end }}
+{{- if $cols }}
 </div>
+{{- if $isPost }}
 {{ partialCached "rail.html" (dict "post" true) "post" }}
+{{- else }}
+{{- $otd := not (.HasShortcode "on-this-day") }}
+{{ partialCached "rail.html" (dict "otd" $otd) "page" $otd }}
+{{- end }}
 </div>
 {{- end }}
 {{- end }}
