@@ -23,8 +23,9 @@
        The Blogroll is Jamie's micro.blog Recommendations (Design > Edit
        Recommendations), from hugo.Data.blogrolls.recommendations, the data
        micro.blog's own {{< blogroll >}} shortcode reads, drawn at build time
-       in name order; with no recommendations the section is left out. Its
-       links are other people's sites, so they carry no ref.
+       in the order Jamie set there (never sorted: 2.0.20 sorted by name, and
+       Jamie's order is deliberate); with no recommendations the section is
+       left out. Its links are other people's sites, so they carry no ref.
        The other sites' feeds allow cross-origin reads (checked 2026-10-20). Without
        JavaScript the lists stay empty and hidden; each section keeps its
        heading and its link onward. Site names and URLs come from
@@ -96,7 +97,7 @@
     <h2 id="rail-blogroll" class="rail__heading"><a href="{{ "lists/blogroll/" | relURL }}">Blogroll</a></h2>
     <p class="rail__sub">Sites I read</p>
     <ul class="rail-list">
-      {{- range $site := sort . "name" }}
+      {{- range $site := . }}
       {{- if and $site.name $site.url }}
       <li><a class="rail-item__link" href="{{ $site.url }}"><span class="rail-item__text"><span class="rail-item__title">{{ $site.name }}</span><span class="rail-item__host">{{ (urls.Parse $site.url).Hostname | strings.TrimPrefix "www." }}</span></span></a></li>
       {{- end }}
