@@ -11,9 +11,9 @@
 {{- $origin := "" -}}
 {{- range $sites }}{{ if .current }}{{ $origin = .id }}{{ end }}{{ end -}}
 {{- if gt (len $sites) 1 }}
-<nav class="sites-strip" aria-label="Jamie's sites">
+<nav class="sites-strip" aria-label="Jamie Thingelstad">
   <div class="sites-strip__inner frame">
-    <span class="sites-strip__label">Jamie's sites</span>
+    <span class="sites-strip__label">Jamie Thingelstad</span>
     <ul class="sites-strip__list">
       {{- range $sites }}
       {{- $href := .url -}}
