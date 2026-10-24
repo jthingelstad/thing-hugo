@@ -110,26 +110,13 @@
       }
     }
 
-    // date and photo are hex in the index, so Pagefind 1.5's metadata search
-    // can't match their words (pagefind-meta.html). An index built before
-    // that has them plain, and they pass through.
-    function unhex(s) {
-      if (!s || !/^(?:[0-9a-f]{2})+$/.test(s)) return s;
-      try {
-        return new TextDecoder().decode(new Uint8Array(s.match(/../g).map(function (h) { return parseInt(h, 16); })));
-      } catch (e) {
-        return s;
-      }
-    }
-
     function card(d) {
       var meta = d.meta || {};
       var url = safeURL(d.url);
       if (!url) return null;
       var li = el('li', 'search-result');
       var text = el('div', 'search-result__text');
-      var date = unhex(meta.date);
-      if (date) text.appendChild(el('p', 'search-result__date', date));
+      if (meta.date) text.appendChild(el('p', 'search-result__date', meta.date));
       if (meta.titled) {
         var t = el('a', 'search-result__title', meta.title || url);
         t.href = url;
@@ -146,7 +133,7 @@
         text.appendChild(p);
       }
       li.appendChild(text);
-      var src = meta.photo && safeURL(photo(unhex(meta.photo)));
+      var src = meta.photo && safeURL(photo(meta.photo));
       if (src) {
         var img = el('img', 'search-result__photo');
         img.src = src;
