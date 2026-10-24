@@ -930,15 +930,18 @@ sup a, .footnote-ref { text-decoration: none; font-size: 0.8em; font-weight: var
 }
 
 /* Photos in the stream (R3-B), set by partials/stream-content.html. A
-   post's own page shows them whole. */
+   post's own page shows them whole. One photo or two crop to 4:3; a single
+   photo wider than that (--whole, 2.0.22) takes its shape from its width
+   and height attributes instead, so a wide screenshot isn't zoomed. */
 .stream-photos { display: grid; gap: var(--space-2); }
 .stream-photos img {
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: var(--radius-md);
 }
+.stream-photos--one:not(.stream-photos--whole) img,
+.stream-photos--two img { aspect-ratio: 4 / 3; }
 .stream-photos--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .stream-photos--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .stream-photos--grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }

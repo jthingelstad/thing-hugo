@@ -1,6 +1,9 @@
 {{- /* A post's body in the stream (Round 3, R3-B). Photos are lifted out of
        the text and set after it, still inside e-content:
-       - one photo: full width, cropped to 4:3
+       - one photo: full width, cropped to 4:3 when it is taller than that;
+         one wider than 4:3 (from its width and height) shows whole, marked
+         stream-photos--whole (2.0.22: a 600x41 screenshot cropped to 4:3
+         showed a sliver of it, zoomed)
        - two: side by side at 4:3 (squares on phones)
        - three or more: a grid of squares, two across for four, else three;
          six at most, the sixth a "+N" link to the post when there are more.
@@ -35,6 +38,13 @@
 {{- $n := len . }}
 {{- $shape := "grid" }}
 {{- if eq $n 1 }}{{ $shape = "one" }}{{ else if eq $n 2 }}{{ $shape = "two" }}{{ else if eq $n 4 }}{{ $shape = "four" }}{{ end }}
+{{- $whole := false }}
+{{- if eq $n 1 }}
+  {{- $w := 0 }}{{ $h := 0 }}
+  {{- with findRESubmatch `\swidth=["']?(\d+)` (index . 0) 1 }}{{ $w = int (strings.TrimLeft "0" (index (index . 0) 1) | default "0") }}{{ end }}
+  {{- with findRESubmatch `\sheight=["']?(\d+)` (index . 0) 1 }}{{ $h = int (strings.TrimLeft "0" (index (index . 0) 1) | default "0") }}{{ end }}
+  {{- $whole = and (gt $h 0) (gt (mul $w 3) (mul $h 4)) }}
+{{- end }}
 {{- /* Resized copies (photo-srcset.html) sized to the slot: the main column
        is 42rem beside the rail and the page less its 1rem gutters below
        56.25rem, halved for two or four, a third for the grid (0.5rem gaps).
@@ -42,7 +52,7 @@
 {{- $sizes := dict "one" "(max-width: 56.25rem) calc(100vw - 2rem), 42rem" "two" "(max-width: 56.25rem) calc(50vw - 1.25rem), 21rem" "four" "(max-width: 56.25rem) calc(50vw - 1.25rem), 21rem" "grid" "(max-width: 56.25rem) calc(33vw - 1rem), 14rem" }}
 {{- $set := slice }}
 {{- range first 6 . }}{{ $set = $set | append (partial "photo-srcset.html" (dict "img" . "sizes" (index $sizes $shape))) }}{{ end }}
-<div class="stream-photos stream-photos--{{ $shape }}">
+<div class="stream-photos stream-photos--{{ $shape }}{{ if $whole }} stream-photos--whole{{ end }}">
   {{- range first (cond (gt $n 6) 5 6) $set }}
   {{ . | safeHTML }}
   {{- end }}
