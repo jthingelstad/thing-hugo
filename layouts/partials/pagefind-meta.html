@@ -12,20 +12,34 @@
        photo: the post's first photo, for the result's thumbnail. Not
        Pagefind's own "image" key: a post without one gets Pagefind's guess,
        the first <img> anywhere on the page (the custom footer's hidden
-       avatar), and every photo-less result would show Jamie's face. */ -}}
+       avatar), and every photo-less result would show Jamie's face.
+
+       Pagefind 1.5 searches metadata as well as the text, and a weight of
+       0 only reorders. So date and photo are hex (js/search.js decodes
+       them), one token no reader types: plain, "jpg" or "uploads" matched
+       every post with a photo and "october" every October post. image is
+       "-" so Pagefind's own guess, the footer avatar's URL, is not indexed
+       ("avatar" matched 4,172 posts). That also drops Pagefind's own
+       image_alt, the first photo's alt text and the only way a photo's
+       description is searched (alt text in the body is not), so image_alt
+       is set here from the first <img> in the post. */ -}}
 {{- $title := partial "title.html" . -}}
 <div hidden data-pagefind-ignore>
   <span data-pagefind-meta="title">{{ $title }}</span>
   {{- if .Title }}
   <span data-pagefind-meta="titled">1</span>
   {{- end }}
-  <span data-pagefind-meta="date">{{ .Date.Format "January 2, 2006" }}</span>
+  <span data-pagefind-meta="image">-</span>
+  {{- with findRESubmatch `<img\s[^>]*\balt="([^"]+)"` .Content 1 }}
+  <span data-pagefind-meta="image_alt">{{ index (index . 0) 1 | htmlUnescape }}</span>
+  {{- end }}
+  <span data-pagefind-meta="date">{{ printf "%x" (.Date.Format "January 2, 2006") }}</span>
   <span data-pagefind-sort="date">{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</span>
   <span data-pagefind-filter="year">{{ .Date.Year }}</span>
   {{- range .Params.categories }}
   <span data-pagefind-filter="category">{{ . }}</span>
   {{- end }}
   {{- with partial "first-image.html" . }}
-  <span data-pagefind-meta="photo">{{ . }}</span>
+  <span data-pagefind-meta="photo">{{ printf "%x" . }}</span>
   {{- end }}
 </div>
