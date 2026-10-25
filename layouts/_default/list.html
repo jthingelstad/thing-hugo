@@ -13,9 +13,12 @@
         <h1 class="post-list__title">{{ .Title }}</h1>
         {{- /* A category's Intro (Categories → edit, Jamie's Coffee page) is
                the term page's content: micro.blog renders it there itself,
-               so no microhook-category-header partial is needed. */ -}}
+               so no microhook-category-header partial is needed. When
+               micro.blog's page and the category's share an address, the
+               Intro is on micro.blog's (term-twin.html). */ -}}
         {{ with .Description }}<div class="post-list__intro">{{ . | markdownify }}</div>{{ end }}
-        {{ with .Content }}<div class="post-list__intro">{{ . }}</div>{{ end }}
+        {{ with .Content }}<div class="post-list__intro">{{ . }}</div>
+        {{- else }}{{ with partial "term-twin.html" . }}{{ with .Content }}<div class="post-list__intro">{{ . }}</div>{{ end }}{{ end }}{{ end }}
       </header>
     {{ end }}
 

@@ -98,6 +98,12 @@ trip, titled or not. Dated series, such as a photo challenge, read the same
 way. Keep going never picks a trip or a post in the post's own trips, so it
 offers something from outside the trip.
 
+micro.blog also writes a page for each category, holding its Intro. For a
+name with an apostrophe ("Tammy's NYC Birthday Trip 2023") Hugo files that
+page and the category's posts as two categories at one address, and keeps
+whichever it writes last; `partials/term-twin.html` lets each borrow what it
+lacks from the other, so the page always has both the posts and the Intro.
+
 ## Settings
 
 micro.blog shows the `plugin.json` fields on the plug-in's settings page. They are
@@ -198,7 +204,8 @@ layouts/
                               is-trip, trip-nav, embeds, youtube,
                               embed-scripts, narration, listen,
                               transcripts, post-transcripts,
-                              transcript-of, plugin-script, sites*, ...
+                              transcript-of, pager, term-twin,
+                              plugin-script, sites*, ...
   shortcodes/{figure,image,on-this-day,search,youtube}.html
 static/assets/
   css/{tokens,thing}.css      linked one each by partials/asset.html

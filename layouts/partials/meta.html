@@ -13,6 +13,8 @@
     {{- $description = site.Params.subtitle | default "" | plainify | strings.TrimSpace | default (partial "site-description.html" $p) -}}
   {{- else -}}
     {{- $description = $p.Summary | plainify | htmlUnescape | strings.TrimSpace | truncate 158 -}}
+    {{- /* A category's Intro may be on micro.blog's copy (term-twin.html). */ -}}
+    {{- if and (not $description) (eq $p.Kind "term") }}{{ with partial "term-twin.html" $p }}{{ $description = .Summary | plainify | htmlUnescape | strings.TrimSpace | truncate 158 }}{{ end }}{{ end -}}
   {{- end -}}
 {{- end }}
 <meta name="description" content="{{ $description }}">

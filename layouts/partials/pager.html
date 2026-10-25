@@ -10,18 +10,23 @@
 {{- if .IsHome -}}
   {{- $pager = .Paginate (where site.RegularPages "Type" $typeName) -}}
 {{- else if eq .Kind "section" "taxonomy" "term" -}}
+  {{- $posts := where .RegularPagesRecursive "Type" $typeName -}}
+  {{- if and (eq .Kind "term") (not $posts) -}}
+    {{- /* micro.blog's copy of a category at the same address (term-twin.html). */ -}}
+    {{- with partial "term-twin.html" . }}{{ $posts = where .RegularPagesRecursive "Type" $typeName }}{{ end -}}
+  {{- end -}}
   {{- if and (eq .Kind "section") (eq .Section "replies") -}}
     {{- $pager = .Paginate (where .RegularPagesRecursive "Type" "reply") -}}
   {{- else if and (eq .Kind "section") (eq .Section "archive") -}}
     {{- $pager = .Paginate ((where site.RegularPages "Type" $typeName).ByDate.Reverse) 100 -}}
   {{- else if partial "is-trip.html" . -}}
     {{- /* A trip reads from its first day. */ -}}
-    {{- $pager = .Paginate ((where .RegularPagesRecursive "Type" $typeName).ByDate) -}}
+    {{- $pager = .Paginate $posts.ByDate -}}
   {{- else if and (eq .Kind "section") (findRE `^\d{4}$` .Section) -}}
     {{- /* A year: the same posts year-page.html groups by month. */ -}}
-    {{- $pager = .Paginate ((where .RegularPagesRecursive "Type" $typeName).ByDate.Reverse) 100 -}}
+    {{- $pager = .Paginate $posts.ByDate.Reverse 100 -}}
   {{- else -}}
-    {{- $pager = .Paginate (where .RegularPagesRecursive "Type" $typeName) -}}
+    {{- $pager = .Paginate $posts -}}
   {{- end -}}
 {{- end -}}
 {{- return $pager -}}

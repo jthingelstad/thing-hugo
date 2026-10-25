@@ -1,0 +1,29 @@
+{{- /* The other category page at this page's address, or false (2.0.33).
+       micro.blog writes a page for each of its categories,
+       content/categories/<its slug>/_index.md, titled with the name and
+       holding the Intro. Hugo merges it with the category's own page when
+       the slug is Hugo's key for the name, as it is for most. Hugo keeps an
+       apostrophe in the key and drops it from the address, so "Tammy's NYC
+       Birthday Trip 2023" is two categories with one address: the posts'
+       ("tammy's nyc birthday trip 2023") and micro.blog's
+       ("tammys-nyc-birthday-trip-2023"), empty. The build keeps whichever it
+       writes last; on 2026-10-25 the live page 1 listed no posts while
+       page 2 listed ten. pager.html and _default/list.html take what this
+       page lacks from its twin, so either copy comes out the same.
+       From micro.blog's page the posts' category is in site.Taxonomies; from
+       the category's page, site.GetPage at the address finds micro.blog's. */ -}}
+{{- $here := . -}}
+{{- $twin := false -}}
+{{- if eq .Kind "term" -}}
+  {{- range index site.Taxonomies .Data.Plural -}}
+    {{- with .Page -}}
+      {{- if and (not $twin) (eq .RelPermalink $here.RelPermalink) (ne . $here) }}{{ $twin = . }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if not $twin -}}
+    {{- with site.GetPage (strings.TrimSuffix "/" .RelPermalink) -}}
+      {{- if and (eq .RelPermalink $here.RelPermalink) (ne . $here) }}{{ $twin = . }}{{ end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $twin -}}
