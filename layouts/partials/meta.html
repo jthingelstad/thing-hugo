@@ -21,7 +21,13 @@
 <meta property="og:site_name" content="{{ site.Title }}">
 <meta property="og:title" content="{{ $title | default site.Title }}">
 <meta property="og:description" content="{{ $description }}">
-<meta property="og:url" content="{{ .url | default $p.Permalink }}">
+{{- /* og:url is the canonical: a list's later pages are their own address
+       (/page/2/ and on), as baseof's canonical says. */ -}}
+{{- $url := .url -}}
+{{- if not $url -}}
+  {{- with partial "pager.html" $p }}{{ $url = .URL | absURL }}{{ else }}{{ $url = $p.Permalink }}{{ end -}}
+{{- end }}
+<meta property="og:url" content="{{ $url }}">
 <meta property="og:type" content="{{ if $p.IsPage }}article{{ else }}website{{ end }}">
 {{- /* A post's share image is its card from cards.thingelstad.com (drawn
        from the post: its words, date and categories, and its first photo).

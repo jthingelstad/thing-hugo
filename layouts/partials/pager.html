@@ -1,10 +1,10 @@
 {{- /* A paginated list's pager, the one place each list says what it pages
        through. The lists (index.html, _default/list.html, year-page.html,
        replies/section.html, archive/list.html) take their pager from here,
-       and so does baseof's canonical, which runs first: Hugo makes a page's
-       pager on the first call and hands every later call that one, so both
-       must ask for the same posts. Returns false on a page that is not a
-       paginated list. */ -}}
+       and so do meta.html's og:url and baseof's canonical, which run
+       first: Hugo makes a page's pager on the first call and hands every
+       later call that one, so all of them must ask for the same posts.
+       Returns false on a page that is not a paginated list. */ -}}
 {{- $typeName := site.Params.contentTypeName | default "post" -}}
 {{- $pager := false -}}
 {{- if .IsHome -}}
