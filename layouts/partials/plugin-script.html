@@ -1,0 +1,14 @@
+{{- /* One plug-in script (site.Params.plugins_js), deferred so none holds up
+       the page. Deferred scripts still run in order, before
+       DOMContentLoaded, which is when the installed ones (studio.js,
+       poststats.js) start work. The Video streaming plug-in asks for hls.js
+       from jsDelivr with no version, so any new release (or a bad publish)
+       reached every page unseen: data/pins.json holds the version it served
+       when pinned, with its hash, and the page asks for exactly that file
+       (2.0.23). Takes the address as the plug-in lists it. */ -}}
+{{- $pins := hugo.Data.pins.scripts | default dict }}
+{{- with index $pins (index (split . "?") 0) }}
+<script src="{{ .src }}" integrity="{{ .integrity }}" crossorigin="anonymous" defer></script>
+{{- else }}
+<script src="{{ . }}" defer></script>
+{{- end }}

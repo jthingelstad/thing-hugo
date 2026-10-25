@@ -142,7 +142,9 @@ Menu links keep Tiny's `page-link {Name}` classes for Custom CSS.
 
 Plug-in scripts (`plugins_js`) load deferred. One listed in `data/pins.json`
 loads that exact version with its integrity hash instead: the Video streaming
-plug-in asks for the latest hls.js. micro.blog's `conversation.js` runs with
+plug-in asks for the latest hls.js. hls.js loads only on a page that shows a
+streaming (`.m3u8`) video, a post or a page of cards with one
+(`stream-player.html`); the plug-in's own script stays on every page. micro.blog's `conversation.js` runs with
 `history.pushState` limited to hiding its sign-in token in place; unwrapped, it
 added a history entry on every post and dropped the address's `?ref=`.
 
@@ -184,7 +186,8 @@ layouts/
                               post-actions, keep-going, year-page,
                               archive-list, local-date, otd-days,
                               search-page, search-ui, pagefind-meta,
-                              is-trip, trip-nav, sites*, ...
+                              is-trip, trip-nav, stream-player,
+                              plugin-script, sites*, ...
   shortcodes/{figure,image,on-this-day,search}.html
 static/assets/
   css/{tokens,thing}.css      linked one each by partials/asset.html

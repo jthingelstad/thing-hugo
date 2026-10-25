@@ -1,0 +1,16 @@
+{{- /* hls.js, the Video streaming plug-in's player, only where a streaming
+       video shows (2.0.30; Jamie, 2026-10-25: "Approved: thing-hugo loads
+       hls.js only on pages that show a streaming video, to main after the
+       full gate"). The plug-in lists it for every page, about 151 KB
+       compressed, and three posts of 10,477 have a streaming (.m3u8)
+       video; plain MP4 needs no player, and Safari plays HLS itself. Takes
+       the HTML the caller has just written (a post's body, a page of
+       cards) and, when it holds a <video> or <source> with an .m3u8
+       address, writes hls.js from plugins_js. It sits after that HTML, not
+       inside e-content; a deferred script still runs before
+       DOMContentLoaded, when the plug-in's studio.js hands it the video. */ -}}
+{{- if findRE `<(video|source)\b[^>]*\.m3u8` (string .) 1 }}
+  {{- range site.Params.plugins_js }}
+    {{- if strings.Contains . "hls.js" }}{{ partial "plugin-script.html" . }}{{ end }}
+  {{- end }}
+{{- end }}

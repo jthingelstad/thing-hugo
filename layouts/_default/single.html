@@ -44,9 +44,11 @@
   </div>
   {{- end }}
 
+  {{- $body := partial "content-photos.html" . }}
   <div class="post__content e-content">
-    {{ partial "content-photos.html" . }}
+    {{ $body }}
   </div>
+  {{- partial "stream-player.html" $body }}
 
   {{- /* The Not Found page is Jamie's micro.blog page at /404.html/; under its
          text, a way to look for what the old link pointed at. */}}

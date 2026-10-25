@@ -34,22 +34,11 @@
          has none. */}}
   <script src="{{ partial "asset.html" "js/sites.js" }}" defer></script>
   <script src="{{ partial "asset.html" "js/nav.js" }}" defer></script>
-  {{- /* Plug-in scripts, deferred so none holds up the page (the Video
-         streaming plug-in's hls.js is 151 KB on every page). Deferred
-         scripts still run in order, before DOMContentLoaded, which is when
-         the installed ones (studio.js, poststats.js) start work. */}}
-  {{- /* The Video streaming plug-in asks for hls.js from jsDelivr with no
-         version, so any new release (or a bad publish) reached every page
-         unseen. data/pins.json holds the version it served when pinned,
-         with its hash, and the page asks for exactly that file. */}}
-  {{- $pins := hugo.Data.pins.scripts | default dict }}
-  {{ range site.Params.plugins_js }}
-  {{- with index $pins (index (split . "?") 0) }}
-  <script src="{{ .src }}" integrity="{{ .integrity }}" crossorigin="anonymous" defer></script>
-  {{- else }}
-  <script src="{{ . }}" defer></script>
+  {{- /* Plug-in scripts (plugin-script.html), all but hls.js, which
+         stream-player.html writes only beside a streaming video (2.0.30). */}}
+  {{- range site.Params.plugins_js }}
+  {{- if not (strings.Contains . "hls.js") }}{{ partial "plugin-script.html" . }}{{ end }}
   {{- end }}
-  {{ end }}
   {{ partial "extended_footer.html" . }}
   {{ partial "tinylytics.html" . }}
 </body>

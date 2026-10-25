@@ -4,13 +4,17 @@
        which sets Round 4's cards into the stream: the latest Weekly Thing
        after the third post and, on phones only (where the rail has dropped
        to the bottom), Ask Thingy after the fourth and Another Thing after
-       the sixth. */ -}}
+       the sixth. A card that shows a streaming video brings hls.js
+       (stream-player.html), once, after the cards. */ -}}
 {{- $pages := . -}}
 {{- $modules := false -}}
 {{- if reflect.IsMap . }}{{ $pages = .pages }}{{ $modules = .modules }}{{ end -}}
+{{- $cards := "" -}}
 <div class="posts h-feed">
   {{- range $i, $p := $pages }}
-  {{ partial "post-card.html" $p }}
+  {{- $card := partial "post-card.html" $p }}
+  {{- $cards = print $cards $card }}
+  {{ $card }}
   {{- if $modules }}
   {{- if eq $i 2 }}{{ partial "wt-latest.html" . }}{{ end }}
   {{- if eq $i 3 }}{{ partial "ask-thingy.html" (dict "id" "stream" "class" "only-narrow") }}{{ end }}
@@ -18,3 +22,4 @@
   {{- end }}
   {{- end }}
 </div>
+{{- partial "stream-player.html" $cards }}
