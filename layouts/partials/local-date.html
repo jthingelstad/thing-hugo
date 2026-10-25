@@ -5,5 +5,13 @@
        its year section follow Central time. So a winter post written after
        11 PM showed under the next day, month or year: /2025/ opened with a
        January holding the Airport Rally post of 2025/12/31, and 75 posts sat
-       on the wrong On This Day. Returns a time.Time. */ -}}
-{{- return time.In (site.Params.time_zone | default "America/Chicago") .Date -}}
+       on the wrong On This Day. Returns a time.Time.
+       time.In reads the server's zone files (Hugo's release builds don't
+       embed them), so where it can't, this keeps micro.blog's date rather
+       than failing the build; check-live's year-page and On This Day rules
+       would then fail. */ -}}
+{{- $date := .Date -}}
+{{- with try (time.In (site.Params.time_zone | default "America/Chicago") .Date) -}}
+  {{- if not .Err }}{{ $date = .Value }}{{ end -}}
+{{- end -}}
+{{- return $date -}}
