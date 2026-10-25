@@ -4,6 +4,11 @@
   so it lists the most recent titled posts, the Featured category, and pages.
   The full archive is linked, not inlined. Every entry is a [name](url)
   link, as llmstxt.org lists are (2.0.34; bare URLs read as no links).
+  Every entry is also one line: the reference parser (llms-txt) reads each
+  line under a heading as a link and fails the whole file on one that isn't,
+  so summaries fold onto their line and names never hold a bracket. A post's
+  date leads its notes, after the ":" where the parser reads them; between
+  the link and the ":" it hid the notes (2.0.35).
 */ -}}
 {{- $recent := int (site.Params.llmstxt_recent | default 50) -}}
 {{- $typeName := site.Params.contentTypeName | default "post" -}}
@@ -28,14 +33,14 @@ Personal blog of {{ site.Params.author.name | default site.Title }}, writing on 
 ## Recent posts
 
 {{ range first $recent (where $posts "Title" "!=" "").ByDate.Reverse -}}
-- [{{ .Title | plainify }}]({{ .Permalink }}) ({{ (partial "local-date.html" .).Format "2006-01-02" }}){{ with .Summary }}: {{ . | plainify | htmlUnescape | truncate 160 }}{{ end }}
+- [{{ partial "llms-name.html" .Title }}]({{ .Permalink }}): {{ (partial "local-date.html" .).Format "2006-01-02" }}{{ with .Summary | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace }}. {{ . | truncate 160 }}{{ end }}
 {{ end }}
 {{- with site.Taxonomies.categories.featured }}
 
 ## Featured
 
 {{ range first 25 .Pages.ByDate.Reverse -}}
-- [{{ .Title | default ((partial "local-date.html" .).Format "2006-01-02") | plainify }}]({{ .Permalink }})
+- [{{ partial "llms-name.html" (.Title | default ((partial "local-date.html" .).Format "2006-01-02")) }}]({{ .Permalink }})
 {{ end }}
 {{- end }}
 
@@ -43,6 +48,6 @@ Personal blog of {{ site.Params.author.name | default site.Title }}, writing on 
 
 {{ range first 50 (where site.RegularPages "Type" "page") -}}
 {{- if not .Params.redirect_url -}}
-- [{{ .Title | plainify }}]({{ .Permalink }})
+- [{{ partial "llms-name.html" (.Title | default .RelPermalink) }}]({{ .Permalink }})
 {{ end -}}
 {{ end -}}

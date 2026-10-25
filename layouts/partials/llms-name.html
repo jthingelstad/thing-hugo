@@ -1,0 +1,5 @@
+{{- /* An entry's name in /llms.txt (2.0.35): plain text on one line, with
+       brackets turned to parentheses, since the reference parser ends a
+       link's name at the first "]" and fails the file. */ -}}
+{{- $name := . | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | replaceRE `\[` "(" | replaceRE `\]` ")" -}}
+{{- return $name -}}
