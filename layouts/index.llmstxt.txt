@@ -2,7 +2,8 @@
   /llms.txt for the whole site (https://llmstxt.org/). Site level only.
   Capped: 20 years and tens of thousands of posts would make a useless file,
   so it lists the most recent titled posts, the Featured category, and pages.
-  The full archive is linked, not inlined.
+  The full archive is linked, not inlined. Every entry is a [name](url)
+  link, as llmstxt.org lists are (2.0.34; bare URLs read as no links).
 */ -}}
 {{- $recent := int (site.Params.llmstxt_recent | default 50) -}}
 {{- $typeName := site.Params.contentTypeName | default "post" -}}
@@ -16,12 +17,12 @@ Personal blog of {{ site.Params.author.name | default site.Title }}, writing on 
 
 ## About
 
-- Site: {{ site.BaseURL }}
-- Archive (every post): {{ "archive/" | absURL }}
-- Feed (RSS): {{ "feed.xml" | absURL }}
-- Feed (JSON): {{ "feed.json" | absURL }}
+- [Home]({{ site.BaseURL }})
+- [Archive]({{ "archive/" | absURL }}): every post
+- [Feed (RSS)]({{ "feed.xml" | absURL }})
+- [Feed (JSON)]({{ "feed.json" | absURL }})
 {{- range hugo.Data.sites.sites }}{{ if and .in_sites_strip (ne .id "www") }}
-- {{ .name }}: {{ .url }} ({{ .description }})
+- [{{ .name }}]({{ .url }}): {{ .description }}
 {{- end }}{{ end }}
 
 ## Recent posts

@@ -38,6 +38,13 @@
   <h1 class="visually-hidden" data-pagefind-ignore>{{ partial "title.html" . }}</h1>
   {{- end }}
 
+  {{- /* A page shows no date line, so it had no post-meta's url and author
+         (2.0.34). */}}
+  {{- if $isPage }}
+  <a class="u-url" href="{{ .Permalink }}" hidden></a>
+  <a class="p-author h-card" href="{{ "/" | absURL }}" hidden>{{ site.Params.author.name | default site.Title }}</a>
+  {{- end }}
+
   {{- if eq .Type "transcript" }}{{ partial "transcript-of.html" . }}{{ end }}
 
   {{- $narration := partial "narration.html" . }}
