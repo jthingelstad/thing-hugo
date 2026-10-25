@@ -5,7 +5,11 @@
        long:       date with year and time (a micropost's own page).
        year:       always show the year.
        reading:    add "· N minute read".
-       categories: add the categories.
+       categories: add the categories, each linking to its category page
+                   (Hugo's address for it: "Privacy & Security" is
+                   /categories/privacy--security/, and the name urlized,
+                   privacy-security, is a page micro.blog makes with no
+                   posts on it).
        The hidden p-author keeps the h-entry's author. Search skips the line
        (data-pagefind-ignore); the date is in Pagefind's meta. */ -}}
 {{- $p := .page -}}
@@ -14,8 +18,8 @@
   {{- if and .reading (ne site.Params.showReadingTime false) $p.WordCount }}
   <span class="post-meta__sep" aria-hidden="true">·</span> <span class="post-meta__reading">{{ $p.ReadingTime }} minute read</span>
   {{- end }}
-  {{- if .categories }}{{ range $p.Params.categories }}
-  <span class="post-meta__sep" aria-hidden="true">·</span> <a class="p-category" href="{{ printf "categories/%s/" (urlize .) | absURL }}">{{ . }}</a>
+  {{- if .categories }}{{ range $p.GetTerms "categories" }}
+  <span class="post-meta__sep" aria-hidden="true">·</span> <a class="p-category" href="{{ .Permalink }}">{{ .LinkTitle }}</a>
   {{- end }}{{ end }}
   <a class="p-author h-card" href="{{ "/" | absURL }}" hidden>{{ site.Params.author.name | default site.Title }}</a>
 </div>

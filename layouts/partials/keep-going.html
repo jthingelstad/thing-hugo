@@ -1,15 +1,25 @@
 {{- /* Round 4's "Keep going", under a post: one earlier post to read next
        and the latest Another Thing episode. The earlier post is the newest
-       titled post before this one in the first of its categories that has
-       one; a post with no categories gets the episode alone. */ -}}
+       titled post before this one in the post's most specific category:
+       the one with the fewest posts among those holding an earlier titled
+       post, Featured left out (2.0.27; Jamie, 2026-10-25: "Approved:
+       thing-hugo Keep going picks the most specific category (fewest
+       posts, Featured skipped) that has an earlier post, to main after the
+       full gate"). micro.blog lists a post's categories oldest category
+       first, so the first one was nearly always a broad topic (Travel,
+       Family) and never a trip. A tie goes to the earlier-listed category.
+       A post with no categories gets the episode alone. */ -}}
 {{- $earlier := false -}}
 {{- $in := "" -}}
-{{- range .GetTerms "categories" }}
-  {{- if not $earlier }}
+{{- $size := 0 -}}
+{{- range $term := .GetTerms "categories" }}
+  {{- $n := len .Pages }}
+  {{- if and (ne (lower .LinkTitle) "featured") (or (not $earlier) (lt $n $size)) }}
     {{- with first 1 (where (where .Pages "Date" "lt" $.Date) "Title" "!=" "") }}
       {{- $earlier = index . 0 }}
+      {{- $in = $term.LinkTitle }}
+      {{- $size = $n }}
     {{- end }}
-    {{- if $earlier }}{{ $in = .LinkTitle }}{{ end }}
   {{- end }}
 {{- end }}
 <section class="keep-going" aria-label="Keep going" data-pagefind-ignore>

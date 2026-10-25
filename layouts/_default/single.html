@@ -60,9 +60,9 @@
   {{- if not $isPage }}
   <footer class="post__footer" data-pagefind-ignore>
     {{- if .Title }}
-    {{- with .Params.categories }}
+    {{- with .GetTerms "categories" }}
     {{- $last := sub (len .) 1 }}
-    <p class="post__filed">Filed under {{ range $i, $c := . }}{{ if $i }}{{ if eq $i $last }} and {{ else }}, {{ end }}{{ end }}<a class="p-category" href="{{ printf "categories/%s/" (urlize $c) | absURL }}">{{ $c }}</a>{{ end }}</p>
+    <p class="post__filed">Filed under {{ range $i, $c := . }}{{ if $i }}{{ if eq $i $last }} and {{ else }}, {{ end }}{{ end }}<a class="p-category" href="{{ .Permalink }}">{{ .LinkTitle }}</a>{{ end }}</p>
     {{- end }}
     {{- else }}
     {{ partial "post-meta.html" (dict "page" . "long" true "categories" true) }}
