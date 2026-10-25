@@ -9,11 +9,14 @@
          six at most, the sixth a "+N" link to the post when there are more.
        A post's own page shows its photos whole, where Jamie put them.
        A photo is an <img> with no width or one wider than 100px; smaller
-       ones (icons, badges, old tracking pixels) stay in the text. Links,
-       paragraphs and figures left empty are removed. */ -}}
-{{- $content := string .Content -}}
+       ones (icons, badges, old tracking pixels) stay in the text, and so
+       does a video's thumbnail (youtube.html). Links, paragraphs and
+       figures left empty are removed. Embeds become the theme's own first
+       (embeds.html, 2.0.31). */ -}}
+{{- $content := string (partial "embeds.html" .Content) -}}
 {{- $photos := slice -}}
 {{- range findRE `<img\b[^>]*>` $content }}
+  {{- if strings.Contains . "video-card__thumb" }}{{ continue }}{{ end }}
   {{- $w := 0 }}
   {{- with findRESubmatch `\swidth=["']?(\d+)` . 1 }}{{ $w = int (strings.TrimLeft "0" (index (index . 0) 1) | default "0") }}{{ end }}
   {{- if or (eq $w 0) (gt $w 100) }}

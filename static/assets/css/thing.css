@@ -584,141 +584,127 @@ figcaption, .figure__caption {
   cursor: default;
 }
 
-/* Narration: micro.blog's narration.js renders a button for posts with audio */
-.post__narration { align-self: flex-start; margin-top: var(--space-5); }
-.microblog_narration_button {
-  font-family: var(--font-body) !important;
-  font-size: var(--font-size-small) !important;
-  font-weight: var(--weight-strong);
-  color: var(--color-ink) !important;
+/* Listen, on a post Jamie read aloud (listen.html, js/listen.js; 2.0.31):
+   a play and pause button whose fill shows how far along it is, and the
+   transcript beside it */
+.listen {
+  margin-top: var(--space-5);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  font-size: var(--font-size-small);
+}
+.post--titleless .listen { margin-top: 0; margin-bottom: var(--space-5); }
+.listen__play {
+  --listen-progress: 0%;
   min-height: var(--target-min);
-  padding: 0 1.125rem 0 0.375rem;
+  padding: 0 1.125rem 0 0.5rem;
   border: 0;
-  border-radius: var(--radius-md);
-  background: var(--color-strip);
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-mark) var(--listen-progress), var(--color-strip) var(--listen-progress));
+  color: var(--color-ink);
+  font: inherit;
+  font-weight: var(--weight-strong);
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 0.625rem;
-  text-decoration: none !important;
   cursor: pointer;
+  font-variant-numeric: tabular-nums;
 }
-.microblog_narration_button::before {
-  content: "";
-  width: 32px;
-  height: 32px;
+.listen__play:hover .listen__label { text-decoration: underline; text-underline-offset: 3px; }
+.listen__icon {
+  position: relative;
   flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 50%;
-  background: var(--color-ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E") center / 14px no-repeat;
-}
-@media (prefers-color-scheme: dark) {
-  .microblog_narration_button::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23131316'%3E%3Cpath d='M8 5v14l11-7z'/%3E%3C/svg%3E");
-  }
-}
-.microblog_narration_button:hover { background: var(--color-mark); }
-.microblog_narration_button span { vertical-align: baseline !important; }
-.microblog_narration_button img { display: none; }
-
-/* Earlier / Later, and a trip's (trip-nav.html, 2.0.28): the trip's name,
-   then its posts either side of this one, on a grey card */
-.post__nav,
-.trip-nav__links {
-  margin-top: var(--space-7);
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  gap: var(--space-4) var(--space-6);
-  line-height: 1.35;
-}
-.post__nav-link, .trip-nav__link { color: var(--color-ink); text-decoration: none; display: flex; flex-direction: column; gap: var(--space-1); }
-.post__nav-link--later, .trip-nav__link--later { text-align: right; grid-column: -2; }
-.post__nav-label, .trip-nav__label { font-size: var(--font-size-label); font-weight: var(--weight-strong); color: var(--color-text-muted); }
-.post__nav-title, .trip-nav__title { font-size: var(--font-size-ui); font-weight: var(--weight-strong); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.post__nav-link:hover .post__nav-title, .trip-nav__link:hover .trip-nav__title { text-decoration-thickness: 2px; }
-.trip-nav {
-  padding: var(--space-5);
-  border-radius: var(--radius-lg);
-  background: var(--color-strip);
-}
-.trip-nav__name {
-  font-family: var(--font-heading);
-  font-size: var(--font-size-h3);
-  font-weight: var(--weight-heading);
-  line-height: 1.2;
-  letter-spacing: var(--tracking-heading);
-  color: var(--color-ink);
-  text-decoration: none;
-}
-.trip-nav__name:hover { text-decoration: underline; }
-.trip-nav__links { margin-top: var(--space-4); }
-
-/* The Not Found page: search, then Ask Thingy, under Jamie's text */
-.not-found__find {
-  margin-top: var(--space-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-}
-
-/* Replies from micro.blog (conversation.js) */
-.microblog_conversation {
-  margin-top: var(--space-6);
-  padding: var(--space-5);
-  border-radius: var(--radius-lg);
-  background: var(--color-strip);
-  font-size: var(--font-size-small);
-  line-height: 1.5;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-}
-.microblog_post { display: flex; flex-direction: column; gap: var(--space-1); }
-.microblog_user { font-weight: var(--weight-strong); display: flex; align-items: center; gap: var(--space-2); }
-.microblog_user a { color: var(--color-ink); text-decoration: none; }
-.microblog_user img {
-  width: 32px !important;
-  height: 32px !important;
-  max-width: 32px !important;
-  border-radius: 50%;
-  display: inline-block;
-}
-.microblog_text p + p { margin-top: var(--space-2); }
-.microblog_text img { max-width: 100%; border-radius: var(--radius-sm); }
-.microblog_time a { color: var(--color-text-muted); font-size: var(--font-size-label); text-decoration: none; }
-.microblog_time a:hover { text-decoration: underline; }
-.microblog_reply_textarea textarea {
-  width: 100%;
-  min-height: 6rem;
-  padding: var(--space-3);
-  border: 0;
-  border-radius: var(--radius-md);
-  background: var(--color-bg);
-  color: var(--color-ink);
-  font: inherit;
-}
-/* conversation.js writes <p class="microblog_reply_button"><input
-   type="submit" value="Post"></p>, disabled until the reader signs in. Only
-   the input is the button; styling the paragraph too drew a full-width black
-   bar with "Post" off to one side. */
-.microblog_reply_button { margin-top: var(--space-2); display: flex; justify-content: flex-end; }
-.microblog_reply_button input,
-.microblog_reply_button button {
-  min-height: var(--target-min);
-  padding: 0 1.125rem;
-  border: 0;
-  border-radius: var(--radius-md);
   background: var(--color-ink);
-  color: var(--color-bg);
-  font: inherit;
-  font-weight: var(--weight-strong);
-  cursor: pointer;
 }
-.microblog_reply_button input:disabled,
-.microblog_reply_button button:disabled {
-  background: var(--color-mark);
-  color: var(--color-text-muted);
-  cursor: default;
+.listen__icon::before,
+.listen__icon::after { content: ""; position: absolute; top: 50%; }
+.listen__icon::before {
+  left: 50%;
+  transform: translate(-35%, -50%);
+  border-style: solid;
+  border-width: 0.375rem 0 0.375rem 0.625rem;
+  border-color: transparent transparent transparent var(--color-bg);
 }
+.listen__play.is-playing .listen__icon::before,
+.listen__play.is-playing .listen__icon::after {
+  transform: translateY(-50%);
+  width: 0.1875rem;
+  height: 0.6875rem;
+  border: 0;
+  background: var(--color-bg);
+}
+.listen__play.is-playing .listen__icon::before { left: calc(50% - 0.3125rem); }
+.listen__play.is-playing .listen__icon::after { left: calc(50% + 0.125rem); }
+.listen__time { color: var(--color-text-muted); font-weight: 400; }
+.listen__transcript { color: var(--color-text-muted); }
+.listen__transcript a { color: var(--color-ink); }
 .microblog_reply_textarea textarea:disabled { cursor: default; }
+
+/* Transcripts of a post's audio (2.0.31): the link under the post, and the
+   post named at the top of the transcript's page */
+.post__transcript { margin-top: var(--space-5); font-size: var(--font-size-small); color: var(--color-text-muted); }
+.post__transcript a { color: var(--color-ink); font-weight: var(--weight-strong); }
+.transcript__of { margin-bottom: var(--space-5); font-size: var(--font-size-small); color: var(--color-text-muted); }
+.transcript__of a { color: var(--color-ink); }
+
+/* Posts from X, as the theme's own card (embeds.html, 2.0.31): the post's
+   text, then who posted it and when, the date linking to it on X */
+blockquote.twitter-tweet {
+  border-left: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-strip);
+  padding: var(--space-4) var(--space-5);
+  color: var(--color-text);
+  font-size: 0.9em;
+}
+blockquote.twitter-tweet > * + * { margin-top: var(--space-3); }
+.tweet__by { font-size: var(--font-size-meta); color: var(--color-text-muted); }
+.tweet__by a { color: var(--color-text-muted); }
+
+/* YouTube videos, click to play (youtube.html, js/video.js; 2.0.31): the
+   thumbnail at 16:9 (YouTube's hqdefault is 4:3 with bars, so it is
+   cropped), a play button over it, the player in its place once clicked */
+.video-card {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-strip);
+}
+.video-card__link { display: block; width: 100%; height: 100%; }
+.video-card__thumb { width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
+.video-card__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4.25rem;
+  height: 3rem;
+  transform: translate(-50%, -50%);
+  border-radius: 0.75rem;
+  background: rgba(22, 22, 26, 0.78);
+  transition: background-color 0.15s;
+}
+.video-card__play::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-35%, -50%);
+  border-style: solid;
+  border-width: 0.625rem 0 0.625rem 1.0625rem;
+  border-color: transparent transparent transparent #fff;
+}
+.video-card__link:hover .video-card__play,
+.video-card__link:focus-visible .video-card__play { background: rgba(22, 22, 26, 0.95); }
+.video-card__link:focus-visible { outline: 3px solid var(--color-ink); outline-offset: -3px; }
+.video-card iframe { display: block; width: 100%; height: 100%; border-radius: 0; }
 
 /* Post-body classes Jamie uses (from Tiny's conventions) */
 .post__content aside,

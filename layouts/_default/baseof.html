@@ -35,7 +35,7 @@
   <script src="{{ partial "asset.html" "js/sites.js" }}" defer></script>
   <script src="{{ partial "asset.html" "js/nav.js" }}" defer></script>
   {{- /* Plug-in scripts (plugin-script.html), all but hls.js, which
-         stream-player.html writes only beside a streaming video (2.0.30). */}}
+         embed-scripts.html writes only beside a streaming video (2.0.30). */}}
   {{- range site.Params.plugins_js }}
   {{- if not (strings.Contains . "hls.js") }}{{ partial "plugin-script.html" . }}{{ end }}
   {{- end }}

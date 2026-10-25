@@ -4,8 +4,9 @@
        on uploads), up to the 45rem column. A tag without a pixel width is
        left alone: its size on the page comes from the file, and a srcset
        would draw a small screenshot at the full column width. So are tags
-       100px wide or less (icons, badges). Returns HTML. */ -}}
-{{- $content := string .Content -}}
+       100px wide or less (icons, badges). Embeds become the theme's own
+       first (embeds.html, 2.0.31). Returns HTML. */ -}}
+{{- $content := string (partial "embeds.html" .Content) -}}
 {{- range uniq (findRE `<img\b[^>]*>` $content) -}}
   {{- $tag := . -}}
   {{- with findRESubmatch `\swidth=["']?(\d+)(?:["'\s/>]|$)` $tag 1 -}}

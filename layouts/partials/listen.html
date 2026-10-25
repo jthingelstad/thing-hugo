@@ -1,0 +1,23 @@
+{{- /* Listen, on a post Jamie read aloud (narration.html; 2.0.31, Jamie,
+       2026-10-25: "I like the feature and would for sure like to support
+       it. Tiny Theme implements it well."). Until 2.0.31 the theme wrote
+       micro.blog's narration.js here, as Tiny Theme does: a "Listen" div no
+       keyboard could reach, written on every post with any audio, so posts
+       with their own player showed it twice. This is a link to the
+       recording with its length, which js/listen.js makes a play and pause
+       button that plays the post's own (hidden) <audio>; without the script
+       the link opens the recording. The transcript sits beside it
+       (post-transcripts.html). Takes (dict "page" <page> "audio" <narration.html's dict>). */ -}}
+{{- $a := .audio -}}
+{{- $time := "" }}{{ with $a.seconds }}{{ $time = printf "%d:%02d" (div . 60) (mod . 60) }}{{ end -}}
+<div class="listen" data-pagefind-ignore>
+  <a class="listen__play" href="{{ $a.src }}" data-title="{{ partial "title.html" .page }}">
+    <span class="listen__icon" aria-hidden="true"></span>
+    <span class="listen__label">Listen</span>
+    {{- with $time }}
+    <span class="listen__time">{{ . }}</span>
+    {{- end }}
+  </a>
+  {{- partial "post-transcripts.html" (dict "page" .page "place" "listen") }}
+</div>
+<script src="{{ partial "asset.html" "js/listen.js" }}" defer></script>

@@ -1,0 +1,26 @@
+{{- /* A post's audio transcripts (transcripts.html, 2.0.31): "Read the
+       transcript", or for several, each by its opening words, in the order
+       they were made. Under the body, or beside Listen on a post Jamie read
+       aloud (listen.html). Takes the post, or (dict "page" <post> "place"
+       "listen"). */ -}}
+{{- $page := . -}}
+{{- $listen := false -}}
+{{- if reflect.IsMap . }}{{ $page = .page }}{{ $listen = eq .place "listen" }}{{ end -}}
+{{- $here := $page.RelPermalink -}}
+{{- $ts := slice -}}
+{{- range partialCached "transcripts.html" "transcripts" }}{{ if eq .post.RelPermalink $here }}{{ $ts = $ts | append .transcript }}{{ end }}{{ end -}}
+{{- with $ts }}
+{{- $links := "" }}
+{{- if eq (len .) 1 }}
+{{- $links = printf `<a href="%s">Read the transcript</a>` (index . 0).Permalink }}
+{{- else }}
+{{- $last := sub (len .) 1 }}
+{{- $links = "Read the transcripts: " }}
+{{- range $i, $t := . }}{{ if $i }}{{ $links = print $links (cond (eq $i $last) " and " ", ") }}{{ end }}{{ $links = print $links (printf `<a href="%s">“%s”</a>` $t.Permalink (partial "title.html" $t | htmlEscape)) }}{{ end }}
+{{- end }}
+{{- if $listen }}
+  <span class="listen__transcript">{{ $links | safeHTML }}</span>
+{{- else }}
+<p class="post__transcript" data-pagefind-ignore>{{ $links | safeHTML }}</p>
+{{- end }}
+{{- end }}

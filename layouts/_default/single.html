@@ -38,17 +38,19 @@
   <h1 class="visually-hidden" data-pagefind-ignore>{{ partial "title.html" . }}</h1>
   {{- end }}
 
-  {{- with .Params.audio }}
-  <div class="post__narration" data-pagefind-ignore>
-    <script src="https://micro.blog/narration.js?url={{ . }}"></script>
-  </div>
+  {{- if eq .Type "transcript" }}{{ partial "transcript-of.html" . }}{{ end }}
+
+  {{- $narration := partial "narration.html" . }}
+  {{- with $narration }}
+  {{ partial "listen.html" (dict "page" $ "audio" .) }}
   {{- end }}
 
   {{- $body := partial "content-photos.html" . }}
   <div class="post__content e-content">
     {{ $body }}
   </div>
-  {{- partial "stream-player.html" $body }}
+  {{- partial "embed-scripts.html" $body }}
+  {{- if and $isPost (not $narration) }}{{ partial "post-transcripts.html" . }}{{ end }}
 
   {{- /* The Not Found page is Jamie's micro.blog page at /404.html/; under its
          text, a way to look for what the old link pointed at. */}}

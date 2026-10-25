@@ -39,6 +39,13 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
   its page reads oldest first, and each of its posts names the posts either
   side of it in the trip.
 - **Tinylytics built in:** page hits and Kudos, no plug-in needed.
+- **Embeds as the theme's own:** a post from X is a quote card (X's
+  `widgets.js` and its `ref_src` are dropped); a YouTube video is its
+  thumbnail and a play button, and the player (from youtube-nocookie.com)
+  loads only when clicked.
+- **Listening:** a post Jamie read aloud (micro.blog's narration) has a Listen
+  button with its length, and audio posts and their micro.blog transcripts
+  link to each other (`data/transcripts.json` pairs them).
 - **[llms.txt](https://llmstxt.org/):** one capped, site-level `/llms.txt`.
 - **Jamie's sites:** a strip above the header and an "Also from Jamie" footer,
   from `data/sites.json`.
@@ -48,8 +55,8 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
 - **Minimal:** two stylesheets (the tokens and the theme), built from CSS
   custom properties and cache-busted with `?v=`. Scripts: the phone menu, the
   rail's lists, Pagefind on the Search page, the signup, On This Day,
-  Tinylytics, and micro.blog's `conversation.js` and `narration.js`. Every page
-  reads in full without them.
+  click-to-play video and Listen (only where there is one), Tinylytics, and
+  micro.blog's `conversation.js`. Every page reads in full without them.
 
 ## Install on micro.blog
 
@@ -144,7 +151,8 @@ Plug-in scripts (`plugins_js`) load deferred. One listed in `data/pins.json`
 loads that exact version with its integrity hash instead: the Video streaming
 plug-in asks for the latest hls.js. hls.js loads only on a page that shows a
 streaming (`.m3u8`) video, a post or a page of cards with one
-(`stream-player.html`); the plug-in's own script stays on every page. micro.blog's `conversation.js` runs with
+(`embed-scripts.html`, which also writes `js/video.js` beside a YouTube card);
+the plug-in's own script stays on every page. micro.blog's `conversation.js` runs with
 `history.pushState` limited to hiding its sign-in token in place; unwrapped, it
 added a history entry on every post and dropped the address's `?ref=`.
 
@@ -166,6 +174,7 @@ data/release.json             the release version, the CSS/JS cache buster
 data/pins.json                plug-in scripts held to one version and hash
 data/signup.json              the Weekly Thing signup's API, Turnstile key and ref
 data/year-photos.json         photos the /archive/ year tiles pass over
+data/transcripts.json         each micro.blog transcript page and the post it is of
 data/sites.json               Jamie's sites (generated copy)
 data/tokens.json              theme-color values (generated copy)
 layouts/
@@ -186,9 +195,11 @@ layouts/
                               post-actions, keep-going, year-page,
                               archive-list, local-date, otd-days,
                               search-page, search-ui, pagefind-meta,
-                              is-trip, trip-nav, stream-player,
-                              plugin-script, sites*, ...
-  shortcodes/{figure,image,on-this-day,search}.html
+                              is-trip, trip-nav, embeds, youtube,
+                              embed-scripts, narration, listen,
+                              transcripts, post-transcripts,
+                              transcript-of, plugin-script, sites*, ...
+  shortcodes/{figure,image,on-this-day,search,youtube}.html
 static/assets/
   css/{tokens,thing}.css      linked one each by partials/asset.html
   fonts/                      Inter and Inter Tight (woff2, OFL)
@@ -197,6 +208,8 @@ static/assets/
   js/search.js                the Search page
   js/subscribe.js             the Weekly Thing signup
   js/on-this-day.js           the On This Day page
+  js/video.js                 a YouTube card's player, on a click
+  js/listen.js                Listen on a narrated post
 ```
 
 All CSS and JS go through `partials/asset.html`, which links the file under

@@ -1,0 +1,26 @@
+{{- /* Which post each transcript is of (2.0.31; Jamie, 2026-10-25:
+       "Approved: thing-hugo links audio posts to their transcripts and back,
+       to main after the full gate"). micro.blog makes a transcript page
+       (type transcript, under /transcripts/) for an audio file and records
+       nothing that ties it to the post with the audio: its date is when it
+       was made (the same as its post's for one of four), its text is the
+       recording's. So data/transcripts.json lists them, transcript address
+       to post address, and a new transcript needs a line there
+       (check-site.mjs fails on one with none). Returns a slice of
+       (dict "transcript" <page> "post" <page>), oldest transcript first.
+       Called through partialCached, once a build. */ -}}
+{{- $map := hugo.Data.transcripts.transcripts | default dict -}}
+{{- $want := slice }}{{ range $map }}{{ $want = $want | append . }}{{ end -}}
+{{- $posts := where site.RegularPages "RelPermalink" "in" $want -}}
+{{- $pairs := slice -}}
+{{- range sort (where site.RegularPages "Type" "transcript") "Date" -}}
+  {{- $t := . -}}
+  {{- with index $map .RelPermalink -}}
+    {{- $found := false -}}
+    {{- range first 1 (where $posts "RelPermalink" .) }}{{ $pairs = $pairs | append (dict "transcript" $t "post" .) }}{{ $found = true }}{{ end -}}
+    {{- if not $found }}{{ warnf "data/transcripts.json: %s names %s, which is not a post" $t.RelPermalink . }}{{ end -}}
+  {{- else -}}
+    {{- warnf "data/transcripts.json has no post for %s" .RelPermalink -}}
+  {{- end -}}
+{{- end -}}
+{{- return $pairs -}}

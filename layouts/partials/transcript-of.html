@@ -1,0 +1,9 @@
+{{- /* At the top of a transcript page, the post whose audio it is
+       (transcripts.html, 2.0.31). */ -}}
+{{- $here := .RelPermalink -}}
+{{- range partialCached "transcripts.html" "transcripts" }}
+{{- if eq .transcript.RelPermalink $here }}
+{{- $post := .post }}
+<p class="transcript__of" data-pagefind-ignore>Transcript of the audio in <a href="{{ $post.Permalink }}">{{ with $post.Title }}{{ . | markdownify }}{{ else }}“{{ partial "title.html" $post }}”{{ end }}</a></p>
+{{- end }}
+{{- end }}

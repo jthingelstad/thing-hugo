@@ -1,0 +1,20 @@
+{{- /* A post Jamie read aloud: micro.blog's narration, recorded in the app
+       and attached to the post as an <audio> hidden at the end of its body
+       (style="display: none"), with its length in .Params.audio_with_metadata.
+       Two posts have one (2024). Posts with a player of their own (old
+       recordings, clips) list their audio in .Params.audio too, but it shows
+       in the body, so they are not narrations. Returns
+       (dict "src" <the hidden tag's address> "seconds" <length or 0>), or
+       false. */ -}}
+{{- $out := false -}}
+{{- with findRE `<audio\b[^>]*\bdisplay:\s*none[^>]*>` (string .Content) 1 -}}
+  {{- with findRESubmatch `\ssrc=["']([^"']+)["']` (index . 0) 1 -}}
+    {{- $src := index (index . 0) 1 -}}
+    {{- $secs := 0 -}}
+    {{- range $.Params.audio_with_metadata -}}
+      {{- if and (not $secs) (strings.HasSuffix (string .url) (path.Base $src)) }}{{ $secs = int (.duration_seconds | default 0) }}{{ end -}}
+    {{- end -}}
+    {{- $out = dict "src" $src "seconds" $secs -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

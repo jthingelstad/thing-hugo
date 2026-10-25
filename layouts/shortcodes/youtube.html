@@ -1,0 +1,14 @@
+{{- /* Hugo's youtube shortcode, as a click-to-play card (partials/youtube.html,
+       2.0.31): {{< youtube ID >}} or {{< youtube id=ID start=N >}}, the two
+       forms posts use; end and title are read too. Hugo's own wrote the
+       player's iframe, loading="eager". */ -}}
+{{- $id := .Get "id" | default (.Get 0) -}}
+{{- if $id }}
+{{- $args := dict "id" $id }}
+{{- with .Get "start" }}{{ $args = merge $args (dict "start" .) }}{{ end }}
+{{- with .Get "end" }}{{ $args = merge $args (dict "end" .) }}{{ end }}
+{{- with .Get "title" }}{{ $args = merge $args (dict "title" .) }}{{ end }}
+{{- partial "youtube.html" $args }}
+{{- else }}
+{{- errorf "The %q shortcode needs a video id. See %s" .Name .Position }}
+{{- end -}}

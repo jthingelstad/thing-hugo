@@ -1,0 +1,41 @@
+{{- /* Embeds in a post's or page's body, made the theme's own (2.0.31;
+       Jamie, 2026-10-25: "Approved: thing-hugo shows X embeds as theme quote
+       cards without X's widgets.js, to main after the full gate" and
+       "Approved: thing-hugo YouTube embeds as click-to-play (thumbnail first,
+       youtube-nocookie), to main after the full gate").
+       - X: the post's text is already in the page. Hugo's x shortcode writes
+         X's oEmbed blockquote at build time, and older posts pasted the same
+         markup. X's widgets.js, which redrew it as X's widget and tracked
+         readers, is dropped, and so is X's ref_src parameter. The
+         "— Name (@user) date" line gets its own paragraph (tweet__by) for
+         the card in thing.css.
+       - YouTube: an iframe typed into a post (youtube.com or
+         youtube-nocookie.com/embed/ID) becomes the card youtube.html draws,
+         as the youtube shortcode's is.
+       Takes the body's HTML, returns HTML. */ -}}
+{{- $html := string . -}}
+{{- if strings.Contains $html "widgets.js" }}
+  {{- $html = replaceRE `<script\b[^>]*\bsrc=["'](?:https?:)?//platform\.(?:twitter|x)\.com/widgets\.js["'][^>]*>\s*</script>\s*` "" $html }}
+{{- end }}
+{{- if strings.Contains $html "twitter-tweet" }}
+  {{- range findRE `(?s)<blockquote\b[^>]*\btwitter-tweet\b[^>]*>.*?</blockquote>` $html }}
+    {{- $q := replaceRE `(?:\?|&amp;|&)ref_src=twsrc%5E\w+(["'])` "${1}" . }}
+    {{- $q = replaceRE `(?s)</p>\s*((?:&mdash;|—|&#8212;)[^<]*(?:<a\b[^>]*>[^<]*</a>)?)\s*</blockquote>$` "</p><p class=\"tweet__by\">${1}</p></blockquote>" $q }}
+    {{- $html = replace $html . $q }}
+  {{- end }}
+{{- end }}
+{{- if strings.Contains $html "/embed/" }}
+  {{- /* A card is a block, so a paragraph holding only the iframe goes. */}}
+  {{- $html = replaceRE `(?s)<p>\s*(<iframe\b[^>]*\bsrc=["'](?:https?:)?//(?:www\.)?youtube(?:-nocookie)?\.com/embed/[^"']+["'][^>]*>\s*</iframe>)\s*</p>` "${1}" $html }}
+  {{- range findRE `(?s)<iframe\b[^>]*\bsrc=["'](?:https?:)?//(?:www\.)?youtube(?:-nocookie)?\.com/embed/[^"']+["'][^>]*>\s*</iframe>` $html }}
+    {{- $tag := . }}
+    {{- with findRESubmatch `/embed/([A-Za-z0-9_-]{11})(?:[?"'&]|$)` $tag 1 }}
+      {{- $args := dict "id" (index (index . 0) 1) }}
+      {{- with findRESubmatch `[?&](?:amp;)?start=(\d+)` $tag 1 }}{{ $args = merge $args (dict "start" (index (index . 0) 1)) }}{{ end }}
+      {{- with findRESubmatch `[?&](?:amp;)?end=(\d+)` $tag 1 }}{{ $args = merge $args (dict "end" (index (index . 0) 1)) }}{{ end }}
+      {{- with findRESubmatch `\stitle=["']([^"']+)["']` $tag 1 }}{{ with index (index . 0) 1 }}{{ if ne . "YouTube video player" }}{{ $args = merge $args (dict "title" (. | htmlUnescape)) }}{{ end }}{{ end }}{{ end }}
+      {{- $html = replace $html $tag (string (partial "youtube.html" $args)) }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- return ($html | safeHTML) -}}

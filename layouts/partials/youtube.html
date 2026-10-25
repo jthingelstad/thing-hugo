@@ -1,0 +1,17 @@
+{{- /* A YouTube video as a card (2.0.31): its thumbnail and a play button,
+       linking to the video on YouTube. js/video.js swaps in the player from
+       youtube-nocookie.com on a click, playing, so nothing loads from
+       YouTube's player until a reader asks; until 2.0.31 every page with a
+       video loaded the whole player at once. Without JavaScript, or with a
+       modified click, the link opens YouTube. The shortcode (youtube) and
+       iframes typed into posts (embeds.html) both draw it.
+       Takes id, and start, end and title when known. */ -}}
+{{- $id := .id -}}
+<div class="video-card" data-youtube="{{ $id }}"{{ with .start }} data-start="{{ . }}"{{ end }}{{ with .end }} data-end="{{ . }}"{{ end }}{{ with .title }} data-title="{{ . }}"{{ end }} data-pagefind-ignore>
+  <a class="video-card__link" href="https://www.youtube.com/watch?v={{ $id }}{{ with .start }}&amp;t={{ . }}s{{ end }}">
+    <img class="video-card__thumb" src="https://i.ytimg.com/vi/{{ $id }}/hqdefault.jpg" alt="" width="480" height="360" loading="lazy" decoding="async">
+    <span class="video-card__play" aria-hidden="true"></span>
+    <span class="visually-hidden">Play {{ with .title }}“{{ . }}”{{ else }}the video{{ end }} on YouTube</span>
+  </a>
+</div>
+{{- /**/ -}}
