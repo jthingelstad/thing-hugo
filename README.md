@@ -174,6 +174,8 @@ layouts/
   _default/{baseof,single,list}.html   list.html also draws the year pages
   list.archivehtml.html       /archive/: year tiles and categories
   list.photoshtml.html        /photos/: photo grid with alt text, 240 to a page
+                              as the home output (micro.blog's content page
+                              can't paginate, so it shows all)
   index.html                  home: hello, Weekly Thing card, stream, rail
   opengraph.html              social card micro.blog renders to an image (plain Go templates, no Hugo functions)
   index.llmstxt.txt           /llms.txt

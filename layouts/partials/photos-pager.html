@@ -3,5 +3,7 @@
        resizer refuse requests). Both the canonical and the grid ask for it:
        Hugo makes a page's pager on the first call and hands every later
        call that one. PhotosHTML's pager is its own, apart from the home
-       stream's (pager.html), and its later pages are /photos/page/2/ on. */ -}}
+       stream's (pager.html), and its later pages are /photos/page/2/ on.
+       Call it only when .IsHome: micro.blog also renders /photos/ as a
+       content page, where .Paginate fails the build. */ -}}
 {{- return .Paginate (partialCached "photo-posts.html" "photos") 240 -}}
