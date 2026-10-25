@@ -34,7 +34,9 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
 - **[Pagefind](https://pagefind.app/) search:** the Search page draws results
   in the theme's style, with Best match / Newest and year and category filters
   (rows above the results on phones); Ask Thingy is the second path.
-- **Trip days:** a `{{< trip >}}` shortcode draws "Go to day" chips.
+- **Trips:** a category whose name holds a year ("Iceland 2022") is a trip:
+  its page reads oldest first, and each of its posts names the posts either
+  side of it in the trip.
 - **Tinylytics built in:** page hits and Kudos, no plug-in needed.
 - **[llms.txt](https://llmstxt.org/):** one capped, site-level `/llms.txt`.
 - **Jamie's sites:** a strip above the header and an "Also from Jamie" footer,
@@ -77,23 +79,15 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
 5. Republish and check `/search/`, `/archive/`, a year page, `/llms.txt` and a
    post's page source.
 
-## Trip days
+## Trips
 
-Put the shortcode at the end of each day's post:
-
-```
-{{< trip "QMSB Trip" >}}
-{{< trip "QMSB Trip" "https://www.thingelstad.com/collections/qmsb-2025" >}}
-{{< trip prefix="QMSB Trip" name="QMSB Trip 2025" url="/collections/qmsb-2025" >}}
-```
-
-The days are the posts whose titles start with the prefix ("QMSB Trip - Day
-7"), oldest first, so earlier days pick up each new one without an edit. Each
-chip shows the "Day N" in its title (else its place in the trip); the post's
-own day is in ink. Posts with the same prefix more than two weeks apart are
-separate trips. The second argument, or `url`, adds "The whole trip". The name
-defaults to the prefix plus the trip's year. Nothing shows until a trip has
-two days or a url.
+A trip is a category whose name holds a year ("Iceland 2022", "MEA 2021 Road
+Trip"; `partials/is-trip.html`), so filing a post in a new trip is all it
+takes. The trip's category page lists its posts oldest first, with its pages
+running Earlier / Later. Under each post in it, a card names the trip
+(linking to that page) and the posts just before and after this one in the
+trip, titled or not. Dated series, such as a photo challenge, read the same
+way.
 
 ## Settings
 
@@ -188,8 +182,8 @@ layouts/
                               post-actions, keep-going, year-page,
                               archive-list, local-date, otd-days,
                               search-page, search-ui, pagefind-meta,
-                              trip-posts, sites*, ...
-  shortcodes/{figure,image,on-this-day,search,trip}.html
+                              is-trip, trip-nav, sites*, ...
+  shortcodes/{figure,image,on-this-day,search}.html
 static/assets/
   css/{tokens,thing}.css      linked one each by partials/asset.html
   fonts/                      Inter and Inter Tight (woff2, OFL)

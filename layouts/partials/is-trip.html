@@ -1,0 +1,16 @@
+{{- /* Whether a page is a trip: a category whose name holds a year
+       ("Iceland 2022", "MEA 2021 Road Trip"). The Librarian names trips
+       that way, so a new trip needs no list kept here; the two dated
+       series (February 2021 Photoblogging Challenge, Summer Challenge
+       2024) read in order too. A trip's page lists oldest first
+       (pager.html) and each of its posts names the posts either side
+       (trip-nav.html). 2.0.28; Jamie, 2026-10-25: "Approved: thing-hugo
+       trip navigation from trip categories (names with a year): earlier
+       and later post in the trip under each post, trip category pages
+       oldest first, remove the unused trip shortcode, to main after the
+       full gate". Returns a bool. */ -}}
+{{- $trip := false -}}
+{{- if and (eq .Kind "term") (eq .Data.Plural "categories") (findRE `\b(19|20)\d\d\b` .Title 1) -}}
+  {{- $trip = true -}}
+{{- end -}}
+{{- return $trip -}}

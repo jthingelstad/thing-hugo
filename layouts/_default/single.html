@@ -89,7 +89,7 @@
 
 {{- if $isPost }}
 {{- /* Round 4: under every post, the Weekly Thing card, Keep going, then
-       Earlier / Later. */}}
+       Earlier / Later; a post in a trip starts with the trip's (2.0.28). */}}
 {{- /* Earlier / Later walk every post, across years (2.0.23): each year
        is a section, so PrevInSection and NextInSection stopped at New Year.
        The list is newest first, so Prev is the older post. */}}
@@ -97,6 +97,7 @@
 {{- $earlier := $posts.Prev . }}
 {{- $later := $posts.Next . }}
 <div class="post-after">
+  {{- partial "trip-nav.html" . }}
   {{ partial "wt-subscribe.html" (dict "variant" "post") }}
   {{ partial "keep-going.html" . }}
   {{- if or $earlier $later }}

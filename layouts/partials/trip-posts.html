@@ -1,5 +1,0 @@
-{{- /* Every post whose title starts with a trip's prefix, oldest first.
-       Called as partialCached "trip-posts.html" $prefix $prefix, so the
-       trip shortcode on each day of a trip reads one shared list. */ -}}
-{{- $re := printf "^%s" (replaceRE `([\\.+*?()|\[\]{}^$])` `\$1` .) -}}
-{{- return (where (where site.RegularPages "Type" "post") "Title" "like" $re).ByDate -}}

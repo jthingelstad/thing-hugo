@@ -14,6 +14,9 @@
     {{- $pager = .Paginate (where .RegularPagesRecursive "Type" "reply") -}}
   {{- else if and (eq .Kind "section") (eq .Section "archive") -}}
     {{- $pager = .Paginate ((where site.RegularPages "Type" $typeName).ByDate.Reverse) 100 -}}
+  {{- else if partial "is-trip.html" . -}}
+    {{- /* A trip reads from its first day. */ -}}
+    {{- $pager = .Paginate ((where .RegularPagesRecursive "Type" $typeName).ByDate) -}}
   {{- else if and (eq .Kind "section") (findRE `^\d{4}$` .Section) -}}
     {{- /* A year: the same posts year-page.html groups by month. */ -}}
     {{- $pager = .Paginate ((where .RegularPagesRecursive "Type" $typeName).ByDate.Reverse) 100 -}}

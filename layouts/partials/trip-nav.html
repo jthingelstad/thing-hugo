@@ -1,0 +1,25 @@
+{{- /* Under a post in a trip (is-trip.html): the trip's name, linking to its
+       page, which starts at the beginning, and the posts just before and
+       after this one in the trip, titled or not (most trip posts are
+       photos). One card a trip; a post in none renders nothing. */ -}}
+{{- $page := . -}}
+{{- range $t := .GetTerms "categories" }}
+  {{- if partial "is-trip.html" $t }}
+    {{- /* Newest first, so Prev is the older post. */}}
+    {{- $earlier := $t.Pages.Prev $page }}
+    {{- $later := $t.Pages.Next $page }}
+    {{- if or $earlier $later }}
+<nav class="trip-nav" aria-label="{{ $t.LinkTitle }}" data-pagefind-ignore>
+  <a class="trip-nav__name" href="{{ $t.Permalink }}">{{ $t.LinkTitle }}</a>
+  <div class="trip-nav__links">
+    {{- with $earlier }}
+    <a class="trip-nav__link trip-nav__link--earlier" href="{{ .Permalink }}"><span class="trip-nav__label">Earlier</span> <span class="trip-nav__title">{{ partial "title.html" . }}</span></a>
+    {{- end }}
+    {{- with $later }}
+    <a class="trip-nav__link trip-nav__link--later" href="{{ .Permalink }}"><span class="trip-nav__label">Later</span> <span class="trip-nav__title">{{ partial "title.html" . }}</span></a>
+    {{- end }}
+  </div>
+</nav>
+    {{- end }}
+  {{- end }}
+{{- end }}

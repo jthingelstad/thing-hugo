@@ -619,19 +619,37 @@ figcaption, .figure__caption {
 .microblog_narration_button span { vertical-align: baseline !important; }
 .microblog_narration_button img { display: none; }
 
-/* Earlier / Later */
-.post__nav {
+/* Earlier / Later, and a trip's (trip-nav.html, 2.0.28): the trip's name,
+   then its posts either side of this one, on a grey card */
+.post__nav,
+.trip-nav__links {
   margin-top: var(--space-7);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
   gap: var(--space-4) var(--space-6);
   line-height: 1.35;
 }
-.post__nav-link { color: var(--color-ink); text-decoration: none; display: flex; flex-direction: column; gap: var(--space-1); }
-.post__nav-link--later { text-align: right; grid-column: -2; }
-.post__nav-label { font-size: var(--font-size-label); font-weight: var(--weight-strong); color: var(--color-text-muted); }
-.post__nav-title { font-size: var(--font-size-ui); font-weight: var(--weight-strong); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.post__nav-link:hover .post__nav-title { text-decoration-thickness: 2px; }
+.post__nav-link, .trip-nav__link { color: var(--color-ink); text-decoration: none; display: flex; flex-direction: column; gap: var(--space-1); }
+.post__nav-link--later, .trip-nav__link--later { text-align: right; grid-column: -2; }
+.post__nav-label, .trip-nav__label { font-size: var(--font-size-label); font-weight: var(--weight-strong); color: var(--color-text-muted); }
+.post__nav-title, .trip-nav__title { font-size: var(--font-size-ui); font-weight: var(--weight-strong); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.post__nav-link:hover .post__nav-title, .trip-nav__link:hover .trip-nav__title { text-decoration-thickness: 2px; }
+.trip-nav {
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--color-strip);
+}
+.trip-nav__name {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-h3);
+  font-weight: var(--weight-heading);
+  line-height: 1.2;
+  letter-spacing: var(--tracking-heading);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+.trip-nav__name:hover { text-decoration: underline; }
+.trip-nav__links { margin-top: var(--space-4); }
 
 /* The Not Found page: search, then Ask Thingy, under Jamie's text */
 .not-found__find {
@@ -970,62 +988,6 @@ sup a, .footnote-ref { text-decoration: none; font-size: 0.8em; font-weight: var
   font-weight: 800;
 }
 .stream-photos__more:hover span { background: rgb(22 22 26 / 0.7); }
-
-/* A trip's days (shortcodes/trip.html, R4-3): chips on a grey card, the
-   current day in ink. */
-.post__content > .trip-days,
-.post-card__content > .trip-days { margin-top: var(--space-5); }
-.trip-days {
-  padding: 1.25rem;
-  border-radius: var(--radius-lg);
-  background: var(--color-strip);
-}
-.trip-days__label {
-  margin: 0;
-  font-size: var(--font-size-meta);
-  font-weight: var(--weight-strong);
-  line-height: 1.4;
-}
-.post__content .trip-days__list,
-.post-card__content .trip-days__list {
-  list-style: none;
-  margin: 0.625rem 0 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.post__content .trip-days__list li + li,
-.post-card__content .trip-days__list li + li { margin-top: 0; }
-.trip-days__list a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
-  padding: 0 0.5rem;
-  border-radius: var(--radius-md);
-  background: var(--color-bg);
-  color: var(--color-ink);
-  font-size: var(--font-size-small);
-  font-weight: var(--weight-strong);
-  line-height: 1;
-  text-decoration: none;
-}
-.trip-days__list a:hover { background: var(--color-mark); }
-.trip-days__list a[aria-current],
-.trip-days__list a[aria-current]:hover { background: var(--color-ink); color: var(--color-bg); }
-.trip-days__all {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  margin-top: 6px;
-  color: var(--color-ink);
-  font-size: var(--font-size-small);
-  font-weight: var(--weight-strong);
-}
-.post-card--note .trip-days,
-.post--note .trip-days { font-size: var(--font-size-base); line-height: 1.6; }
 
 /* micro.blog collections and galleries in post bodies */
 .microblog_collection img { border-radius: var(--radius-md); }
@@ -1565,7 +1527,7 @@ a.keep-going__card:hover .keep-going__title { text-decoration: underline; }
   .archive__row { gap: var(--space-3); }
   .archive__date { width: 3.25rem; }
   .archive__thumb { width: 3.5rem; height: 3.5rem; }
-  .post__nav-link--later { text-align: left; grid-column: auto; }
+  .post__nav-link--later, .trip-nav__link--later { text-align: left; grid-column: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
