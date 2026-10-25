@@ -29,6 +29,12 @@
     {{- if not $isPage }}{{ partial "post-meta.html" (dict "page" . "year" true "reading" true) }}{{ end }}
     <h1 class="post__title p-name">{{ .Title | markdownify }}</h1>
   </header>
+  {{- else if $isPost }}
+  {{- /* A micropost has no title, so its page had no h1 at all (8,082 of
+         10,461 posts): the first heading a screen reader or search engine
+         met was the Weekly Thing card's. Its <title> words (title.html),
+         hidden, and no p-name, so the h-entry stays as it was. */}}
+  <h1 class="visually-hidden" data-pagefind-ignore>{{ partial "title.html" . }}</h1>
   {{- end }}
 
   {{- with .Params.audio }}
@@ -67,7 +73,15 @@
 
   {{- if and (not $isPage) site.Params.include_conversation }}
   <section class="post__conversation" aria-label="Replies" data-pagefind-ignore>
+    {{- /* micro.blog's conversation.js takes its sign-in token out of the
+           address with history.pushState, on every page, token or not. That
+           added a history entry (Back stayed on the post) and dropped the
+           query before Tinylytics read it, so no ?ref= reached a post's hit.
+           While it runs (it is synchronous: it writes the reply form with
+           document.write), pushState only hides a token, in place. */}}
+    <script>(function (h) { var push = h.pushState; h.pushState = function (s, t, u) { if (/[?&]token=/.test(location.search)) h.replaceState(s, t, u); }; h.pushState.original = push; })(history);</script>
     <script src="https://micro.blog/conversation.js?url={{ .Permalink }}"></script>
+    <script>if (history.pushState.original) history.pushState = history.pushState.original;</script>
   </section>
   {{- end }}
 </article>
@@ -75,15 +89,21 @@
 {{- if $isPost }}
 {{- /* Round 4: under every post, the Weekly Thing card, Keep going, then
        Earlier / Later. */}}
+{{- /* Earlier / Later walk every post, across years (2.0.23): each year
+       is a section, so PrevInSection and NextInSection stopped at New Year.
+       The list is newest first, so Prev is the older post. */}}
+{{- $posts := partialCached "all-posts.html" "posts" }}
+{{- $earlier := $posts.Prev . }}
+{{- $later := $posts.Next . }}
 <div class="post-after">
   {{ partial "wt-subscribe.html" (dict "variant" "post") }}
   {{ partial "keep-going.html" . }}
-  {{- if or .NextInSection .PrevInSection }}
+  {{- if or $earlier $later }}
   <nav class="post__nav" aria-label="More posts" data-pagefind-ignore>
-    {{- with .PrevInSection }}
+    {{- with $earlier }}
     <a class="post__nav-link post__nav-link--earlier" href="{{ .Permalink }}" rel="next"><span class="post__nav-label">Earlier</span> <span class="post__nav-title">{{ partial "title.html" . }}</span></a>
     {{- end }}
-    {{- with .NextInSection }}
+    {{- with $later }}
     <a class="post__nav-link post__nav-link--later" href="{{ .Permalink }}" rel="prev"><span class="post__nav-label">Later</span> <span class="post__nav-title">{{ partial "title.html" . }}</span></a>
     {{- end }}
   </nav>

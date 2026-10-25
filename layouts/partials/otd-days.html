@@ -1,6 +1,6 @@
 {{- /* On This Day's day files: /otd/<MM-DD>.json, one a calendar day, listing
-       every post published on that day in any year (the blog's local date,
-       as in its URLs), oldest first. Each post is
+       every post published on that day in any year (its date in the blog's
+       time zone, local-date.html), oldest first. Each post is
          u  its path
          y  its year
          t  its title ("" for a micropost)
@@ -16,7 +16,8 @@
   {{- $title := .Title | plainify | htmlUnescape | strings.TrimSpace -}}
   {{- $text := .Summary | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace -}}
   {{- $text = truncate (cond (ne $title "") 200 280) "…" $text | htmlUnescape -}}
-  {{- $days.Add (.Date.Format "01-02") (slice (dict "u" .RelPermalink "y" .Date.Year "t" $title "x" $text "p" (partial "first-image.html" .))) -}}
+  {{- $date := partial "local-date.html" . -}}
+  {{- $days.Add ($date.Format "01-02") (slice (dict "u" .RelPermalink "y" $date.Year "t" $title "x" $text "p" (partial "first-image.html" .))) -}}
 {{- end -}}
 {{- range $day, $posts := $days.Values -}}
   {{- (resources.FromString (printf "otd/%s.json" $day) (jsonify $posts)).Publish -}}

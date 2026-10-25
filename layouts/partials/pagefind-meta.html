@@ -8,7 +8,8 @@
        titled: present only on posts with a real title, so Search can set
        a micropost as its words rather than a made-up heading.
        sort:  ISO date, which sorts lexically.
-       filters: year and each category.
+       filters: year (in the blog's time zone, as the year pages file it)
+       and each category.
        photo: the post's first photo, for the result's thumbnail. Not
        Pagefind's own "image" key: a post without one gets Pagefind's guess,
        the first <img> anywhere on the page (the custom footer's hidden
@@ -21,7 +22,7 @@
   {{- end }}
   <span data-pagefind-meta="date">{{ .Date.Format "January 2, 2006" }}</span>
   <span data-pagefind-sort="date">{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</span>
-  <span data-pagefind-filter="year">{{ .Date.Year }}</span>
+  <span data-pagefind-filter="year">{{ (partial "local-date.html" .).Year }}</span>
   {{- range .Params.categories }}
   <span data-pagefind-filter="category">{{ . }}</span>
   {{- end }}

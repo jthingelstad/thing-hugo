@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "https://cdn.jsdelivr.net/npm/hls.js": {
+      "version": "1.7.3",
+      "src": "https://cdn.jsdelivr.net/npm/hls.js@1.7.3/dist/hls.min.js",
+      "integrity": "sha384-cciJ0zi8d1uMKC2zJd7jvPY4HQt7W4ByUI/FlMkltvBi31aW61rcpVBhpmW8/NwX"
+    }
+  }
+}

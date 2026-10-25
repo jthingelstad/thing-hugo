@@ -9,19 +9,26 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
   kept intact.
 - **v2 design:** black and white on white, with a dark mode that follows the
   reader's system. Colour marks only Jamie's other sites: the Weekly Thing
-  (blue), Another Thing (red) and Thingy (tangerine). Inter Tight headings and
-  Inter body, self-hosted (SIL OFL, `static/assets/fonts/`). One 1120px frame
-  shared by the sites strip, header, content and footer; lists add a rail.
+  (blue), Another Thing (crimson), Thingy (tangerine) and Things I've built
+  (green). Inter Tight headings and Inter body, self-hosted (SIL OFL,
+  `static/assets/fonts/`). One 1120px frame shared by the sites strip, header,
+  content and footer; lists, posts and pages add a rail.
 - **Home:** a hello beside a Weekly Thing subscribe card, then the stream.
   Titled posts show an excerpt, microposts show whole. Stream photos are 4:3
   crops; three or more become a square grid with a "+N" tile. A post's own
   page shows its photos whole.
 - **The rail:** Ask Thingy, recent Weekly Thing issues, Another Thing, On This
-  Day and Browse.
+  Day, Browse and the Blogroll (micro.blog's Recommendations, in the order set
+  there). Every page has it but Not Found.
 - **Under a post:** Kudos, reply links and "Explore with Thingy", a Weekly Thing
-  card, Keep going (one more post and the podcast), then Earlier / Later.
+  card, Keep going (one more post and the podcast), then Earlier / Later,
+  which run on across years.
 - **Archive:** `/archive/` is a photo tile for every year plus the categories;
-  each year page lists every post by month, 100 to a page.
+  each year page lists every post by month, 100 to a page. Posts are filed by
+  their date in the blog's time zone (`time_zone`), since micro.blog hands
+  Hugo every date at a fixed -05:00.
+- **On This Day:** the theme writes a day file for every date
+  (`/otd/MM-DD.json`); the rail and the On This Day page read them.
 - **[Pagefind](https://pagefind.app/) search:** the Search page draws results
   in the theme's style, with Best match / Newest and year and category filters;
   Ask Thingy is the second path.
@@ -30,10 +37,14 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
 - **[llms.txt](https://llmstxt.org/):** one capped, site-level `/llms.txt`.
 - **Jamie's sites:** a strip above the header and an "Also from Jamie" footer,
   from `data/sites.json`.
-- **Minimal:** one fingerprinted stylesheet built from CSS custom properties.
-  Scripts: the phone menu, the rail's Weekly Thing / Another Thing / On This
-  Day lists, Pagefind on the Search page, Tinylytics, and micro.blog's
-  `conversation.js` and `narration.js`. Every page reads in full without them.
+- **Weekly Thing signup:** the card takes the address and asks the Librarian's
+  `/auth`, with Cloudflare Turnstile loaded once a reader starts on the form;
+  without JavaScript its button goes to the Weekly Thing's own form.
+- **Minimal:** two stylesheets (the tokens and the theme), built from CSS
+  custom properties and cache-busted with `?v=`. Scripts: the phone menu, the
+  rail's lists, Pagefind on the Search page, the signup, On This Day,
+  Tinylytics, and micro.blog's `conversation.js` and `narration.js`. Every page
+  reads in full without them.
 
 ## Install on micro.blog
 
@@ -94,7 +105,7 @@ single-line inputs, so lists are comma-separated.
 | `home_greeting` | "Hi, I'm" and the first name | The home page's greeting |
 | `intro` | a sentence about the blog | Home intro beside the Weekly Thing card (Markdown) |
 | `rail_categories` | `Weekly Thing, Kubb, Coffee, Minnestar, Pokémon` | Categories in the rail's Browse list |
-| `on_this_day_feed` | Micro Memories, US/Central | Feed for the rail's On This Day; blank turns it off |
+| `on_this_day_feed` | `on` | Any text shows On This Day in the rail; blank turns it off |
 | `on_this_day_path` | `/on-this-day/` | The full On This Day page |
 | `featured_category` | `Featured` | Category whose camera photos lead each year's tile on `/archive/` |
 | `photo_proxy` | micro.blog's resizer | Thumbnails of `/uploads/` photos; `off` uses the originals |
@@ -112,6 +123,9 @@ Other params (`config.json` defaults, or the site's own config):
 | `pagefindEnabled` | `true` | Pagefind attributes and the Search link |
 | `search_path` | `/search/` | Where the Search page lives |
 | `llmsTxtEnabled` | `true` | Advertise `/llms.txt` in `<head>` and the footer |
+| `time_zone` | `America/Chicago` | The zone posts are filed in: year pages, archive lists, On This Day and search's year filter |
+| `thingy_blurb` | "Ask me about coffee, kubb, or two decades of links." | The line under Ask Thingy in the rail |
+| `thingy_placeholder` | "What has Jamie written about kubb?" | The Ask Thingy box's placeholder |
 | `subtitle`, `intro`, `keywords`, `dateFormat` | | As in v1 |
 
 From micro.blog's own settings: `description`, `author.{name,avatar,username}`,
@@ -128,6 +142,12 @@ the pill row under a post: Reply by Email (`reply-by-email.html`), Conversation
 Link (`conversation-link.html`) and Reply on Mastodon (`reply-on-mastodon.html`).
 Menu links keep Tiny's `page-link {Name}` classes for Custom CSS.
 
+Plug-in scripts (`plugins_js`) load deferred. One listed in `data/pins.json`
+loads that exact version with its integrity hash instead: the Video streaming
+plug-in asks for the latest hls.js. micro.blog's `conversation.js` runs with
+`history.pushState` limited to hiding its sign-in token in place; unwrapped, it
+added a history entry on every post and dropped the address's `?ref=`.
+
 ## Design tokens
 
 `static/assets/css/tokens.css` is **generated**. The source of truth is
@@ -143,6 +163,8 @@ Menu links keep Tiny's `page-link {Name}` classes for Custom CSS.
 config.json                   llmstxt output, ten micro.blog home outputs + llmstxt, params
 plugin.json                   micro.blog plug-in manifest and settings fields
 data/release.json             the release version, the CSS/JS cache buster
+data/pins.json                plug-in scripts held to one version and hash
+data/signup.json              the Weekly Thing signup's API, Turnstile key and ref
 data/sites.json               Jamie's sites (generated copy)
 data/tokens.json              theme-color values (generated copy)
 layouts/
@@ -159,13 +181,18 @@ layouts/
   partials/                   head, header, footer, h-card, asset, rail,
                               post-card, stream-content, post-meta,
                               post-actions, keep-going, year-page,
-                              archive-list, search-page, search-ui,
-                              pagefind-meta, trip-posts, sites*, ...
-  shortcodes/{figure,image,search,trip}.html
+                              archive-list, local-date, otd-days,
+                              search-page, search-ui, pagefind-meta,
+                              trip-posts, sites*, ...
+  shortcodes/{figure,image,on-this-day,search,trip}.html
 static/assets/
   css/{tokens,thing}.css      linked one each by partials/asset.html
   fonts/                      Inter and Inter Tight (woff2, OFL)
-  js/{nav,sites,search}.js    phone menu; rail lists; the Search page
+  js/nav.js                   the phone menu
+  js/sites.js                 the rail's lists and cards
+  js/search.js                the Search page
+  js/subscribe.js             the Weekly Thing signup
+  js/on-this-day.js           the On This Day page
 ```
 
 All CSS and JS go through `partials/asset.html`, which links the file under

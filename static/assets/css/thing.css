@@ -217,7 +217,7 @@ figcaption, .figure__caption {
 }
 .content { flex: 1; padding-top: var(--space-7); padding-bottom: 4.5rem; }
 
-/* The rail (partials/rail.html; js/rail.js fills the lists). A list the
+/* The rail (partials/rail.html; js/sites.js fills the lists). A list the
    script couldn't fill stays hidden behind its heading and link. */
 .rail__heading { font-size: var(--font-size-h3); line-height: 1.2; }
 .rail__heading a { color: inherit; text-decoration: none; }
@@ -1159,33 +1159,7 @@ a.tinylytics_webring { text-decoration: none; }
   border-radius: var(--radius-lg);
   padding: var(--space-5);
 }
-.signup__title { font-size: 1.25rem; margin-bottom: var(--space-2); }
-.signup__blurb { margin-bottom: var(--space-4); }
-.signup__form { display: flex; gap: var(--space-2); flex-wrap: wrap; }
-.signup__label { position: absolute; left: -9999px; }
-.signup__input {
-  flex: 1 1 16rem;
-  font: inherit;
-  min-height: var(--target-field);
-  padding: 0 0.875rem;
-  border: 0;
-  background: var(--color-bg);
-  color: var(--color-ink);
-  border-radius: var(--radius-md);
-}
-.signup__button {
-  font: inherit;
-  font-weight: var(--weight-heading);
-  min-height: var(--target-field);
-  padding: 0 1.375rem;
-  background: var(--color-ink);
-  color: var(--color-bg);
-  border: 0;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-}
 
-/* Search page (Pagefind) */
 /* Search (Round 4b): results drawn by js/search.js from Pagefind */
 .search-head__main { display: flex; flex-direction: column; gap: 1.25rem; }
 .search-head .search-form__input,

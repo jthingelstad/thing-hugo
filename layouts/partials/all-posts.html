@@ -1,0 +1,4 @@
+{{- /* Every post, newest first (Hugo's default order), for walking from one
+       post to the next. Built once: call it as partialCached
+       "all-posts.html" "posts". */ -}}
+{{- return where site.RegularPages "Type" (site.Params.contentTypeName | default "post") -}}

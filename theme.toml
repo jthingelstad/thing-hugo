@@ -1,12 +1,12 @@
 name = "thing-theme"
 license = "MIT"
 licenselink = "https://github.com/jthingelstad/thing-hugo/blob/main/LICENSE"
-description = "A clean, opinionated Hugo theme for Micro.blog with built-in support for Pagefind search, LLMs.txt, and Weekly Thing / Another Thing integrations."
+description = "Jamie Thingelstad's theme for micro.blog, installed as a plug-in over the Blank design: microformats, Pagefind search, a capped llms.txt and links to Jamie's other sites."
 homepage = "https://github.com/jthingelstad/thing-hugo"
 tags = ["blog", "clean", "minimal", "microblog", "personal", "responsive", "search", "llms"]
 features = ["blog", "microblog", "pagefind", "llmstxt"]
-min_version = "0.100.0"
+min_version = "0.158.0"
 
 [author]
   name = "Jamie Thingelstad"
-  homepage = "https://thingelstad.com"
+  homepage = "https://www.thingelstad.com"

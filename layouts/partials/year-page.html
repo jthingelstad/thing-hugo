@@ -11,13 +11,18 @@
 {{- $older := "" -}}
 {{- $found := false -}}
 {{- range $years }}{{ if $found }}{{ $older = . }}{{ break }}{{ end }}{{ if eq .Section $.Section }}{{ $found = true }}{{ end }}{{ end -}}
-{{- /* Where each month starts: GroupByDate keeps the newest-first order, so
-       a running count gives the page. */ -}}
+{{- /* Where each month starts: the posts come newest first, so the first
+       post of a month (in the blog's time zone, as archive-list.html files
+       them) gives its page. A post from another year (2019 imports under
+       /2020/) is under its own year heading, not a month of this one. */ -}}
 {{- $months := slice -}}
-{{- $n := 0 -}}
-{{- range $all.GroupByDate "01" }}
-  {{- $months = $months | append (dict "id" (printf "m%s" .Key) "name" ((index .Pages 0).Date.Format "Jan") "page" (add (div $n $per) 1)) }}
-  {{- $n = add $n (len .Pages) }}
+{{- $key := "" -}}
+{{- range $n, $p := $all }}
+  {{- $date := partial "local-date.html" $p }}
+  {{- if and (ne ($date.Format "01") $key) (eq ($date.Format "2006") $.Section) }}
+  {{- $key = $date.Format "01" }}
+  {{- $months = $months | append (dict "id" (printf "m%s" $key) "name" ($date.Format "Jan") "page" (add (div $n $per) 1)) }}
+  {{- end }}
 {{- end -}}
 <header class="archive-head archive-head--year cols">
   <div class="archive-head__title">
@@ -28,13 +33,13 @@
 </header>
 <div class="cols">
   <section class="archive archive--year" aria-label="Posts from {{ .Section }}">
-    {{ partial "archive-list.html" (dict "pages" $paginator.Pages "years" false) }}
+    {{ partial "archive-list.html" (dict "pages" $paginator.Pages "years" false "year" .Section) }}
     <nav class="archive-pager" aria-label="More posts">
       {{- with $paginator.Prev }}
-      <a class="archive-pager__page" href="{{ .URL }}" rel="prev">{{ (index (last 1 .Pages) 0).Date.Format "January" }} and later</a>
+      <a class="archive-pager__page" href="{{ .URL }}" rel="prev">{{ (partial "local-date.html" (index (last 1 .Pages) 0)).Format "January" }} and later</a>
       {{- end }}
       {{- with $paginator.Next }}
-      <a class="archive-pager__page" href="{{ .URL }}" rel="next">{{ (index .Pages 0).Date.Format "January" }} and earlier</a>
+      <a class="archive-pager__page" href="{{ .URL }}" rel="next">{{ (partial "local-date.html" (index .Pages 0)).Format "January" }} and earlier</a>
       {{- end }}
       {{- with $older }}
       <a class="archive-pager__year" href="{{ .RelPermalink }}">{{ .Section }}</a>
