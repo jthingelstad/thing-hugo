@@ -8,14 +8,30 @@
        full gate"). micro.blog lists a post's categories oldest category
        first, so the first one was nearly always a broad topic (Travel,
        Family) and never a trip. A tie goes to the earlier-listed category.
-       A post with no categories gets the episode alone. */ -}}
+       A post with no categories gets the episode alone.
+       Trips are left out, and so are the posts in this post's own trips,
+       since trip-nav.html's card walks the trip (2.0.29; Jamie,
+       2026-10-25: "Approved: thing-hugo Keep going skips trip categories
+       on posts that show a trip card, to main after the full gate" and
+       "Approved: thing-hugo Keep going also skips posts in the post's own
+       trips, so it offers something from outside the trip, to main after
+       the full gate"). A trip could only be picked if it held an earlier
+       post, and then the post shows a trip card, so leaving trips out
+       always is the same rule. Skipping the trip's posts matters because
+       a broad category (Travel) holds them too: before it, 182 trip posts
+       showed the trip card's Earlier post twice and 689 offered another
+       post from the same trip. */ -}}
 {{- $earlier := false -}}
 {{- $in := "" -}}
 {{- $size := 0 -}}
+{{- $trips := slice -}}
+{{- range .GetTerms "categories" }}
+  {{- if partial "is-trip.html" . }}{{ $trips = $trips | append .Pages }}{{ end }}
+{{- end }}
 {{- range $term := .GetTerms "categories" }}
   {{- $n := len .Pages }}
-  {{- if and (ne (lower .LinkTitle) "featured") (or (not $earlier) (lt $n $size)) }}
-    {{- with first 1 (where (where .Pages "Date" "lt" $.Date) "Title" "!=" "") }}
+  {{- if and (ne (lower .LinkTitle) "featured") (not (partial "is-trip.html" $term)) (or (not $earlier) (lt $n $size)) }}
+    {{- with first 1 (complement $trips (where (where .Pages "Date" "lt" $.Date) "Title" "!=" "")) }}
       {{- $earlier = index . 0 }}
       {{- $in = $term.LinkTitle }}
       {{- $size = $n }}

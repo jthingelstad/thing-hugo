@@ -21,8 +21,9 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
   Day, Browse and the Blogroll (micro.blog's Recommendations, in the order set
   there). Every page has it but Not Found.
 - **Under a post:** Kudos, reply links and "Explore with Thingy", a Weekly Thing
-  card, Keep going (one more post, from the post's most specific category,
-  and the podcast), then Earlier / Later, which run on across years.
+  card, Keep going (one more post, from the post's most specific category
+  that is not a trip, and the podcast), then Earlier / Later, which run on
+  across years.
 - **Archive:** `/archive/` is a photo tile for every year plus the categories;
   each year page lists every post by month, 100 to a page. `/photos/` shows
   the first photo of every post, 240 to a page under a heading a year.
@@ -87,7 +88,8 @@ takes. The trip's category page lists its posts oldest first, with its pages
 running Earlier / Later. Under each post in it, a card names the trip
 (linking to that page) and the posts just before and after this one in the
 trip, titled or not. Dated series, such as a photo challenge, read the same
-way.
+way. Keep going never picks a trip or a post in the post's own trips, so it
+offers something from outside the trip.
 
 ## Settings
 
