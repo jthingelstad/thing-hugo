@@ -24,14 +24,16 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
   card, Keep going (one more post and the podcast), then Earlier / Later,
   which run on across years.
 - **Archive:** `/archive/` is a photo tile for every year plus the categories;
-  each year page lists every post by month, 100 to a page. Posts are filed by
-  their date in the blog's time zone (`time_zone`), since micro.blog hands
-  Hugo every date at a fixed -05:00.
+  each year page lists every post by month, 100 to a page. `/photos/` shows
+  the first photo of every post, 240 to a page under a heading a year.
+- **Dates in the blog's time zone:** posts are filed and dated in
+  `time_zone` (US Central), since micro.blog hands Hugo every date at a fixed
+  -05:00 whatever the season.
 - **On This Day:** the theme writes a day file for every date
   (`/otd/MM-DD.json`); the rail and the On This Day page read them.
 - **[Pagefind](https://pagefind.app/) search:** the Search page draws results
-  in the theme's style, with Best match / Newest and year and category filters;
-  Ask Thingy is the second path.
+  in the theme's style, with Best match / Newest and year and category filters
+  (rows above the results on phones); Ask Thingy is the second path.
 - **Trip days:** a `{{< trip >}}` shortcode draws "Go to day" chips.
 - **Tinylytics built in:** page hits and Kudos, no plug-in needed.
 - **[llms.txt](https://llmstxt.org/):** one capped, site-level `/llms.txt`.
@@ -123,7 +125,7 @@ Other params (`config.json` defaults, or the site's own config):
 | `pagefindEnabled` | `true` | Pagefind attributes and the Search link |
 | `search_path` | `/search/` | Where the Search page lives |
 | `llmsTxtEnabled` | `true` | Advertise `/llms.txt` in `<head>` and the footer |
-| `time_zone` | `America/Chicago` | The zone posts are filed in: year pages, archive lists, On This Day and search's year filter |
+| `time_zone` | `America/Chicago` | The zone posts are filed and dated in: every date shown, year pages, archive lists, On This Day and search's year filter |
 | `thingy_blurb` | "Ask me about coffee, kubb, or two decades of links." | The line under Ask Thingy in the rail |
 | `thingy_placeholder` | "What has Jamie written about kubb?" | The Ask Thingy box's placeholder |
 | `subtitle`, `intro`, `keywords`, `dateFormat` | | As in v1 |
@@ -165,12 +167,13 @@ plugin.json                   micro.blog plug-in manifest and settings fields
 data/release.json             the release version, the CSS/JS cache buster
 data/pins.json                plug-in scripts held to one version and hash
 data/signup.json              the Weekly Thing signup's API, Turnstile key and ref
+data/year-photos.json         photos the /archive/ year tiles pass over
 data/sites.json               Jamie's sites (generated copy)
 data/tokens.json              theme-color values (generated copy)
 layouts/
   _default/{baseof,single,list}.html   list.html also draws the year pages
   list.archivehtml.html       /archive/: year tiles and categories
-  list.photoshtml.html        /photos/: photo grid with alt text
+  list.photoshtml.html        /photos/: photo grid with alt text, 240 to a page
   index.html                  home: hello, Weekly Thing card, stream, rail
   opengraph.html              social card micro.blog renders to an image (plain Go templates, no Hugo functions)
   index.llmstxt.txt           /llms.txt

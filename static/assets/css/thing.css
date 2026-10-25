@@ -921,6 +921,9 @@ sup a, .footnote-ref { text-decoration: none; font-size: 0.8em; font-weight: var
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr)) !important;
   gap: var(--space-2) !important;
 }
+.photos__years .rail-chips { margin-top: 0; }
+.photos__year + .photos__year { margin-top: var(--space-7); }
+.photos__year > .archive__year-heading { margin-bottom: var(--space-4); scroll-margin-top: var(--space-5); }
 .photos-grid-container img {
   width: 100%;
   height: auto;
@@ -1239,6 +1242,57 @@ a.tinylytics_webring { text-decoration: none; }
 }
 .search-results__more:hover { color: var(--color-bg); background: var(--color-ink); }
 .search-results__more[hidden] { display: none; }
+
+/* Search below 900px (2.0.25, layout A; Jamie, 2026-10-24): Sort, Year and
+   Category as rows above the results, each row's chips one sideways
+   scroll, and Ask Thingy after them. The rail becomes display: contents so
+   its sections join the column and CSS order lifts the filters. Until the
+   first results (or a message) are drawn, an address with a query
+   (html.has-q, set as the page parses) keeps both filter rows' space and
+   a screen's height for the results, and holds Ask Thingy back, so
+   nothing on screen moves when they arrive (layout shift 0 at 390 and
+   500px on Slow 4G, against about 0.5 before). search.js sets
+   html.search-drawn. */
+@media (max-width: 56.25rem) {
+  .cols:has(> .rail--search) { row-gap: var(--space-3); }
+  .cols:has(> .rail--search) > .search-page { margin-top: var(--space-4); }
+  .rail--search { display: contents; }
+  .rail--search [data-search-filter] {
+    order: -1;
+    display: grid;
+    grid-template-columns: 4.75rem minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--space-2);
+    min-height: 2.75rem;
+    margin-top: 0;
+  }
+  .rail--search [data-search-filter][hidden] { display: none; }
+  .has-q:not(.search-drawn) .rail--search [data-search-filter][hidden] { display: grid; visibility: hidden; }
+  .rail--search [data-search-filter] .rail__heading { font-size: var(--font-size-meta); font-weight: 400; color: var(--color-text-muted); }
+  .rail--search .rail-chips {
+    margin: 0;
+    padding: 2px 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    mask-image: linear-gradient(to right, #000 85%, transparent);
+  }
+  .rail--search .rail-chips li { flex: none; }
+  .rail--search .rail-card--thingy { margin-top: var(--space-6); }
+  .has-q:not(.search-drawn) .rail--search .rail-card--thingy { display: none; }
+  .has-q .search-page { min-height: 100vh; min-height: 100svh; }
+  .search-head { row-gap: var(--space-5); margin-bottom: var(--space-3); }
+  .search-sort {
+    display: grid;
+    grid-template-columns: 4.75rem auto auto;
+    justify-content: start;
+    column-gap: var(--space-2);
+    min-height: 2.75rem;
+    margin-top: 0;
+  }
+  .search-sort[hidden] { display: none; }
+  .search-sort__label { padding-right: 0; font-size: var(--font-size-meta); }
+}
 
 /* On This Day (shortcodes/on-this-day.html): the day between its
    neighbours, then a heading a year over search's cards. */

@@ -16,6 +16,10 @@
   </div>
   {{ partial "wt-subscribe.html" (dict "variant" "hero") }}
 </section>
+{{- else }}
+{{- /* The stream's later pages (/page/2/ on) have no hello, so their h1
+       is hidden: the page needs one, and the stream is all it shows. */ -}}
+<h1 class="visually-hidden">Posts, page {{ $paginator.PageNumber }}</h1>
 {{- end }}
 <div class="cols">
   <section class="home" aria-label="Posts">

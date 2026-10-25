@@ -1,8 +1,9 @@
 {{- /* A page's date in the blog's time zone (US Central; params.time_zone
-       overrides it), for filing posts by day, month and year. micro.blog
-       hands Hugo every date at a fixed -05:00 offset, winter and summer
-       (live 2026-10-24: December posts carry -05:00), while a post's URL and
-       its year section follow Central time. So a winter post written after
+       overrides it), for filing posts by day, month and year and, since
+       2.0.25, for every date and time the theme shows. micro.blog hands
+       Hugo every date at a fixed -05:00 offset, winter and summer (live
+       2026-10-24: December posts carry -05:00), while a post's URL and its
+       year section follow Central time. So a winter post written after
        11 PM showed under the next day, month or year: /2025/ opened with a
        January holding the Airport Rally post of 2025/12/31, and 75 posts sat
        on the wrong On This Day. Returns a time.Time.

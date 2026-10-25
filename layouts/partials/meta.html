@@ -44,7 +44,7 @@
 <meta property="og:image:alt" content="{{ $title | default site.Title }}">
 {{- end }}
 {{- if $p.IsPage }}
-<meta property="article:published_time" content="{{ $p.Date.Format "2006-01-02T15:04:05Z07:00" }}">
+<meta property="article:published_time" content="{{ (partial "local-date.html" $p).Format "2006-01-02T15:04:05Z07:00" }}">
 {{- range $p.Params.categories }}
 <meta property="article:tag" content="{{ . }}">
 {{- end }}

@@ -1,0 +1,13 @@
+{{- /* Where each year starts on /photos/, in the blog's time zone: the
+       photos come newest first, so a year's first photo gives its page.
+       Takes the page size; built once a build:
+       partialCached "photo-years.html" $per $per. Returns a list of
+       dict year, page. */ -}}
+{{- $per := . -}}
+{{- $years := slice -}}
+{{- $key := "" -}}
+{{- range $n, $p := partialCached "photo-posts.html" "photos" }}
+  {{- $y := (partial "local-date.html" $p).Format "2006" }}
+  {{- if ne $y $key }}{{ $key = $y }}{{ $years = $years | append (dict "year" $y "page" (add (div $n $per) 1)) }}{{ end }}
+{{- end -}}
+{{- return $years -}}

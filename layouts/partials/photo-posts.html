@@ -1,0 +1,9 @@
+{{- /* Every page /photos/ shows, newest first: those with a photo in
+       photos (narrated posts list only an .mp3, which first-image.html
+       skips). Built once a build: call it as
+       partialCached "photo-posts.html" "photos". */ -}}
+{{- $out := slice -}}
+{{- range (where site.RegularPages ".Params.photos" "!=" nil).ByDate.Reverse -}}
+  {{- if partial "first-image.html" . }}{{ $out = $out | append . }}{{ end -}}
+{{- end -}}
+{{- return $out -}}

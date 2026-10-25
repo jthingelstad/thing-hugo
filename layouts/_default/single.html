@@ -29,11 +29,12 @@
     {{- if not $isPage }}{{ partial "post-meta.html" (dict "page" . "year" true "reading" true) }}{{ end }}
     <h1 class="post__title p-name">{{ .Title | markdownify }}</h1>
   </header>
-  {{- else if $isPost }}
+  {{- else }}
   {{- /* A micropost has no title, so its page had no h1 at all (8,082 of
          10,461 posts): the first heading a screen reader or search engine
          met was the Weekly Thing card's. Its <title> words (title.html),
-         hidden, and no p-name, so the h-entry stays as it was. */}}
+         hidden, and no p-name, so the h-entry stays as it was. Replies too,
+         since 2.0.25. */}}
   <h1 class="visually-hidden" data-pagefind-ignore>{{ partial "title.html" . }}</h1>
   {{- end }}
 

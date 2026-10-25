@@ -6,6 +6,6 @@
 {{- $t := .Title -}}
 {{- if and (not $t) .IsPage -}}
   {{- $t = .Summary | plainify | htmlUnescape | strings.TrimSpace | truncate 60 "…" -}}
-  {{- if not $t }}{{ $t = .Date.Format "January 2, 2006" }}{{ end -}}
+  {{- if not $t }}{{ $t = (partial "local-date.html" .).Format "January 2, 2006" }}{{ end -}}
 {{- end -}}
 {{- return $t -}}

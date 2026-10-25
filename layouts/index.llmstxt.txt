@@ -27,14 +27,14 @@ Personal blog of {{ site.Params.author.name | default site.Title }}, writing on 
 ## Recent posts
 
 {{ range first $recent (where $posts "Title" "!=" "").ByDate.Reverse -}}
-- [{{ .Title | plainify }}]({{ .Permalink }}) ({{ .Date.Format "2006-01-02" }}){{ with .Summary }}: {{ . | plainify | htmlUnescape | truncate 160 }}{{ end }}
+- [{{ .Title | plainify }}]({{ .Permalink }}) ({{ (partial "local-date.html" .).Format "2006-01-02" }}){{ with .Summary }}: {{ . | plainify | htmlUnescape | truncate 160 }}{{ end }}
 {{ end }}
 {{- with site.Taxonomies.categories.featured }}
 
 ## Featured
 
 {{ range first 25 .Pages.ByDate.Reverse -}}
-- [{{ .Title | default (.Date.Format "2006-01-02") | plainify }}]({{ .Permalink }})
+- [{{ .Title | default ((partial "local-date.html" .).Format "2006-01-02") | plainify }}]({{ .Permalink }})
 {{ end }}
 {{- end }}
 

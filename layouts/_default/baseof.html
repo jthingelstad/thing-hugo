@@ -2,7 +2,7 @@
 <html lang="{{ site.Language.Locale | default "en" }}">
 <head>
   {{ block "title" . }}
-    <title>{{ if .IsHome }}{{ site.Title }}{{ with site.Params.subtitle }} — {{ . }}{{ end }}{{ else }}{{ with partial "title.html" . }}{{ . }} · {{ end }}{{ site.Title }}{{ end }}</title>
+    <title>{{ if .IsHome }}{{ with partial "pager.html" . }}{{ if gt .PageNumber 1 }}Posts, page {{ .PageNumber }} · {{ end }}{{ end }}{{ site.Title }}{{ with site.Params.subtitle }} — {{ . }}{{ end }}{{ else }}{{ with partial "title.html" . }}{{ . }} · {{ end }}{{ site.Title }}{{ end }}</title>
   {{ end }}
   {{ partial "head.html" . }}
   {{- /* /archive/ and /photos/ are the home page in another output format, so

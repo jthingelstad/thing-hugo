@@ -7,7 +7,10 @@
        title: partials/title.html (microposts get their opening words).
        titled: present only on posts with a real title, so Search can set
        a micropost as its words rather than a made-up heading.
-       sort:  ISO date, which sorts lexically.
+       date:  the date shown on the result, in the blog's time zone
+       (local-date.html), as the post shows it.
+       sort:  the UTC instant as ISO text, so it sorts as text whatever
+       offset micro.blog hands Hugo.
        filters: year (in the blog's time zone, as the year pages file it)
        and each category.
        photo: the post's first photo, for the result's thumbnail. Not
@@ -20,9 +23,10 @@
   {{- if .Title }}
   <span data-pagefind-meta="titled">1</span>
   {{- end }}
-  <span data-pagefind-meta="date">{{ .Date.Format "January 2, 2006" }}</span>
-  <span data-pagefind-sort="date">{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</span>
-  <span data-pagefind-filter="year">{{ (partial "local-date.html" .).Year }}</span>
+  {{- $date := partial "local-date.html" . }}
+  <span data-pagefind-meta="date">{{ $date.Format "January 2, 2006" }}</span>
+  <span data-pagefind-sort="date">{{ .Date.UTC.Format "2006-01-02T15:04:05Z" }}</span>
+  <span data-pagefind-filter="year">{{ $date.Year }}</span>
   {{- range .Params.categories }}
   <span data-pagefind-filter="category">{{ . }}</span>
   {{- end }}

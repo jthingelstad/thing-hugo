@@ -4,16 +4,27 @@
        on, else the year's last. Then the same order with any photo, else
        "" (2000 has none). Takes the year's section page; call with
        partialCached keyed by the year. params.featured_category names the
-       category (default "Featured"). */ -}}
+       category (default "Featured"). A photo whose address ends in a key of
+       data/year-photos.json's skip is passed over: the resizer serves GIFs
+       whole, and a GIF can carry a .jpg name, which nothing here can see
+       (2019's was 3.5 MB of a 5.3 MB /archive/; 2.0.25). check-live fails
+       on a tile served as a GIF. */ -}}
 {{- $typeName := site.Params.contentTypeName | default "post" -}}
 {{- $pages := (where (where .RegularPagesRecursive "Type" $typeName) "Params.photos" "!=" nil).ByDate -}}
 {{- $featured := where $pages "Params.categories" "intersect" (slice (site.Params.featured_category | default "Featured")) -}}
 {{- $later := where $pages "Date" "ge" (time.AsTime (printf "%s-07-01T00:00:00Z" .Section)) -}}
+{{- $skip := dict -}}
+{{- with index hugo.Data "year-photos" }}{{ $skip = .skip | default dict }}{{ end -}}
 {{- $out := "" -}}
 {{- range $pattern := slice `(?i)\.(jpe?g|heic)(\?.*)?$` "" }}
   {{- range $list := slice $featured $later $pages.Reverse }}
     {{- range $list }}
-      {{- with partial "first-image.html" . }}{{ if or (not $pattern) (findRE $pattern . 1) }}{{ $out = . }}{{ break }}{{ end }}{{ end }}
+      {{- with partial "first-image.html" . }}
+        {{- $src := . }}
+        {{- $skipped := false }}
+        {{- range $tail, $_ := $skip }}{{ if strings.HasSuffix $src $tail }}{{ $skipped = true }}{{ end }}{{ end }}
+        {{- if and (not $skipped) (or (not $pattern) (findRE $pattern $src 1)) }}{{ $out = $src }}{{ break }}{{ end }}
+      {{- end }}
     {{- end }}
     {{- if $out }}{{ break }}{{ end }}
   {{- end }}

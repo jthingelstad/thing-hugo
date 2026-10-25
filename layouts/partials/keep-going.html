@@ -15,7 +15,7 @@
 <section class="keep-going" aria-label="Keep going" data-pagefind-ignore>
   {{- with $earlier }}
   <a class="keep-going__card" href="{{ .RelPermalink }}">
-    <span class="keep-going__kicker">More in {{ $in }} · {{ .Date.Format "January 2006" }}</span>
+    <span class="keep-going__kicker">More in {{ $in }} · {{ (partial "local-date.html" .).Format "January 2006" }}</span>
     <span class="keep-going__title">{{ .Title | plainify }}</span>
   </a>
   {{- end }}

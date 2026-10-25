@@ -40,7 +40,7 @@
 {{- $name := cond $named (.Get "name" | default "") "" }}
 {{- if not $name }}
   {{- $name = replaceRE `[\s\-—–:,]+$` "" $prefix }}
-  {{- if and $days (not (findRE `\b(19|20)\d\d\b|'\d\d\b` $name 1)) }}{{ $name = printf "%s %d" $name (index $days 0).Date.Year }}{{ end }}
+  {{- if and $days (not (findRE `\b(19|20)\d\d\b|'\d\d\b` $name 1)) }}{{ $name = printf "%s %d" $name (partial "local-date.html" (index $days 0)).Year }}{{ end }}
 {{- end }}
 <nav class="trip-days" aria-label="{{ $name }} days" data-pagefind-ignore>
   <p class="trip-days__label">{{ $name }}{{ if ge (len $days) 2 }} · Go to day{{ end }}</p>

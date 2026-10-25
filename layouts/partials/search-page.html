@@ -6,7 +6,11 @@
        submits, and the results area says to browse the archive instead.
        The page's own text, which holds {{< search >}}, sits above the
        results; a page without the shortcode (layout: search) gets the
-       results added after its text. */ -}}
+       results added after its text.
+       Below 900px the filters move above the results (layout A, 2.0.25,
+       thing.css). The script after the header runs as the page parses: with
+       a query in the address it shows Sort and sets html.has-q, so the
+       space the results will take is kept from the first paint. */ -}}
 <header class="archive-head search-head cols">
   <div class="search-head__main">
     <h1 class="post-list__title">{{ .Title | default "Search" }}</h1>
@@ -18,6 +22,7 @@
     <button class="search-sort__button" type="button" data-sort="newest" aria-pressed="false">Newest</button>
   </div>
 </header>
+<script>(function () { if (/[?&]q=[^&]/.test(location.search)) { document.documentElement.classList.add('has-q'); var s = document.querySelector('[data-search-sort]'); if (s) s.hidden = false; } })();</script>
 <div class="cols">
   <section class="search-page" aria-label="Results">
     {{- with .Content }}

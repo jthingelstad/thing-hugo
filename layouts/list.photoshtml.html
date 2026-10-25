@@ -4,19 +4,46 @@
        photos_alt (else the post's own <img>), and the grid styled by the
        theme instead of inline styles. Tiles come through the photo resizer
        (photo-src.html); the original URL still finds the alt text.
-       Narrated posts list an .mp3 in photos; partials/first-image.html skips it. */ -}}
-{{ define "title" }}<title>Photos · {{ site.Title }}</title>{{ end }}
-{{ define "meta" }}{{ partial "meta.html" (dict "page" . "title" "Photos" "url" ("photos/" | absURL)
+       Narrated posts list an .mp3 in photos; partials/first-image.html skips it.
+       Since 2.0.25 it pages, 240 to a page (photos-pager.html), under a
+       heading a year, with the years listed at the top, each linking to
+       the page it starts on, as a year page's months do. */ -}}
+{{ define "title" }}{{ $pager := partial "photos-pager.html" . }}<title>Photos{{ if gt $pager.PageNumber 1 }}, page {{ $pager.PageNumber }}{{ end }} · {{ site.Title }}</title>{{ end }}
+{{ define "meta" }}{{ $pager := partial "photos-pager.html" . }}{{ partial "meta.html" (dict "page" . "title" "Photos" "url" ($pager.URL | absURL)
   "description" (printf "The first photo from every post on %s's blog, newest first." site.Title)) }}{{ end }}
-{{ define "canonical" }}<link rel="canonical" href="{{ "photos/" | absURL }}">{{ end }}
+{{ define "canonical" }}<link rel="canonical" href="{{ (partial "photos-pager.html" .).URL | absURL }}">{{ end }}
 {{ define "header" }}{{ partial "header.html" (dict "page" . "home" false) }}{{ end }}
 {{ define "main" }}
+{{- $paginator := partial "photos-pager.html" . -}}
+{{- $per := $paginator.PagerSize -}}
+{{- $years := partialCached "photo-years.html" $per $per -}}
+{{- /* This page's photos, a group a year. */ -}}
+{{- $groups := slice -}}
+{{- $rows := slice -}}
+{{- $key := "" -}}
+{{- range $paginator.Pages }}
+  {{- $y := (partial "local-date.html" .).Format "2006" }}
+  {{- if and $rows (ne $y $key) }}{{ $groups = $groups | append (dict "year" $key "pages" $rows) }}{{ $rows = slice }}{{ end }}
+  {{- $key = $y }}
+  {{- $rows = $rows | append . }}
+{{- end -}}
+{{- if $rows }}{{ $groups = $groups | append (dict "year" $key "pages" $rows) }}{{ end -}}
 <section class="photos">
   <header class="post-list__header">
     <h1 class="post-list__title">Photos</h1>
+    <nav class="photos__years" aria-label="Years">
+      <ul class="rail-chips">
+        {{- range $years }}
+        <li><a href="{{ if ne .page $paginator.PageNumber }}{{ (index $paginator.Pagers (sub .page 1)).URL }}{{ end }}#y{{ .year }}">{{ .year }}</a></li>
+        {{- end }}
+      </ul>
+    </nav>
   </header>
+  {{- range $groups }}
+  <section class="photos__year" aria-labelledby="y{{ .year }}">
+  <h2 id="y{{ .year }}" class="archive__year-heading">{{ .year }}</h2>
   <div class="photos-grid-container">
-    {{- range (where site.RegularPages ".Params.photos" "!=" nil).ByDate.Reverse }}
+    {{- range .pages }}
     {{- $page := . -}}
     {{- $src := partial "first-image.html" . -}}
     {{- with $src }}
@@ -29,10 +56,20 @@
         {{- if in . $src }}{{ with findRESubmatch `\balt="([^"]*)"` . 1 }}{{ $alt = index (index . 0) 1 | htmlUnescape | strings.TrimSpace }}{{ end }}{{ break }}{{ end }}
       {{- end }}
     {{- end }}
-    {{- if not $alt }}{{ $alt = $page.Title | default (printf "Photo from %s" ($page.Date.Format "January 2, 2006")) }}{{ end -}}
+    {{- if not $alt }}{{ $alt = $page.Title | default (printf "Photo from %s" ((partial "local-date.html" $page).Format "January 2, 2006")) }}{{ end -}}
     <a class="photos-grid-item-link" href="{{ $page.Permalink }}"><img class="photos-grid-item" src="{{ partial "photo-src.html" (dict "src" $src "size" 400 "square" true) }}" alt="{{ $alt }}" width="300" height="300" loading="lazy" decoding="async"></a>
     {{- end }}
     {{- end }}
   </div>
+  </section>
+  {{- end }}
+  <nav class="archive-pager" aria-label="More photos">
+    {{- with $paginator.Prev }}
+    <a class="archive-pager__page" href="{{ .URL }}" rel="prev">{{ (partial "local-date.html" (index (last 1 .Pages) 0)).Format "2006" }} and later</a>
+    {{- end }}
+    {{- with $paginator.Next }}
+    <a class="archive-pager__page" href="{{ .URL }}" rel="next">{{ (partial "local-date.html" (index .Pages 0)).Format "2006" }} and earlier</a>
+    {{- end }}
+  </nav>
 </section>
 {{ end }}

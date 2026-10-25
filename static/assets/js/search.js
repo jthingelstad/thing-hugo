@@ -7,6 +7,10 @@
 // pause of TYPING ms runs the search, Enter runs it at once, and the last
 // results stay up until the next ones arrive.
 //
+// The first results or message drawn set html.search-drawn: until then a
+// page opened with a query keeps their space (thing.css, below 900px).
+// "More results" moves focus to the first result it adds.
+//
 // State lives in the address (?q=kubb&sort=newest&year=2025&category=Kubb)
 // so a search can be reloaded or shared. Results come ten at a time. There
 // are no counts anywhere, by design. Excerpt HTML from Pagefind is rebuilt
@@ -55,6 +59,8 @@
     }
 
     function say(text) { status.textContent = text; }
+
+    function drawn() { document.documentElement.classList.add('search-drawn'); }
 
     // Tinylytics counts clicks on data-tinylytics-event elements.
     function track(name, value) {
@@ -156,11 +162,15 @@
       return Promise.all(next.map(function (r) { return r.data(); })).then(function (data) {
         if (token !== run) return;
         if (fresh) list.textContent = '';
+        var first = null;
         data.forEach(function (d) {
           var li = card(d);
           if (li) list.appendChild(li);
+          if (li && !first) first = li;
         });
         more.hidden = shown >= results.length;
+        drawn();
+        return first;
       });
     }
 
@@ -233,16 +243,26 @@
         if (!results.length) {
           list.textContent = '';
           say('Nothing in the blog matches “' + state.q + '”' + (state.year.length || state.category.length ? ' with those filters.' : '. Try fewer words, or ask Thingy.'));
+          drawn();
           return;
         }
         say('Results for “' + state.q + '”');
         return showMore(token, true);
       }).catch(function () {
-        if (token === run) say('Search is not working right now. The archive lists every post by year.');
+        if (token !== run) return;
+        say('Search is not working right now. The archive lists every post by year.');
+        drawn();
       });
     }
 
-    more.addEventListener('click', function () { showMore(run); });
+    // The button hides while the next results load, which would drop
+    // keyboard focus on the page; it goes to the first new result instead.
+    more.addEventListener('click', function () {
+      showMore(run).then(function (first) {
+        var a = first && first.querySelector('a');
+        if (a) a.focus();
+      });
+    });
     if (sortGroup) {
       sortGroup.addEventListener('click', function (e) {
         var b = e.target.closest('[data-sort]');
@@ -291,6 +311,7 @@
       search();
     }).catch(function () {
       say('Search is not working right now. The archive lists every post by year.');
+      drawn();
     });
   }
 
