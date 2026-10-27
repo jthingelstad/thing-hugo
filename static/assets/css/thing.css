@@ -686,10 +686,6 @@ figcaption, .figure__caption {
 .microblog_reply_form p { margin: 0; }
 .microblog_reply_signin { color: var(--color-text-muted); }
 .microblog_reply_signin a { color: var(--color-ink); }
-/* Signed out, the box and Post are disabled and do nothing: the sign-in
-   line is the whole invitation. */
-.microblog_reply_textarea:has(textarea:disabled),
-.microblog_reply_button:has(input:disabled) { display: none; }
 .microblog_reply_textarea textarea {
   display: block;
   box-sizing: border-box;
@@ -703,7 +699,10 @@ figcaption, .figure__caption {
   font: inherit;
   resize: vertical;
 }
-.microblog_reply_textarea textarea:disabled { cursor: default; }
+/* Signed out, the box and Post stay in view, disabled, so a reader sees
+   that replies are open (Jamie, 2026-10-26: "It draws the users attention
+   that they CAN comment"). */
+.microblog_reply_textarea textarea:disabled { cursor: default; background: var(--color-strip); }
 .microblog_reply_button input {
   min-height: var(--target-min);
   padding: 0 1.125rem;
@@ -716,6 +715,12 @@ figcaption, .figure__caption {
   cursor: pointer;
 }
 .microblog_reply_button input:hover { text-decoration: underline; text-underline-offset: 3px; }
+.microblog_reply_button input:disabled {
+  background: var(--color-strip);
+  color: var(--color-text-muted);
+  cursor: default;
+  text-decoration: none;
+}
 
 /* Transcripts of a post's audio (2.0.31): the link under the post, and the
    post named at the top of the transcript's page */
