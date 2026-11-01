@@ -1558,7 +1558,7 @@ a.tinylytics_webring { text-decoration: none; }
   gap: var(--space-4);
 }
 .keep-going__card { min-width: 0; }
-a.keep-going__card {
+a.keep-going__card, a.related__card {
   display: flex;
   flex-direction: column;
   padding: var(--space-5);
@@ -1567,8 +1567,8 @@ a.keep-going__card {
   color: var(--color-ink);
   text-decoration: none;
 }
-.keep-going__kicker { font-size: var(--font-size-label); font-weight: var(--weight-strong); color: var(--color-text-muted); }
-.keep-going__title {
+.keep-going__kicker, .related__kicker { font-size: var(--font-size-label); font-weight: var(--weight-strong); color: var(--color-text-muted); }
+.keep-going__title, .related__title {
   margin-top: 6px;
   font-family: var(--font-heading);
   font-size: var(--font-size-h3);
@@ -1577,6 +1577,23 @@ a.keep-going__card {
   letter-spacing: var(--tracking-heading);
 }
 a.keep-going__card:hover .keep-going__title { text-decoration: underline; }
+/* Related (2.0.39): up to three cards like Keep going's, under a label. */
+.related__heading {
+  margin: 0 0 var(--space-3);
+  font-family: inherit;
+  font-size: var(--font-size-label);
+  font-weight: var(--weight-strong);
+  letter-spacing: normal;
+  line-height: inherit;
+  color: var(--color-text-muted);
+}
+.related__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: var(--space-4);
+}
+.related__card { min-width: 0; }
+a.related__card:hover .related__title { text-decoration: underline; }
 
 /* Stream cards that only make sense when the rail has dropped below
    (phones and narrow windows), and rail parts those cards replace. */
@@ -1623,6 +1640,7 @@ a.keep-going__card:hover .keep-going__title { text-decoration: underline; }
   .archive__date { width: 3.25rem; }
   .archive__thumb { width: 3.5rem; height: 3.5rem; }
   .post__nav-link--later, .trip-nav__link--later { text-align: left; grid-column: auto; }
+  .related__cards { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

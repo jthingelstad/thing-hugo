@@ -1,0 +1,40 @@
+{{- /* The posts related.html shows under a post (2.0.39): up to three of the
+       addresses data/related.json lists for it, in the file's order, that
+       are posts in this build. Left out: the post itself, the posts in its
+       own trips (the trip card walks the trip, as Keep going leaves them
+       out) and Keep going's pick, so no post shows twice.
+
+       The file is the Librarian's ranking (source_neighborhood: posts
+       sharing distinctive words or linked sites), not the theme's: Hugo's
+       related content matches only front matter (categories, dates), which
+       is Keep going's job. It is not shipped in the theme. micro.blog
+       builds the site, so the file reaches the build as a file in the
+       blog's own custom theme, written through the Themes API (Jamie,
+       2026-11-01: "Approved: ship an empty-by-default related-posts section
+       in thing-hugo, then write a one-entry test data/related.json for
+       Camelback to the blog's custom theme on micro.blog via the Themes
+       API"). Without the file, or without an entry for this post, it
+       returns nothing and the section is not drawn.
+
+       Shape: {"posts": {"/2021/03/11/hiking-camelback-mountain.html":
+       ["/2021/03/10/pinnacle-peak.html", ...]}}. Keys and values are
+       .RelPermalink: micro.blog gives Hugo no post id it can rely on.
+       Returns a slice of pages. */ -}}
+{{- $picks := slice -}}
+{{- with hugo.Data.related }}{{ with .posts }}{{ with index . $.RelPermalink }}
+  {{- $list := . -}}
+  {{- with partialCached "related-index.html" "related-index" }}
+    {{- $byURL := . -}}
+    {{- $skip := slice $ -}}
+    {{- with (partial "keep-going-pick.html" $).page }}{{ $skip = $skip | append . }}{{ end -}}
+    {{- range $.GetTerms "categories" }}
+      {{- if partial "is-trip.html" . }}{{ $skip = $skip | append .Pages }}{{ end }}
+    {{- end -}}
+    {{- $found := slice -}}
+    {{- range $list }}
+      {{- with index $byURL . }}{{ $found = $found | append . }}{{ end }}
+    {{- end -}}
+    {{- $picks = first 3 (complement $skip ($found | uniq)) -}}
+  {{- end }}
+{{- end }}{{ end }}{{ end -}}
+{{- return $picks -}}

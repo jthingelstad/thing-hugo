@@ -1,0 +1,17 @@
+{{- /* Related, under a post (2.0.39): the posts related-picks.html chooses,
+       as Keep going's cards, each with its month and its title (a micropost's
+       opening words, title.html). Nothing is drawn when there are none,
+       which is every post until data/related.json names it. */ -}}
+{{- with partial "related-picks.html" . }}
+<section class="related" aria-labelledby="related-heading" data-pagefind-ignore>
+  <h2 class="related__heading" id="related-heading">Related</h2>
+  <div class="related__cards">
+    {{- range . }}
+    <a class="related__card" href="{{ .RelPermalink }}" data-tinylytics-event="related.click" data-tinylytics-event-value="{{ .RelPermalink }}">
+      <span class="related__kicker">{{ (partial "local-date.html" .).Format "January 2006" }}</span>
+      <span class="related__title">{{ partial "title.html" . }}</span>
+    </a>
+    {{- end }}
+  </div>
+</section>
+{{- end }}
