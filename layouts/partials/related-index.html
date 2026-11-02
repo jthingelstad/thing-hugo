@@ -1,6 +1,0 @@
-{{- /* Every post by its address (.RelPermalink), for related-picks.html.
-       Built once a build, and only when some post has related data: call
-       it as partialCached "related-index.html" "related-index". */ -}}
-{{- $s := newScratch -}}
-{{- range partialCached "all-posts.html" "posts" }}{{ $s.SetInMap "posts" .RelPermalink . }}{{ end -}}
-{{- return $s.Get "posts" -}}
