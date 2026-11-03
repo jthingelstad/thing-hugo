@@ -1,5 +1,5 @@
 {
-  "version": "2.0.40",
+  "version": "2.0.41",
   "title": "Thing Theme",
   "description": "Jamie Thingelstad's theme for micro.blog, installed over the Blank design: microformats, Pagefind search, a capped llms.txt and links to Jamie's other sites.",
   "fields": [
@@ -55,13 +55,8 @@
     },
     {
       "field": "params.tinylytics_id",
-      "label": "Tinylytics embed id (blank turns Tinylytics and Kudos off)",
+      "label": "Tinylytics site id (blank turns Tinylytics and Kudos off)",
       "placeholder": "dMNzEVG73Bcq1RisbGRG"
-    },
-    {
-      "field": "params.tinylytics_options",
-      "label": "Tinylytics embed options",
-      "placeholder": "hits&kudos=👍&uptime&webring=avatars&countries&publicstats"
     }
   ]
 }

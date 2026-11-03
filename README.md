@@ -121,8 +121,7 @@ single-line inputs, so lists are comma-separated.
 | `featured_category` | `Featured` | Category whose camera photos lead each year's tile on `/archive/` |
 | `photo_proxy` | micro.blog's resizer | Thumbnails of `/uploads/` photos; `off` uses the originals |
 | `llmstxt_recent` | `50` | Recent titled posts listed in `/llms.txt` |
-| `tinylytics_id` | the blog's embed id | Tinylytics embed id; blank turns Tinylytics and Kudos off |
-| `tinylytics_options` | `hits&kudos=👍&uptime&webring=avatars&countries&publicstats` | The embed's feature flags |
+| `tinylytics_id` | the blog's site id | Tinylytics site id (`data-site` on Tinylytics' one script tag); blank turns Tinylytics and Kudos off. Hits, Kudos, countries, events and the rest are set in the site's Tinylytics settings |
 
 Other params (`config.json` defaults, or the site's own config):
 

@@ -16,6 +16,12 @@
 // are no counts anywhere, by design. Excerpt HTML from Pagefind is rebuilt
 // as text plus <mark>, never inserted as HTML.
 (function () {
+  // Tinylytics' script (2.0.41) counts a page view on every history change
+  // to a new address. save() rewrites the address on each search as you
+  // type, which would count a view per pause in typing. This deferred file
+  // runs before the Tinylytics tag at the end of the body wraps history, so
+  // keep the browser's own replaceState for it: a search page stays one view.
+  var replaceState = History.prototype.replaceState;
   var PAGE = 10;
   var CATEGORIES = 8;
   var TYPING = 250;
@@ -81,7 +87,7 @@
       state.year.forEach(function (y) { p.append('year', y); });
       state.category.forEach(function (c) { p.append('category', c); });
       var qs = p.toString();
-      window.history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : ''));
+      replaceState.call(window.history, null, '', window.location.pathname + (qs ? '?' + qs : ''));
     }
 
     // Pagefind's excerpt: escaped text with <mark> around matches.
