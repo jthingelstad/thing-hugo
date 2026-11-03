@@ -5,7 +5,7 @@
        micro.blog only rebuilds when Jamie posts. ?d=MM-DD shows another
        day; the day links step through the calendar. data-photo-proxy and
        data-uploads put photos through the resizer, as search does. */ -}}
-{{- $proxy := site.Params.photo_proxy | default "https://micro.blog/photos/" -}}
+{{- $proxy := partialCached "photo-proxy.html" "proxy" -}}
 <div id="otd" class="otd" data-otd="{{ partialCached "otd-days.html" "otd" }}"{{ if ne $proxy "off" }} data-photo-proxy="{{ $proxy }}" data-uploads="{{ delimit (partialCached "upload-prefixes.html" "prefixes") " " }}"{{ end }}>
   <nav class="otd__nav" aria-label="Other days" data-otd-nav hidden>
     <a class="otd__step" rel="prev" data-otd-prev></a>
