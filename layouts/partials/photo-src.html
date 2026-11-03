@@ -7,10 +7,11 @@
        square slots only: a 4:3 slot cropping that square again shows a
        landscape photo zoomed in. Neither form enlarges a photo. Only the
        blog's own uploads go through it, at either address
-       (upload-prefixes.html). params.photo_proxy sets another service, or
-       "off" for the originals. */ -}}
+       (upload-prefixes.html). photo-proxy.html says where the resizer is:
+       the blog's own /resize/ (CloudFront in front of micro.blog's) unless
+       params.photo_proxy sets another, or "off" for the originals. */ -}}
 {{- $src := .src -}}
-{{- $proxy := site.Params.photo_proxy | default "https://micro.blog/photos/" -}}
+{{- $proxy := partialCached "photo-proxy.html" "proxy" -}}
 {{- if ne $proxy "off" -}}
   {{- range partialCached "upload-prefixes.html" "prefixes" -}}
     {{- if strings.HasPrefix $src . -}}

@@ -1,0 +1,13 @@
+{{- /* The photo resizer every thumbnail and srcset goes through
+       (photo-src.html, photo-srcset.html, and the data-photo-proxy that
+       js/search.js, js/sites.js and js/on-this-day.js read).
+       Since 2026-11-03 the blog sits behind CloudFront (projects-sysadmin
+       docs/MICROBLOG-PROXY.md), which serves micro.blog's resizer on the
+       blog's own name: <site>/resize/<size>x/<url> is
+       https://micro.blog/photos/<size>x/<url>, cached at the edge. So the
+       default is <baseURL>resize/. params.photo_proxy sets another service,
+       "https://micro.blog/photos/" for micro.blog's own (the rollback if the
+       blog's DNS goes back to micro.blog), or "off" for the originals.
+       Returns the prefix, ending in "/", or "off". */ -}}
+{{- $proxy := site.Params.photo_proxy | default (printf "%sresize/" site.BaseURL) -}}
+{{- return $proxy -}}

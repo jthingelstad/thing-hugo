@@ -1,14 +1,14 @@
 {{- /* Gives one <img> tag of Jamie's uploads a srcset of resized copies, so
        a phone or a 1x screen no longer loads the 2 to 6 MB original.
        Usage: {{ partial "photo-srcset.html" (dict "img" $tag "sizes" $sizes) }}
-       The copies come from micro.blog's resizer in its width form
+       The copies come from the resizer (photo-proxy.html) in its width form
        (photo-src.html), which keeps the photo's shape and never enlarges it,
        so a small original is served at its own size. src stays the original,
        for the lightbox, microformats and browsers without srcset. GIFs (they
        may be animated), a tag with a srcset already and anything that isn't
        an upload are left alone. Returns the tag. */ -}}
 {{- $img := .img -}}
-{{- $proxy := site.Params.photo_proxy | default "https://micro.blog/photos/" -}}
+{{- $proxy := partialCached "photo-proxy.html" "proxy" -}}
 {{- if and (ne $proxy "off") (not (strings.Contains $img "srcset=")) -}}
   {{- with findRESubmatch `\ssrc=["']([^"']+)["']` $img 1 -}}
     {{- $src := index (index . 0) 1 -}}

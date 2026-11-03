@@ -1,5 +1,5 @@
 {
-  "version": "2.0.41",
+  "version": "2.0.42",
   "title": "Thing Theme",
   "description": "Jamie Thingelstad's theme for micro.blog, installed over the Blank design: microformats, Pagefind search, a capped llms.txt and links to Jamie's other sites.",
   "fields": [
@@ -45,8 +45,8 @@
     },
     {
       "field": "params.photo_proxy",
-      "label": "Photo resizer for thumbnails (blank uses micro.blog's; off uses the originals)",
-      "placeholder": "https://micro.blog/photos/"
+      "label": "Photo resizer for thumbnails (blank uses the blog's /resize/, micro.blog's resizer through CloudFront; off uses the originals)",
+      "placeholder": "https://www.thingelstad.com/resize/"
     },
     {
       "field": "params.llmstxt_recent",
