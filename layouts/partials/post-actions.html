@@ -2,9 +2,11 @@
 
        Kudos is the theme's own Tinylytics (partials/tinylytics.html), shown
        when a Tinylytics id is set or the old plug-in is still installed; the
-       Tinylytics script fills .tinylytics_kudos. Reply by Email, Conversation
-       Link and Reply on Mastodon appear when their micro.blog plug-in is
-       installed (the plug-in ships the partial). Explore with
+       Tinylytics script fills .tinylytics_kudos. Reply by Email and
+       Conversation Link appear when their micro.blog plug-in is installed
+       (the plug-in ships the partial). No social-network buttons (Jamie,
+       2026-11-03: "Don't link to bluesky or mastadon or other social
+       networks."), so Reply on Mastodon stays out even if installed. Explore with
        Thingy is the theme's own and opens Thingy on this post, using the
        Thingy URL from data/sites.json, with &ref=www-post. */ -}}
 {{- $thingy := "" -}}
@@ -18,9 +20,6 @@
   {{- end }}
   {{- if templates.Exists "partials/conversation-link.html" }}
   <li>{{ partial "conversation-link.html" . }}</li>
-  {{- end }}
-  {{- if templates.Exists "partials/reply-on-mastodon.html" }}
-  <li>{{ partial "reply-on-mastodon.html" . }}</li>
   {{- end }}
   {{- with $thingy }}
   <li><a class="explore-with-thingy" href="{{ partial "ref-url.html" (dict "url" (printf "%s/chat/?explore=%s" (strings.TrimSuffix "/" .) ($.Permalink | urlquery)) "place" "post") }}" data-tinylytics-event="thingy.explore" data-tinylytics-event-value="{{ $.RelPermalink }}">Explore with Thingy</a></li>
