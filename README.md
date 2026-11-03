@@ -148,8 +148,9 @@ micro.blog's Categories page) is the category page's content, and the theme
 shows it under the title. What the blog used microhooks for is built in, as are the styles post bodies
 lean on: `.callout`, `.aside`, `.alert` and the `.chat` conversation markup
 (Tiny-era Custom CSS no longer needs to carry them). It does detect the partials these micro.blog plug-ins ship and adds each one to
-the pill row under a post: Reply by Email (`reply-by-email.html`), Conversation
-Link (`conversation-link.html`) and Reply on Mastodon (`reply-on-mastodon.html`).
+the pill row under a post: Reply by Email (`reply-by-email.html`) and Conversation
+Link (`conversation-link.html`). It links to no social network: no Reply on
+Mastodon, and no `u-syndication` link to a post's Bluesky copy.
 Menu links keep Tiny's `page-link {Name}` classes for Custom CSS.
 
 Plug-in scripts (`plugins_js`) load deferred. One listed in `data/pins.json`
