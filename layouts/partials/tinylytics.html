@@ -1,18 +1,17 @@
 {{- /* Tinylytics, built into the theme: page hits plus Kudos on every post
        (partials/post-actions.html renders the .tinylytics_kudos button the
-       script fills in). site.Params.tinylytics_id is the site's public embed
-       id; tinylytics_options are the embed's features, as in Tinylytics' own
-       snippet. If the Tinylytics micro.blog plug-in is still installed it
-       loads the same script, so the theme stands down rather than count twice.
-       events and beacon are always added: the data-tinylytics-event clicks
-       (Subscribe, Explore and Ask Thingy, the Another Thing card, the sites
-       strip, search) only count with events, and beacon keeps a click that
-       leaves the page. Added here, not in the setting's default, because
-       Pull from GitHub doesn't refresh a plug-in's params. */ -}}
-{{- with site.Params.tinylytics_id }}
+       script fills in). site.Params.tinylytics_id is the site's public id.
+       Tinylytics' one script tag (2.0.41) takes only data-site: the widgets
+       and options (hits, kudos, countries, uptime, webring, public stats,
+       events, beacon) are set in the site's settings at Tinylytics, not in
+       the address, so the old tinylytics_options param is gone. The
+       data-tinylytics-event clicks (Subscribe, Explore and Ask Thingy, the
+       Another Thing card, the sites strip, search) still count. If the
+       Tinylytics micro.blog plug-in is still installed it loads its own
+       script, so the theme stands down rather than count twice. A blank id
+       (serve.sh passes " ") turns it off. */ -}}
+{{- with strings.TrimSpace (site.Params.tinylytics_id | default "") }}
 {{- if not (templates.Exists "partials/plugin_tinylytics.html") }}
-{{- $opts := site.Params.tinylytics_options | default "" -}}
-{{- range slice "events" "beacon" }}{{ if not (in (split $opts "&") .) }}{{ $opts = cond (eq $opts "") . (printf "%s&%s" $opts .) }}{{ end }}{{ end }}
-<script src="https://tinylytics.app/embed/{{ . }}.js{{ with $opts }}?{{ . | safeURL }}{{ end }}" defer></script>
+<script defer src="https://tinylytics.app/js/script.js" data-site="{{ . }}"></script>
 {{- end }}
 {{- end }}
