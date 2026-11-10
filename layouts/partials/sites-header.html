@@ -6,7 +6,11 @@
        carries ?ref=sites-strip-<this site's id> so the Tinylytics Sources
        report on the destination shows the visits this strip sent (left off
        when no site matches baseURL, as under serve.sh), and a strip.click
-       event naming the destination, so the blog's own report counts them. */ -}}
+       event naming the destination, so the blog's own report counts them.
+       All Things (strip_all in sites.json) ends the strip on every site,
+       after the list: the list of everything of Jamie's live today on
+       thingelstad.xyz. It is no site's own link, so it never carries
+       aria-current, and the footer's "Also from Jamie" leaves it out. */ -}}
 {{- $sites := partial "sites.html" . -}}
 {{- $origin := "" -}}
 {{- range $sites }}{{ if .current }}{{ $origin = .id }}{{ end }}{{ end -}}
@@ -23,6 +27,11 @@
       </li>
       {{- end }}
     </ul>
+    {{- with hugo.Data.sites.strip_all }}
+    {{- $href := .url -}}
+    {{- with $origin }}{{ $href = printf "%s%sref=sites-strip-%s" $href (cond (strings.Contains $href "?") "&" "?") . }}{{ end }}
+    <a class="sites-strip__all" href="{{ $href }}" title="{{ .description }}" data-tinylytics-event="strip.click" data-tinylytics-event-value="all">{{ .label }}</a>
+    {{- end }}
   </div>
 </nav>
 {{- end }}

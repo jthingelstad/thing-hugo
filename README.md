@@ -47,7 +47,8 @@ Thingelstad's blog on [micro.blog](https://micro.blog). It is a micro.blog
   button with its length, and audio posts and their micro.blog transcripts
   link to each other (`data/transcripts.json` pairs them).
 - **[llms.txt](https://llmstxt.org/):** one capped, site-level `/llms.txt`.
-- **Jamie's sites:** a strip above the header and an "Also from Jamie" footer,
+- **Jamie's sites:** a strip above the header, ending in All Things (the list
+  of everything live on thingelstad.xyz), and an "Also from Jamie" footer,
   from `data/sites.json`.
 - **Weekly Thing signup:** the card takes the address and asks the Librarian's
   `/auth`, with Cloudflare Turnstile loaded once a reader starts on the form;

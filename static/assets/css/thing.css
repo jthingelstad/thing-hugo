@@ -1593,9 +1593,14 @@ a.keep-going__card:hover .keep-going__title { text-decoration: underline; }
   .otd__nav { grid-template-columns: 1fr 1fr; row-gap: var(--space-2); }
   .post__content .otd__day { grid-column: 1 / -1; grid-row: 1; }
   .stream-photos--two img { aspect-ratio: 1; }
-  .sites-strip__inner { flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; gap: 1.125rem; }
+  /* One row without its label: the list scrolls sideways inside it and All
+     Things stays put at its right end, never scrolled out of sight. The
+     list's padding, taken back by its margin, keeps the focus ring inside
+     the scrolling box, where it is not cut off. */
+  .sites-strip__inner { flex-wrap: nowrap; white-space: nowrap; gap: 1.125rem; }
   .sites-strip__label { display: none; }
-  .sites-strip__list { flex-wrap: nowrap; gap: 1.125rem; }
+  .sites-strip__list { flex-wrap: nowrap; gap: 1.125rem; flex: 1 1 auto; min-width: 0; margin: -6px; padding: 6px; overflow-x: auto; }
+  .sites-strip__all { flex: none; }
   .site-header, .site-header--home { padding-top: 1.25rem; }
   .site-header--home .site-author__photo { width: 48px; height: 48px; }
   .site-author { grid-template-columns: auto minmax(0, 1fr); }
